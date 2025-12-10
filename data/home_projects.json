@@ -7,9 +7,22 @@
                 "cat": "fotos xulíssimes fetes amb roba de uniqlo"
             },
             "categoria": "commercial",
-            "date": 2025-01-25,
+            "date": "2025-01-25",
             "relevance": 1,
             "imatge_home": "fake_1.webp"
+        },
+
+        "torito": {
+            "sinopsis": {
+                "es": "un cortometraje sobre un torito de lidia que quiere ser vegetariano",
+                "en": "a short film about a fighting bull who wants to be vegetarian",
+                "cat": "un curtmetratge sobre un torito de llidia que vol ser vegetarià"
+            },
+            "categoria": "videoclip",
+            "date": "2024-10-24",
+            "relevance": 1,
+            "imatge_home": "TORITO_ANNAIZQUIERDO_1.webp"
         }
     }
+
 }
