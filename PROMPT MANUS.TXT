@@ -1,0 +1,19 @@
+vale quiero que construyas la web del repo paulaBarjau, como veras, ya hay una infraestructura mas o menos construida que quiero que investigues y entiendas, y puedes tomar un poco como referencia la pagina del repo mirandaperezhita:
+
+de momento lo estamos pensando mobile first asi que pon un max width 800px a todo y centra todo horizontalemnte, la home es el titulo "paula barjau" en h1 y centrado, y después aparecerán las imatges_home de cada proyecto de home_projects, al hacer hover o click te hará un velo del 50% del color de la categoria de ese proyecto (los colores estan en home_categories) y te saldrá ala sinopsis en el idioma que corresponda (por defecto será catalan, pero tiene que poderse cambiar facil) dentro de ese recuadro de la foto velado alineado arriba a la izquierda y abajo a la derecha te saldrá un "ver más" (en el idioma que se necesite) (que esto este en home_categories como "text_see_more" (tambien tiene que estar el de "text_menu" a partir del cual generara el boton para abrir el menu)
+
+y el menú se accede con un boton que es simplemente "menu" abajo centrado y fijo a una distancia del bottom
+
+al hacer click se subirá la palabra menú y con ella el menú, que contendrá las categorías en su color cada una, al hacer click en una, se filtran los proyectos visibles por esa categoría (solo se ven los de la categoria activa) y el resto de categorías se ponen en negro. al volver a hacer click en la categoría activada se desactiva, y si activas una categoría cuando ya tienes otra, simplemente se desactiva la de antes y se activa la nueva) y un espacio un poco separado los idiomas: las 3 opciones en la misma linea centradas
+
+si vuelves a clicar en menu se vuelve a "esconder" la pestaña del menu. es una pestaña que sale de abajo centrado y cubre todo el width de la pantalla pero solo cubre el height que necesita
+
+y luego al darle a "ver más" en un proyecto te lleva a la pagina de ese proyecto, el color de fondo es el que le toca al proyecto por categoria y en cada poroyecto:
+
+enb el h1 que en la home es paula barjau ahora esta el titulo, la categoria determina el color de fondo, la imatge principal es lo que estara debajo del titulo y bajo la imagen principal van los creditos alineados a la izquierda y que los links mantengan el subrayado pero no el azul hiperenlace ese
+
+y luego va la galeria que puede contener items del tipo "youtube" (es un video de youtube que molaria saber como se pueden ver en la pagina) pueden ser fotos que seran generalmente webp, pero puede estar listo para jpg o png (asi en general todas las fotos), o podrian ser videos en webm, que de momento no se ha dado el caso. 
+
+la galeria puede tener varios bloques"iguales" pues determinan el orden: 3 fotos 1 video youtube 5 fotos 2 videos webm 1 foto podria ser un orden valido, para que lo tengas en cuenta a la hora de pensar la galeria en los jsons
+
+y el menú ahora contendrá el idioma, un botón de "ver más [categoria] -> te lleva a la home con esa categoria, y "back"
