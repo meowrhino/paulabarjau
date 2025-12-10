@@ -4,6 +4,10 @@
   background: #fff;
 }
 
+.project-page .menu-panel {
+  background: inherit;
+}
+
 .project-page main {
   padding-bottom: 100px;
 }
@@ -112,10 +116,6 @@
 
 .menu-action-btn:hover {
   opacity: 0.8;
-}
-
-#more-category-btn {
-  /* El color se aplicará dinámicamente */
 }
 
 /* Responsive */

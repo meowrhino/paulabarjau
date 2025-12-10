@@ -111,6 +111,7 @@ function createProjectCard(project) {
   const overlay = document.createElement('div');
   overlay.className = 'project-overlay';
   overlay.style.backgroundColor = hexToRgba(categoryColor, 0.5);
+  overlay.dataset.category = project.categoria;
   
   // Sinopsis
   const sinopsis = document.createElement('div');
@@ -128,8 +129,8 @@ function createProjectCard(project) {
   card.appendChild(img);
   card.appendChild(overlay);
   
-  // Click en overlay para ir al proyecto
-  overlay.addEventListener('click', (e) => {
+  // Click en "ver más" para ir al proyecto
+  seeMore.addEventListener('click', (e) => {
     e.stopPropagation();
     window.location.href = `project.html?slug=${project.slug}`;
   });
@@ -137,6 +138,10 @@ function createProjectCard(project) {
   // Click en imagen para toggle del overlay
   img.addEventListener('click', (e) => {
     e.stopPropagation();
+    // Desactivar otros overlays
+    document.querySelectorAll('.project-overlay.active').forEach(o => {
+      if (o !== overlay) o.classList.remove('active');
+    });
     overlay.classList.toggle('active');
   });
   
@@ -170,6 +175,9 @@ function toggleCategory(categoryCode) {
     projectCards.forEach(card => {
       card.classList.remove('hidden');
     });
+    
+    // Restaurar fondo del menú a blanco
+    menuPanel.style.backgroundColor = '#fff';
   } else {
     // Activar nueva categoría
     activeCategory = categoryCode;
@@ -196,6 +204,10 @@ function toggleCategory(categoryCode) {
         card.classList.add('hidden');
       }
     });
+    
+    // Cambiar fondo del menú al color de la categoría
+    const categoryBg = categoriesData.home_categories[categoryCode].bg;
+    menuPanel.style.backgroundColor = '#' + categoryBg;
   }
 }
 
@@ -256,6 +268,13 @@ function setupEventListeners() {
         !menuPanel.contains(e.target) && 
         !menuToggle.contains(e.target)) {
       toggleMenu();
+    }
+    
+    // Cerrar overlays al hacer click fuera
+    if (!e.target.closest('.project-card')) {
+      document.querySelectorAll('.project-overlay.active').forEach(o => {
+        o.classList.remove('active');
+      });
     }
   });
 }
