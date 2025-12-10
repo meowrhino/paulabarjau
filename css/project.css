@@ -95,17 +95,17 @@
 
 /* Botones del menú en la página de proyecto */
 .menu-action-btn {
-  background: #000;
-  color: #fff;
+  background: none;
+  color: inherit;
   border: none;
-  padding: 12px 25px;
+  padding: 0;
   font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: var(--font-tracking);
   cursor: pointer;
   text-transform: lowercase;
-  width: 100%;
+  text-align: center;
   margin-bottom: 15px;
   transition: opacity 0.3s ease;
 }

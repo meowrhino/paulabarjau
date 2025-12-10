@@ -44,8 +44,8 @@ h1 {
 
 /* Contenedor de proyectos */
 #projects-container {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
 }
 
@@ -85,8 +85,7 @@ h1 {
   color: #fff;
 }
 
-.project-card:hover .project-overlay,
-.project-card:active .project-overlay {
+.project-overlay.active {
   opacity: 1;
 }
 
@@ -138,8 +137,7 @@ h1 {
   transform: translateX(-50%) translateY(100%);
   width: 100%;
   max-width: var(--max-width);
-  background: #fff;
-  border-top: 2px solid #000;
+  background: inherit;
   z-index: 99;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -156,19 +154,19 @@ h1 {
 .categories-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
   justify-content: center;
   margin-bottom: 30px;
 }
 
 .category-btn {
-  background: #000;
-  color: #fff;
+  background: none;
+  color: inherit;
   border: none;
-  padding: 10px 20px;
+  padding: 0;
   font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: var(--font-tracking);
   cursor: pointer;
   text-transform: lowercase;
@@ -184,8 +182,8 @@ h1 {
 }
 
 .category-btn.inactive {
-  background: #000 !important;
-  color: #fff !important;
+  color: #000 !important;
+  opacity: 0.3;
 }
 
 /* Idiomas */
@@ -194,7 +192,6 @@ h1 {
   gap: 20px;
   justify-content: center;
   padding-top: 20px;
-  border-top: 1px solid #ccc;
 }
 
 .lang-btn {
@@ -205,27 +202,23 @@ h1 {
   font-weight: 400;
   letter-spacing: var(--font-tracking);
   cursor: pointer;
-  color: #999;
+  color: inherit;
+  opacity: 0.3;
   text-transform: lowercase;
-  transition: color 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .lang-btn:hover {
-  color: #000;
+  opacity: 0.6;
 }
 
 .lang-btn.active {
-  color: #000;
+  opacity: 1;
   font-weight: 600;
 }
 
 /* Responsive */
 @media (min-width: 600px) {
-  #projects-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-  }
-  
   h1 {
     font-size: 2.5rem;
   }

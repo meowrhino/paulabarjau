@@ -193,7 +193,7 @@ function updateMoreCategoryButton() {
   const categoryName = category[`name_${currentLanguage}`];
   
   moreCategoryBtn.textContent = `${seeMoreText} ${categoryName}`;
-  moreCategoryBtn.style.backgroundColor = category.color;
+  moreCategoryBtn.style.color = category.color;
 }
 
 // Toggle del menú

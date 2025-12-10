@@ -62,8 +62,7 @@ function renderCategories() {
     button.className = 'category-btn';
     button.dataset.category = category.code;
     button.textContent = category[`name_${currentLanguage}`];
-    button.style.backgroundColor = category.color;
-    button.style.color = '#fff';
+    button.dataset.color = category.color;
     
     button.addEventListener('click', () => toggleCategory(category.code));
     
@@ -129,9 +128,16 @@ function createProjectCard(project) {
   card.appendChild(img);
   card.appendChild(overlay);
   
-  // Click para ir al proyecto
-  card.addEventListener('click', () => {
+  // Click en overlay para ir al proyecto
+  overlay.addEventListener('click', (e) => {
+    e.stopPropagation();
     window.location.href = `project.html?slug=${project.slug}`;
+  });
+  
+  // Click en imagen para toggle del overlay
+  img.addEventListener('click', (e) => {
+    e.stopPropagation();
+    overlay.classList.toggle('active');
   });
   
   return card;
@@ -154,11 +160,9 @@ function toggleCategory(categoryCode) {
   if (activeCategory === categoryCode) {
     activeCategory = null;
     
-    // Restaurar todos los botones a su color original
+    // Restaurar todos los botones
     categoryButtons.forEach(btn => {
-      const cat = btn.dataset.category;
-      const categoryColor = categoriesData.home_categories[cat].color;
-      btn.style.backgroundColor = categoryColor;
+      btn.style.color = '';
       btn.classList.remove('active', 'inactive');
     });
     
@@ -176,12 +180,11 @@ function toggleCategory(categoryCode) {
       if (cat === categoryCode) {
         btn.classList.add('active');
         btn.classList.remove('inactive');
-        const categoryColor = categoriesData.home_categories[cat].color;
-        btn.style.backgroundColor = categoryColor;
+        btn.style.color = btn.dataset.color;
       } else {
         btn.classList.add('inactive');
         btn.classList.remove('active');
-        btn.style.backgroundColor = '#000';
+        btn.style.color = '';
       }
     });
     
