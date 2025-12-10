@@ -1,23 +1,40 @@
 <!doctype html>
-<html lang="es">
-  <head>
+<html lang="ca">
+<head>
     <meta charset="utf-8" />
-    <title>Home – Portfolio</title>
+    <title>paula barjau</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- CSS con la fuente -->
     <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
+</head>
+<body>
     <main>
-      <h1>paula barjau</h1>
-      <section id="projects-container">
+        <h1 id="page-title">paula barjau</h1>
+        
+        <section id="projects-container">
+            <!-- Los proyectos se cargarán dinámicamente -->
         </section>
-        <div class="menu"></div>
-        <!-- Aquí se cargarán los proyectos desde JSON -->
+        
+        <!-- Botón del menú fijo en la parte inferior -->
+        <button id="menu-toggle" class="menu-toggle">menú</button>
+        
+        <!-- Panel del menú deslizable -->
+        <div id="menu-panel" class="menu-panel">
+            <div class="menu-content">
+                <!-- Categorías -->
+                <div id="categories-container" class="categories-container">
+                    <!-- Se llenarán dinámicamente -->
+                </div>
+                
+                <!-- Idiomas -->
+                <div class="languages-container">
+                    <button class="lang-btn active" data-lang="cat">cat</button>
+                    <button class="lang-btn" data-lang="es">es</button>
+                    <button class="lang-btn" data-lang="en">en</button>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Aquí tu JS que carga proyectos desde JSON -->
-    <script src="main.js"></script>
-  </body>
+    <script src="js/main.js"></script>
+</body>
 </html>

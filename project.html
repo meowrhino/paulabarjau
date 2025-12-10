@@ -1,21 +1,55 @@
 <!doctype html>
-<html lang="es">
-  <head>
+<html lang="ca">
+<head>
     <meta charset="utf-8" />
-    <title>Proyecto</title>
+    <title>paula barjau</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- CSS con la fuente -->
     <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <main id="project-root">
-      <h1 id="project-title">Título del proyecto</h1>
-      <p id="project-description">Descripción del proyecto, cargada desde JSON.</p>
-      <ul id="project-credits"></ul>
+    <link rel="stylesheet" href="css/project.css" />
+</head>
+<body class="project-page">
+    <main>
+        <h1 id="project-title">paula barjau</h1>
+        
+        <!-- Imagen principal -->
+        <div id="main-image-container">
+            <!-- Se cargará dinámicamente -->
+        </div>
+        
+        <!-- Créditos -->
+        <div id="credits-container">
+            <!-- Se cargarán dinámicamente -->
+        </div>
+        
+        <!-- Galería -->
+        <div id="gallery-container">
+            <!-- Se cargará dinámicamente -->
+        </div>
+        
+        <!-- Botón del menú fijo en la parte inferior -->
+        <button id="menu-toggle" class="menu-toggle">menú</button>
+        
+        <!-- Panel del menú deslizable -->
+        <div id="menu-panel" class="menu-panel">
+            <div class="menu-content">
+                <!-- Botón back -->
+                <button id="back-btn" class="menu-action-btn">tornar</button>
+                
+                <!-- Ver más de esta categoría -->
+                <button id="more-category-btn" class="menu-action-btn">
+                    <!-- Se llenará dinámicamente -->
+                </button>
+                
+                <!-- Idiomas -->
+                <div class="languages-container">
+                    <button class="lang-btn active" data-lang="cat">cat</button>
+                    <button class="lang-btn" data-lang="es">es</button>
+                    <button class="lang-btn" data-lang="en">en</button>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Aquí tu JS que lee el slug y carga el JSON del proyecto -->
-    <script src="project.js"></script>
-  </body>
+    <script src="js/project.js"></script>
+</body>
 </html>

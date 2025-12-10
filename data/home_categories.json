@@ -1,26 +1,43 @@
 {
+    "text_menu": {
+        "cat": "menú",
+        "es": "menú",
+        "en": "menu"
+    },
+    "text_see_more": {
+        "cat": "veure més",
+        "es": "ver más",
+        "en": "see more"
+    },
+    "text_back": {
+        "cat": "tornar",
+        "es": "volver",
+        "en": "back"
+    },
     "home_categories": {
         "fashion": {
             "code": "fashion",
+            "name_cat": "moda",
             "name_es": "moda",
             "name_en": "fashion",
             "color": "#FFB3CD",
-            "bg": "FFD9E6"
+            "bg": "#FFD9E6"
         },
         "commercial": {
             "code": "commercial",
+            "name_cat": "comercial",
             "name_es": "comercial",
             "name_en": "commercial",
             "color": "#FFBE7D",
-            "bg": "FFDFBE"
+            "bg": "#FFDFBE"
         },
         "videoclip": {
             "code": "videoclip",
+            "name_cat": "videoclip",
             "name_es": "videoclip",
             "name_en": "videoclip",
             "color": "#B28DFF",
-            "bg": "D9C6FF"
+            "bg": "#D9C6FF"
         }
     }
-
 }
