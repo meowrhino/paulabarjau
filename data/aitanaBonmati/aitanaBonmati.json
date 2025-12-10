@@ -1,0 +1,144 @@
+        {
+            "slug": "aitanaBonmati",
+            "titulo": "AITANA BONMATÍ x UNIq ONE",
+            "categoria": "commercial",
+            "imatge_principal": "fake_1.webp",
+            "galeria": [{
+                "tipo": "fotos",
+                "url": [
+                "fake_2.webp",
+                "fake_3.webp",
+                "fake_4.webp",
+                "fake_5.webp"
+                ]
+        }],
+            "_comment": "los creditos pueden ser fotos en el repo, videos en el repo en webm, o links externos a youtube. Se han de mostrar en el orden en que se colocan, pueden haber varios arrays de fotos para conseguir el orden necesario: por ejemplo, si quiero que el video vaya en medio de dos fotos, pondria: galeria: [ {fotos: [foto1]}, {video: urlvideo}, {fotos: [foto2]} ]",
+            "creditos": [
+                {
+                    "titulo": {
+                        "es": "Prod.",
+                        "en": "Production",
+                        "cat": "Producció"
+                    },
+                    "nombre": "@wearekarabot",
+                    "link": "https://www.instagram.com/wearekarabot/"
+                },
+                {
+                    "titulo": {
+                        "es": "Producción ejecutiva",
+                        "en": "Executive Production",
+                        "cat": "Producció executiva"
+                    },
+                    "nombre": "@jonajaraba",
+                    "link": "https://www.instagram.com/jonajaraba/"
+                },
+                {
+                    "titulo": {
+                        "es": "Ay. de Producción",
+                        "en": "Production Assist.",
+                        "cat": "Aj. de Producció"
+                    },
+                    "nombre": "@hernanfrito",
+                    "link": "https://www.instagram.com/hernanfrito/"
+                },
+                {
+                    "titulo": {
+                        "es": "Director",
+                        "en": "Director",
+                        "cat": "Director"
+                    },
+                    "nombre": "@german_delahoz",
+                    "link": "https://www.instagram.com/german_delahoz/"
+                },
+                {
+                    "titulo": {
+                        "es": "AD",
+                        "en": "AD",
+                        "cat": "AD"
+                    },
+                    "nombre": "@carlos.batllo",
+                    "link": "https://www.instagram.com/carlos.batllo/"
+                },
+                {
+                    "titulo": {
+                        "es": "Fotógrafo",
+                        "en": "Stills",
+                        "cat": "Fotògraf"
+                    },
+                    "nombre": "@miguelreveriego",
+                    "link": "https://www.instagram.com/miguelreveriego/"
+                },
+                {
+                    "titulo": {
+                        "es": "Dir. de Arte",
+                        "en": "Art Director",
+                        "cat": "Dir. d’Art"
+                    },
+                    "nombre": "@j.puigbanchs",
+                    "link": "https://www.instagram.com/j.puigbanchs/"
+                },
+                {
+                    "titulo": {
+                        "es": "Dir. de Arte",
+                        "en": "Art Director",
+                        "cat": "Dir. d’Art"
+                    },
+                    "nombre": "@lertupido",
+                    "link": "https://www.instagram.com/lertupido/"
+                },
+                {
+                    "titulo": {
+                        "es": "Estilista",
+                        "en": "Stylist",
+                        "cat": "Estilista"
+                    },
+                    "nombre": "@oliviaqkla",
+                    "link": "https://www.instagram.com/oliviaqkla/"
+                },
+                {
+                    "titulo": {
+                        "es": "Confección",
+                        "en": "Seamstress",
+                        "cat": "Confecció"
+                    },
+                    "nombre": "@lolavillaescusastylist",
+                    "link": "https://www.instagram.com/lolavillaescusastylist/"
+                },
+                {
+                    "titulo": {
+                        "es": "Peluquera",
+                        "en": "Hairstylist",
+                        "cat": "Perruquera"
+                    },
+                    "nombre": "@paula_educationrp",
+                    "link": "https://www.instagram.com/paula_educationrp/"
+                },
+                {
+                    "titulo": {
+                        "es": "Maquillaje",
+                        "en": "Make up",
+                        "cat": "Maquillatge"
+                    },
+                    "nombre": "@paulabarjau",
+                    "link": "https://www.instagram.com/paulabarjau/"
+                },
+                {
+                    "titulo": {
+                        "es": "As. de Maquillaje",
+                        "en": "Make up Assist.",
+                        "cat": "As. de Maquillatge"
+                    },
+                    "nombre": "@ldomenech_muah",
+                    "link": "https://www.instagram.com/ldomenech_muah/"
+                },
+                {
+                    "titulo": {
+                        "es": "As. de Maquillaje",
+                        "en": "Make up Assist.",
+                        "cat": "As. de Maquillatge"
+                    },
+                    "nombre": "@lauraasturgomakeup",
+                    "link": "https://www.instagram.com/lauraasturgomakeup/"
+                }
+            ]
+        }
