@@ -21,19 +21,6 @@
             "color": "#B28DFF",
             "bg": "D9C6FF"
         }
-    },
-    "home_projects": {
-        {
-            "slug": "aitanaBonmati",
-            "sinopsis": {
-                "es": "fotos chulisimas hechas con ropa de uniqlo",
-                "en": "super cool photos made with uniqlo clothes",
-                "cat": "fotos xulíssimes fetes amb roba de uniqlo"
-            },
-            "categoria": "commercial",
-            "date": 2025-01-25,
-            "relevance": 1,
-            "imatge_home": "fake_1.webp"
-        }
     }
+
 }
