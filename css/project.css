@@ -99,6 +99,7 @@
 
 /* Botones del menú en la página de proyecto */
 .menu-action-btn {
+  display: block;
   background: none;
   color: inherit;
   border: none;
@@ -110,7 +111,7 @@
   cursor: pointer;
   text-transform: lowercase;
   text-align: center;
-  margin-bottom: 15px;
+  margin: 0;
   transition: opacity 0.3s ease;
 }
 

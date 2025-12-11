@@ -31,6 +31,31 @@ function closeAllOverlays() {
   document.querySelectorAll('.project-overlay.active').forEach(o => o.classList.remove('active'));
 }
 
+function hideCard(card) {
+  if (card.dataset.hidden === 'true') return;
+  card.dataset.hidden = 'true';
+  card.classList.add('hiding');
+  const onEnd = (e) => {
+    if (e.propertyName !== 'opacity') return;
+    card.style.display = 'none';
+    card.removeEventListener('transitionend', onEnd);
+  };
+  card.addEventListener('transitionend', onEnd);
+}
+
+function showCard(card) {
+  if (card.dataset.hidden !== 'true') {
+    card.classList.remove('hiding');
+    return;
+  }
+  card.style.display = '';
+  card.dataset.hidden = 'false';
+  card.classList.add('hiding');
+  requestAnimationFrame(() => {
+    card.classList.remove('hiding');
+  });
+}
+
 // Inicialización
 async function init() {
   try {
@@ -183,7 +208,7 @@ function toggleCategory(categoryCode, options = {}) {
     
     // Mostrar todos los proyectos
     projectCards.forEach(card => {
-      card.classList.remove('hidden');
+      showCard(card);
     });
     
     // Restaurar fondo
@@ -209,9 +234,9 @@ function toggleCategory(categoryCode, options = {}) {
     // Filtrar proyectos
     projectCards.forEach(card => {
       if (card.dataset.category === categoryCode) {
-        card.classList.remove('hidden');
+        showCard(card);
       } else {
-        card.classList.add('hidden');
+        hideCard(card);
       }
     });
     
