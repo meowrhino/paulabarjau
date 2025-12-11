@@ -3,6 +3,7 @@ let categoriesData = null;
 let projectsData = null;
 let currentLanguage = 'cat';
 let activeCategory = null;
+let projectCards = [];
 
 // Elementos del DOM
 const projectsContainer = document.getElementById('projects-container');
@@ -12,6 +13,8 @@ const categoriesContainer = document.getElementById('categories-container');
 const langButtons = document.querySelectorAll('.lang-btn');
 
 // Helpers
+const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
 function setImageAlt(img, text) {
   img.alt = text || '';
 }
@@ -27,33 +30,15 @@ function compareProjects(a, b) {
   return new Date(b.date) - new Date(a.date);
 }
 
-function closeAllOverlays() {
-  document.querySelectorAll('.project-overlay.active').forEach(o => o.classList.remove('active'));
-}
-
-function hideCard(card) {
-  if (card.dataset.hidden === 'true') return;
-  card.dataset.hidden = 'true';
-  card.classList.add('hiding');
-  const onEnd = (e) => {
-    if (e.propertyName !== 'opacity') return;
-    card.style.display = 'none';
-    card.removeEventListener('transitionend', onEnd);
-  };
-  card.addEventListener('transitionend', onEnd);
-}
-
-function showCard(card) {
-  if (card.dataset.hidden !== 'true') {
-    card.classList.remove('hiding');
-    return;
-  }
-  card.style.display = '';
-  card.dataset.hidden = 'false';
-  card.classList.add('hiding');
-  requestAnimationFrame(() => {
-    card.classList.remove('hiding');
-  });
+function clearInlineLayout(card) {
+  card.style.position = '';
+  card.style.top = '';
+  card.style.left = '';
+  card.style.width = '';
+  card.style.height = '';
+  card.style.pointerEvents = '';
+  card.style.opacity = '';
+  card.style.transform = '';
 }
 
 // Inicialización
@@ -116,9 +101,22 @@ function renderCategories() {
   });
 }
 
+// Actualizar textos de categorías sin recrear nodos
+function updateCategoryButtonsText() {
+  const categories = categoriesData.home_categories;
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    const code = btn.dataset.category;
+    const category = categories[code];
+    if (category) {
+      btn.textContent = category[`name_${currentLanguage}`];
+    }
+  });
+}
+
 // Renderizar proyectos
 function renderProjects() {
   projectsContainer.innerHTML = '';
+  projectCards = [];
   
   const projects = projectsData.home_projects;
   
@@ -134,7 +132,12 @@ function renderProjects() {
   projectsArray.forEach(project => {
     const card = createProjectCard(project);
     projectsContainer.appendChild(card);
+    card.dataset.visible = 'true';
+    card.style.display = '';
+    projectCards.push(card);
   });
+  
+  applyFilter(); // asegurar estado inicial coherente
 }
 
 // Crear tarjeta de proyecto
@@ -181,6 +184,27 @@ function createProjectCard(project) {
   return card;
 }
 
+// Actualizar textos y alt de las tarjetas existentes
+function updateProjectCardsText() {
+  projectCards.forEach(card => {
+    const slug = card.dataset.slug;
+    const project = projectsData.home_projects[slug];
+    if (!project) return;
+    
+    const sinopsisText = project.sinopsis[currentLanguage];
+    const seeMoreText = categoriesData.text_see_more[currentLanguage];
+    
+    const img = card.querySelector('img');
+    if (img) setImageAlt(img, sinopsisText);
+    
+    const sinopsisEl = card.querySelector('.project-sinopsis');
+    if (sinopsisEl) sinopsisEl.textContent = sinopsisText;
+    
+    const seeMoreEl = card.querySelector('.project-see-more');
+    if (seeMoreEl) seeMoreEl.textContent = seeMoreText;
+  });
+}
+
 // Convertir hex a rgba
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -189,12 +213,134 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+// Animación FLIP del filtrado
+function applyFilter() {
+  const reduceMotion = reduceMotionQuery.matches;
+  const shouldShow = (card) => !activeCategory || card.dataset.category === activeCategory;
+  
+  const staying = [];
+  const entering = [];
+  const exiting = [];
+  const initialRects = new Map();
+  
+  // 1) Medir estado inicial de las cards visibles
+  if (!reduceMotion) {
+    projectCards.forEach(card => {
+      if (card.style.display !== 'none') {
+        initialRects.set(card, card.getBoundingClientRect());
+      }
+    });
+  }
+  
+  // 2) Clasificar cards según si se quedan, entran o salen
+  projectCards.forEach(card => {
+    const wasVisible = card.dataset.visible !== 'false';
+    const willBeVisible = shouldShow(card);
+    
+    if (wasVisible && willBeVisible) {
+      staying.push(card);
+    } else if (!wasVisible && willBeVisible) {
+      entering.push(card);
+    } else if (wasVisible && !willBeVisible) {
+      exiting.push(card);
+    }
+  });
+  
+  if (reduceMotion) {
+    entering.forEach(card => {
+      card.dataset.visible = 'true';
+      clearInlineLayout(card);
+      card.style.display = '';
+    });
+    
+    exiting.forEach(card => {
+      card.dataset.visible = 'false';
+      clearInlineLayout(card);
+      card.style.display = 'none';
+    });
+    
+    staying.forEach(clearInlineLayout);
+    return;
+  }
+  
+  const containerRect = projectsContainer.getBoundingClientRect();
+  
+  // 3) Sacar del flujo las que salen, fijando su tamaño/posición para animar la salida
+  exiting.forEach(card => {
+    const rect = initialRects.get(card);
+    if (!rect) return;
+    card.dataset.visible = 'false';
+    card.style.position = 'absolute';
+    card.style.top = `${rect.top - containerRect.top}px`;
+    card.style.left = `${rect.left - containerRect.left}px`;
+    card.style.width = `${rect.width}px`;
+    card.style.height = `${rect.height}px`;
+    card.style.pointerEvents = 'none';
+    card.style.opacity = '1';
+    card.style.transform = '';
+  });
+  
+  // 4) Añadir las nuevas al flujo con estado inicial discreto
+  entering.forEach(card => {
+    card.dataset.visible = 'true';
+    clearInlineLayout(card);
+    card.style.display = '';
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(12px) scale(0.98)';
+  });
+  
+  // 5) Medir posiciones finales de las que se quedan
+  const finalRects = new Map();
+  staying.forEach(card => finalRects.set(card, card.getBoundingClientRect()));
+  
+  // 6) FLIP para las que permanecen
+  staying.forEach(card => {
+    const initial = initialRects.get(card);
+    const final = finalRects.get(card);
+    if (!initial || !final) return;
+    
+    const dx = initial.left - final.left;
+    const dy = initial.top - final.top;
+    if (dx === 0 && dy === 0) return;
+    
+    card.style.transition = 'none';
+    card.style.transform = `translate(${dx}px, ${dy}px)`;
+    card.getBoundingClientRect(); // fuerza reflow
+    card.style.transition = '';
+    card.style.transform = '';
+  });
+  
+  // Animar entradas
+  requestAnimationFrame(() => {
+    entering.forEach(card => {
+      card.style.opacity = '';
+      card.style.transform = '';
+    });
+  });
+  
+  // Animar salidas y limpiar estilos al terminar
+  exiting.forEach(card => {
+    requestAnimationFrame(() => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(12px) scale(0.98)';
+    });
+    
+    const onEnd = (event) => {
+      if (event.propertyName !== 'opacity') return;
+      if (card.dataset.visible === 'true') return; // ya ha vuelto a ser visible
+      card.style.display = 'none';
+      clearInlineLayout(card);
+      card.removeEventListener('transitionend', onEnd);
+    };
+    
+    card.addEventListener('transitionend', onEnd);
+  });
+}
+
 // Toggle de categoría
 function toggleCategory(categoryCode, options = {}) {
   const { keepActive = false } = options;
   const categoryButtons = document.querySelectorAll('.category-btn');
-  const projectCards = document.querySelectorAll('.project-card');
-  closeAllOverlays();
   
   // Si se clickea la categoría activa, desactivar
   if (activeCategory === categoryCode && !keepActive) {
@@ -206,13 +352,9 @@ function toggleCategory(categoryCode, options = {}) {
       btn.classList.remove('active', 'inactive');
     });
     
-    // Mostrar todos los proyectos
-    projectCards.forEach(card => {
-      showCard(card);
-    });
-    
     // Restaurar fondo
     document.documentElement.style.setProperty('--page-bg', '#fff');
+    applyFilter();
   } else {
     // Activar nueva categoría
     activeCategory = categoryCode;
@@ -231,18 +373,11 @@ function toggleCategory(categoryCode, options = {}) {
       }
     });
     
-    // Filtrar proyectos
-    projectCards.forEach(card => {
-      if (card.dataset.category === categoryCode) {
-        showCard(card);
-      } else {
-        hideCard(card);
-      }
-    });
-    
     // Cambiar fondo al color de la categoría
     const categoryBg = categoriesData.home_categories[categoryCode].bg;
     document.documentElement.style.setProperty('--page-bg', categoryBg);
+    
+    applyFilter();
   }
 }
 
@@ -261,7 +396,6 @@ function toggleMenu() {
 // Cambiar idioma
 function changeLanguage(lang) {
   currentLanguage = lang;
-  closeAllOverlays();
   
   // Actualizar botones de idioma
   langButtons.forEach(btn => {
@@ -271,14 +405,9 @@ function changeLanguage(lang) {
   // Actualizar texto del botón del menú
   menuToggle.textContent = categoriesData.text_menu[lang];
   
-  // Re-renderizar categorías y proyectos
-  renderCategories();
-  renderProjects();
-  
-  // Mantener el filtro activo si existe
-  if (activeCategory) {
-    toggleCategory(activeCategory, { keepActive: true });
-  }
+  updateCategoryButtonsText();
+  updateProjectCardsText();
+  applyFilter();
 }
 
 // Configurar event listeners

@@ -48,6 +48,7 @@ h1 {
 
 /* Contenedor de proyectos */
 #projects-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 20px;
