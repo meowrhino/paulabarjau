@@ -12,7 +12,6 @@
                 "fake_5.webp"
                 ]
         }],
-            "_comment": "los creditos pueden ser fotos en el repo, videos en el repo en webm, o links externos a youtube. Se han de mostrar en el orden en que se colocan, pueden haber varios arrays de fotos para conseguir el orden necesario: por ejemplo, si quiero que el video vaya en medio de dos fotos, pondria: galeria: [ {fotos: [foto1]}, {video: urlvideo}, {fotos: [foto2]} ]",
             "creditos": [
                 {
                     "titulo": {
