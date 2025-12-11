@@ -22,6 +22,66 @@
             "date": "2024-10-24",
             "relevance": 1,
             "imatge_home": "TORITO_ANNAIZQUIERDO_1.webp"
+        },
+
+        "fake_fashion_1": {
+            "sinopsis": {
+                "es": "editorial luminosa en exteriores",
+                "en": "bright outdoor editorial",
+                "cat": "editorial lluminosa a l'exterior"
+            },
+            "categoria": "fashion",
+            "date": "2024-09-12",
+            "relevance": 2,
+            "imatge_home": "fake_fashion_1.webp"
+        },
+
+        "fake_commercial_1": {
+            "sinopsis": {
+                "es": "campaña fresca con acentos pop",
+                "en": "fresh campaign with pop accents",
+                "cat": "campanya fresca amb accents pop"
+            },
+            "categoria": "commercial",
+            "date": "2024-07-05",
+            "relevance": 2,
+            "imatge_home": "fake_commercial_1.webp"
+        },
+
+        "fake_videoclip_1": {
+            "sinopsis": {
+                "es": "videoclip nocturno con neones",
+                "en": "night video with neon lights",
+                "cat": "videoclip nocturn amb neons"
+            },
+            "categoria": "videoclip",
+            "date": "2023-12-20",
+            "relevance": 2,
+            "imatge_home": "fake_videoclip_1.webp"
+        },
+
+        "fake_fashion_2": {
+            "sinopsis": {
+                "es": "beauty editorial minimalista",
+                "en": "minimal beauty editorial",
+                "cat": "editorial beauty minimalista"
+            },
+            "categoria": "fashion",
+            "date": "2024-03-15",
+            "relevance": 3,
+            "imatge_home": "fake_fashion_2.webp"
+        },
+
+        "fake_commercial_2": {
+            "sinopsis": {
+                "es": "lookbook desenfadado para ecommerce",
+                "en": "casual lookbook for ecommerce",
+                "cat": "lookbook desenfadat per a ecommerce"
+            },
+            "categoria": "commercial",
+            "date": "2023-06-01",
+            "relevance": 4,
+            "imatge_home": "fake_commercial_2.webp"
         }
     }
 
