@@ -1,2 +1,0 @@
-hace falta que el slug esté en el proyecto.json tambien??? creo que no, porque el slug es siempre el nombre de la carpeta del proyecto y de su correspondiente archivo .json de dentro
-y la categoria que esta en los dos archivos??? creo que esta bien que sea asi poorque asi no necesitara la home cargar cada uno de los jsons de cada proyecto en principio no? y luego cuando vayas a cada pagina de cada proyecto tendra el color y talk no?
