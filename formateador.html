@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>formateador de créditos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --panel-border: #e5e5e5;
+      --muted: #666;
+    }
+
+    body.formatter-page {
+      background: var(--page-bg, #fff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 12px;
+    }
+
+    .formatter-main {
+      max-width: var(--max-width);
+      margin: 40px auto;
+      padding: 20px;
+      padding-bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel {
+      border: 1px solid var(--panel-border);
+      /* border-radius: 10px; */
+      padding: 14px;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border: 1px solid var(--panel-border);
+      /* border-radius: 8px; */
+      padding: 12px;
+      font-family: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      background: #fff;
+    }
+
+    textarea.error {
+      border-color: #b00020;
+      box-shadow: 0 0 0 1px rgba(176, 0, 32, 0.15);
+    }
+
+    .helper {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .helper ul {
+      margin: 6px 0 0 16px;
+      padding: 0;
+    }
+
+    .helper li {
+      margin-bottom: 4px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .add-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-start;
+      flex: 1;
+    }
+
+    .btn {
+      background: #000;
+      color: #fff;
+      border: 1px solid #000;
+      padding: 10px 16px;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      letter-spacing: var(--font-tracking);
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: lowercase;
+      transition: opacity 0.2s ease;
+      /* border-radius: 0; */
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: #000;
+    }
+
+    .btn:hover {
+      opacity: 0.82;
+    }
+
+    pre {
+      margin: 0;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid var(--panel-border);
+      /* border-radius: 8px; */
+      font-family: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      overflow: auto;
+      min-height: 220px;
+      white-space: pre;
+    }
+
+    .warnings {
+      color: #b00020;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .preview-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .credit-row {
+      border: 1px solid var(--panel-border);
+      /* border-radius: 8px; */
+      padding: 10px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+
+    .credit-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: baseline;
+    }
+
+    .pill {
+      border: 1px solid var(--panel-border);
+      /* border-radius: 999px; */
+      padding: 2px 8px;
+      font-size: 0.85rem;
+      letter-spacing: var(--font-tracking);
+      background: #f3f3f3;
+    }
+
+    .editable-span {
+      min-width: 40px;
+      padding: 2px 4px;
+      border-bottom: 1px dashed transparent;
+    }
+
+    .editable-span:empty:before {
+      content: attr(data-placeholder);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .editable-span:focus {
+      outline: none;
+      border-bottom-color: #000;
+      background: #f7f7f7;
+    }
+
+    .link-span {
+      color: #0066cc;
+    }
+
+    .remove-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .remove-btn:hover {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body class="formatter-page">
+  <main class="formatter-main">
+    <section class="panel">
+      <textarea id="raw-input" spellcheck="false" placeholder='"creditos": [ ... ]'></textarea>
+      <div class="actions" style="justify-content:center;">
+        <button id="import-btn" class="btn secondary">traer al editor</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div id="preview-list" class="preview-list"></div>
+      <div class="actions">
+        <div class="add-actions">
+          <button id="add-credit" class="btn secondary">añadir crédito</button>
+          <button id="add-extra" class="btn secondary">añadir extra</button>
+        </div>
+        <button id="copy-json" class="btn">copiar</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <pre id="json-output" aria-live="polite">[]</pre>
+      <div class="warnings" id="warnings"></div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const rawInput = document.getElementById('raw-input');
+      const previewList = document.getElementById('preview-list');
+      const outputEl = document.getElementById('json-output');
+      const warningsEl = document.getElementById('warnings');
+      const copyBtn = document.getElementById('copy-json');
+      const importBtn = document.getElementById('import-btn');
+      const addCreditBtn = document.getElementById('add-credit');
+      const addExtraBtn = document.getElementById('add-extra');
+
+      let blobUrl = null;
+      let creditos = [];
+
+      function normalizeLink(link) {
+        if (!link) return null;
+        const trimmed = link.trim();
+        if (!trimmed) return null;
+        const lower = trimmed.toLowerCase();
+        if (lower.startsWith('http://') || lower.startsWith('https://')) return trimmed;
+        return `https://${trimmed}`;
+      }
+
+      function buildTitulo(parts) {
+        const es = parts[0] || '';
+        const en = parts[1] || es;
+        const cat = parts[2] || en || es;
+        return { es, en, cat };
+      }
+
+      function parseExtra(line, idx, warnings) {
+        const rawText = line.replace(/^extra:/i, '').trim();
+        if (!rawText) {
+          warnings.push(`Línea ${idx + 1}: bloque extra sin texto, se ignora.`);
+          return null;
+        }
+        const parts = rawText.split('|').map(p => p.trim()).filter(Boolean);
+        return {
+          tipo: 'extra',
+          texto: buildTitulo(parts)
+        };
+      }
+
+      function parseLine(line, idx, warnings) {
+        if (!line.trim()) return null;
+        if (/^extra:/i.test(line)) {
+          return parseExtra(line, idx, warnings);
+        }
+
+        const parts = line.split('|').map(p => p.trim()).filter(Boolean);
+        if (parts.length < 2) {
+          warnings.push(`Línea ${idx + 1}: no hay nombre o separadores "|". Formato mínimo: titulo | nombre.`);
+          return null;
+        }
+
+        if (parts.length >= 4) {
+          const titulo = buildTitulo(parts.slice(0, 3));
+          const nombre = parts[3] || '';
+          const link = normalizeLink(parts[4]);
+          return { titulo, nombre, link: link ?? null };
+        }
+
+        if (parts.length === 3) {
+          const titulo = buildTitulo([parts[0]]);
+          const nombre = parts[1];
+          const link = normalizeLink(parts[2]);
+          return { titulo, nombre, link: link ?? null };
+        }
+
+        const titulo = buildTitulo([parts[0]]);
+        const nombre = parts[1];
+        return { titulo, nombre, link: null };
+      }
+
+      function parseInput(raw) {
+        const warnings = [];
+        const creditos = [];
+
+        raw.split('\\n').forEach((line, idx) => {
+          const parsed = parseLine(line, idx, warnings);
+          if (parsed) creditos.push(parsed);
+        });
+
+        return { creditos, warnings };
+      }
+
+      function updateLink(json) {
+        if (blobUrl) {
+          URL.revokeObjectURL(blobUrl);
+          blobUrl = null;
+        }
+        const blob = new Blob([json], { type: 'application/json' });
+        blobUrl = URL.createObjectURL(blob);
+      }
+
+      async function copyJson() {
+        const text = outputEl.textContent.trim();
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+          copyBtn.textContent = 'copiado';
+          setTimeout(() => (copyBtn.textContent = 'copiar'), 1400);
+        } catch (err) {
+          console.error('No se pudo copiar', err);
+          copyBtn.textContent = 'error';
+          setTimeout(() => (copyBtn.textContent = 'copiar'), 1600);
+        }
+      }
+
+      function uniquePush(arr, value) {
+        if (value && !arr.includes(value)) arr.push(value);
+      }
+
+      function extractArrayAfterKey(text, key) {
+        const keyIndex = text.indexOf(`"${key}"`);
+        if (keyIndex === -1) return null;
+        const bracketStart = text.indexOf('[', keyIndex);
+        if (bracketStart === -1) return null;
+        let depth = 0;
+        let inString = false;
+        let escape = false;
+        for (let i = bracketStart; i < text.length; i++) {
+          const ch = text[i];
+          if (inString) {
+            if (escape) {
+              escape = false;
+            } else if (ch === '\\') {
+              escape = true;
+            } else if (ch === '"') {
+              inString = false;
+            }
+            continue;
+          }
+          if (ch === '"') {
+            inString = true;
+            continue;
+          }
+          if (ch === '[') depth++;
+          if (ch === ']') {
+            depth--;
+            if (depth === 0) {
+              return text.slice(bracketStart, i + 1);
+            }
+          }
+        }
+        return null;
+      }
+
+      function parseRawCreditos(raw) {
+        const trimmed = (raw || '').trim();
+        if (!trimmed) return null;
+
+        const variants = [];
+        const noTrailing = trimmed.replace(/,\\s*$/, '');
+
+        uniquePush(variants, trimmed);
+        uniquePush(variants, noTrailing);
+
+        if (trimmed.startsWith('[')) {
+          uniquePush(variants, `{ "creditos": ${trimmed} }`);
+        }
+
+        const extracted = extractArrayAfterKey(trimmed, 'creditos');
+        if (extracted) {
+          uniquePush(variants, `{ "creditos": ${extracted} }`);
+        }
+
+        let lastError = null;
+        for (const candidate of variants) {
+          try {
+            const parsed = JSON.parse(candidate);
+            if (Array.isArray(parsed)) return parsed;
+            if (parsed && Array.isArray(parsed.creditos)) return parsed.creditos;
+            if (parsed && parsed.creditos && typeof parsed.creditos === 'object' && Array.isArray(parsed.creditos.creditos)) {
+              return parsed.creditos.creditos;
+            }
+          } catch (err) {
+            lastError = err;
+          }
+        }
+
+        throw lastError || new Error('No se pudo interpretar el bloque pegado.');
+      }
+
+      function creditoToLine(credito) {
+        if (credito && credito.tipo === 'extra') {
+          const texto = credito.texto || {};
+          return `extra: ${texto.es || ''} | ${texto.en || texto.es || ''} | ${texto.cat || texto.en || texto.es || ''}`.trim();
+        }
+        const titulo = credito.titulo || {};
+        const nombre = credito.nombre || '';
+        const link = credito.link || '';
+        const es = typeof titulo === 'string' ? titulo : (titulo.es || '');
+        const en = typeof titulo === 'string' ? titulo : (titulo.en || es);
+        const cat = typeof titulo === 'string' ? titulo : (titulo.cat || en || es);
+        const parts = [es, en, cat, nombre];
+        if (link) parts.push(link);
+        return parts.join(' | ').trim();
+      }
+
+      function importRaw() {
+        if (!rawInput) return;
+        const raw = rawInput.value;
+        if (!raw.trim()) {
+          rawInput.classList.remove('error');
+          return;
+        }
+        try {
+          const parsed = parseRawCreditos(raw);
+          if (!parsed || !Array.isArray(parsed)) {
+            throw new Error('Sin array de créditos');
+          }
+          creditos = parsed;
+          rawInput.classList.remove('error');
+          renderPreview();
+          refreshOutput();
+        } catch (err) {
+          try {
+            const fallback = parseInput(raw);
+            if (fallback.creditos.length) {
+              creditos = fallback.creditos;
+              rawInput.classList.remove('error');
+              renderPreview();
+              refreshOutput(fallback.warnings);
+              return;
+            }
+            throw err;
+          } catch (err2) {
+            console.error('Import error', err2);
+            rawInput.classList.add('error');
+            warningsEl.textContent = 'No se pudo interpretar el bloque pegado. Revisa que incluya un array de "creditos".';
+          }
+        }
+      }
+
+      function refreshOutput(warnings = []) {
+        const json = creditos.length ? JSON.stringify(creditos, null, 2) : '[]';
+        outputEl.textContent = json;
+        warningsEl.textContent = warnings.join('\\n');
+        updateLink(json);
+      }
+
+      function handleFieldChange(idx, field, value) {
+        const item = creditos[idx];
+        if (!item) return;
+        if (item.tipo === 'extra') {
+          item.texto = item.texto || { es: '', en: '', cat: '' };
+          if (field === 'extra-es') item.texto.es = value;
+          if (field === 'extra-en') item.texto.en = value;
+          if (field === 'extra-cat') item.texto.cat = value;
+        } else {
+          item.titulo = item.titulo || { es: '', en: '', cat: '' };
+          if (field === 'title-es') item.titulo.es = value;
+          if (field === 'title-en') item.titulo.en = value;
+          if (field === 'title-cat') item.titulo.cat = value;
+          if (field === 'name') item.nombre = value;
+          if (field === 'link') item.link = value ? normalizeLink(value) : null;
+        }
+        refreshOutput();
+      }
+
+      function renderPreview() {
+        previewList.innerHTML = '';
+        if (!creditos.length) return;
+        creditos.forEach((cred, idx) => {
+          const row = document.createElement('div');
+          row.className = 'credit-row';
+
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'remove-btn';
+          removeBtn.textContent = 'x';
+          removeBtn.title = 'Eliminar';
+          removeBtn.addEventListener('click', () => {
+            creditos.splice(idx, 1);
+            renderPreview();
+            refreshOutput();
+          });
+          row.appendChild(removeBtn);
+
+          if (cred.tipo === 'extra') {
+            const line = document.createElement('div');
+            line.className = 'credit-line';
+            const pill = document.createElement('span');
+            pill.className = 'pill';
+            pill.textContent = 'extra';
+            line.appendChild(pill);
+
+            ['es', 'en', 'cat'].forEach(lang => {
+              const span = document.createElement('span');
+              span.className = 'editable-span';
+              span.contentEditable = 'true';
+              span.dataset.idx = idx;
+              span.dataset.field = `extra-${lang}`;
+              span.dataset.placeholder = `texto ${lang}`;
+              span.textContent = (cred.texto && cred.texto[lang]) || '';
+              span.addEventListener('input', (e) => handleFieldChange(idx, `extra-${lang}`, e.target.textContent.trim()));
+              line.appendChild(span);
+              if (lang !== 'cat') {
+                const sep = document.createElement('span');
+                sep.textContent = '/';
+                line.appendChild(sep);
+              }
+            });
+
+            row.appendChild(line);
+          } else {
+            const titles = document.createElement('div');
+            titles.className = 'credit-line';
+            ['es', 'en', 'cat'].forEach(lang => {
+              const span = document.createElement('span');
+              span.className = 'editable-span';
+              span.contentEditable = 'true';
+              span.dataset.idx = idx;
+              span.dataset.field = `title-${lang}`;
+              span.dataset.placeholder = `título ${lang}`;
+              span.textContent = (cred.titulo && cred.titulo[lang]) || '';
+              span.addEventListener('input', (e) => handleFieldChange(idx, `title-${lang}`, e.target.textContent.trim()));
+              titles.appendChild(span);
+              if (lang !== 'cat') {
+                const sep = document.createElement('span');
+                sep.textContent = '/';
+                titles.appendChild(sep);
+              }
+            });
+
+            const nameLine = document.createElement('div');
+            nameLine.className = 'credit-line';
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'editable-span';
+            nameSpan.contentEditable = 'true';
+            nameSpan.dataset.idx = idx;
+            nameSpan.dataset.field = 'name';
+            nameSpan.dataset.placeholder = 'nombre / @';
+            nameSpan.textContent = cred.nombre || '';
+            nameSpan.addEventListener('input', (e) => handleFieldChange(idx, 'name', e.target.textContent.trim()));
+
+            const linkSpan = document.createElement('span');
+            linkSpan.className = 'editable-span link-span';
+            linkSpan.contentEditable = 'true';
+            linkSpan.dataset.idx = idx;
+            linkSpan.dataset.field = 'link';
+            linkSpan.dataset.placeholder = 'link (opcional)';
+            linkSpan.textContent = cred.link || '';
+            linkSpan.addEventListener('input', (e) => handleFieldChange(idx, 'link', e.target.textContent.trim()));
+
+            nameLine.appendChild(nameSpan);
+            nameLine.appendChild(linkSpan);
+
+            row.appendChild(titles);
+            row.appendChild(nameLine);
+          }
+
+          previewList.appendChild(row);
+        });
+      }
+
+      function addCredit() {
+        creditos.push({
+          titulo: { es: '', en: '', cat: '' },
+          nombre: '',
+          link: null
+        });
+        renderPreview();
+        refreshOutput();
+      }
+
+      function addExtra() {
+        creditos.push({
+          tipo: 'extra',
+          texto: { es: '', en: '', cat: '' }
+        });
+        renderPreview();
+        refreshOutput();
+      }
+
+      function init() {
+        creditos = [];
+        renderPreview();
+        refreshOutput();
+
+        copyBtn?.addEventListener('click', copyJson);
+        importBtn?.addEventListener('click', importRaw);
+        rawInput?.addEventListener('input', () => rawInput.classList.remove('error'));
+        addCreditBtn?.addEventListener('click', addCredit);
+        addExtraBtn?.addEventListener('click', addExtra);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
