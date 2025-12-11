@@ -1,7 +1,7 @@
 /* Estilos específicos para la página de proyecto */
 
 .project-page {
-  background: #fff;
+  background: var(--page-bg, #fff);
 }
 
 .project-page .menu-panel {

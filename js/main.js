@@ -83,6 +83,7 @@ function renderCategories() {
     button.dataset.category = category.code;
     button.textContent = category[`name_${currentLanguage}`];
     button.dataset.color = category.color;
+    button.style.color = category.color;
     
     button.addEventListener('click', () => toggleCategory(category.code));
     
@@ -189,7 +190,7 @@ function toggleCategory(categoryCode, options = {}) {
     
     // Restaurar todos los botones
     categoryButtons.forEach(btn => {
-      btn.style.color = '';
+      btn.style.color = btn.dataset.color;
       btn.classList.remove('active', 'inactive');
     });
     
@@ -198,8 +199,8 @@ function toggleCategory(categoryCode, options = {}) {
       card.classList.remove('hidden');
     });
     
-    // Restaurar fondo del menú a blanco
-    menuPanel.style.backgroundColor = '#fff';
+    // Restaurar fondo
+    document.documentElement.style.setProperty('--page-bg', '#fff');
   } else {
     // Activar nueva categoría
     activeCategory = categoryCode;
@@ -210,11 +211,11 @@ function toggleCategory(categoryCode, options = {}) {
       if (cat === categoryCode) {
         btn.classList.add('active');
         btn.classList.remove('inactive');
-        btn.style.color = btn.dataset.color;
+        btn.style.color = '#fff';
       } else {
         btn.classList.add('inactive');
         btn.classList.remove('active');
-        btn.style.color = '';
+        btn.style.color = '#000';
       }
     });
     
@@ -227,9 +228,9 @@ function toggleCategory(categoryCode, options = {}) {
       }
     });
     
-    // Cambiar fondo del menú al color de la categoría
+    // Cambiar fondo al color de la categoría
     const categoryBg = categoriesData.home_categories[categoryCode].bg;
-    menuPanel.style.backgroundColor = '#' + categoryBg;
+    document.documentElement.style.setProperty('--page-bg', categoryBg);
   }
 }
 

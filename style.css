@@ -7,6 +7,7 @@
   --font-features: normal;
   --font-tracking: -0.05em;
   --max-width: 800px;
+  --page-bg: #fff;
 }
 
 /* Reset y base */
@@ -21,7 +22,7 @@ html, body {
   font-feature-settings: var(--font-features, normal);
   font-variant-alternates: stylistic(1);
   letter-spacing: var(--font-tracking);
-  background: #fff;
+  background: var(--page-bg, #fff);
   color: #000;
 }
 
@@ -31,6 +32,7 @@ main {
   margin: 0 auto;
   padding: 20px;
   padding-bottom: 100px; /* Espacio para el botón del menú */
+  background: var(--page-bg, #fff);
 }
 
 /* Título principal */
@@ -145,7 +147,7 @@ h1 {
   transform: translateX(-50%) translateY(100%);
   width: 100%;
   max-width: var(--max-width);
-  background: #fff;
+  background: var(--page-bg, #fff);
   z-index: 99;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }

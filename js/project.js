@@ -91,7 +91,7 @@ async function loadData() {
 function renderProject() {
   // Aplicar color de fondo según categoría
   const category = categoriesData.home_categories[projectData.categoria];
-  document.body.style.backgroundColor = category.bg;
+  document.documentElement.style.setProperty('--page-bg', category.bg);
   
   // Título
   projectTitle.textContent = projectData.titulo;
@@ -231,6 +231,7 @@ function updateMoreCategoryButton() {
 // Mostrar error visible cuando faltan datos del proyecto
 function renderErrorState() {
   document.body.style.backgroundColor = '#fff';
+  document.documentElement.style.setProperty('--page-bg', '#fff');
   projectTitle.textContent = ERROR_TEXTS.title[currentLanguage] || ERROR_TEXTS.title.cat;
   
   mainImageContainer.innerHTML = '';
