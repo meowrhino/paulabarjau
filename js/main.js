@@ -149,21 +149,8 @@ function createProjectCard(project) {
   
   card.appendChild(img);
   card.appendChild(overlay);
-  
-  // Click en "ver más" para ir al proyecto
-  seeMore.addEventListener('click', (e) => {
-    e.stopPropagation();
+  card.addEventListener('click', () => {
     window.location.href = `project.html?slug=${project.slug}`;
-  });
-  
-  // Click en imagen para toggle del overlay
-  img.addEventListener('click', (e) => {
-    e.stopPropagation();
-    // Desactivar otros overlays
-    document.querySelectorAll('.project-overlay.active').forEach(o => {
-      if (o !== overlay) o.classList.remove('active');
-    });
-    overlay.classList.toggle('active');
   });
   
   return card;
@@ -287,13 +274,6 @@ function setupEventListeners() {
         !menuPanel.contains(e.target) && 
         !menuToggle.contains(e.target)) {
       toggleMenu();
-    }
-    
-    // Cerrar overlays al hacer click fuera
-    if (!e.target.closest('.project-card')) {
-      document.querySelectorAll('.project-overlay.active').forEach(o => {
-        o.classList.remove('active');
-      });
     }
   });
 }

@@ -88,13 +88,8 @@ h1 {
   pointer-events: none;
 }
 
-.project-card:hover .project-overlay,
-.project-overlay.active {
+.project-card:hover .project-overlay {
   opacity: 1;
-}
-
-.project-overlay.active {
-  pointer-events: auto;
 }
 
 .project-sinopsis {
