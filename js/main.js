@@ -4,9 +4,12 @@ let projectsData = null;
 let currentLanguage = 'cat';
 let activeCategory = null;
 let projectCards = [];
+const LOAD_BATCH = 6;
+let visibleLimit = LOAD_BATCH;
 
 // Elementos del DOM
 const projectsContainer = document.getElementById('projects-container');
+const loadMoreBtn = document.getElementById('load-more-btn');
 const menuToggle = document.getElementById('menu-toggle');
 const menuPanel = document.getElementById('menu-panel');
 const categoriesContainer = document.getElementById('categories-container');
@@ -14,6 +17,11 @@ const langButtons = document.querySelectorAll('.lang-btn');
 
 // Helpers
 const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const TEXT_LOAD_MORE = {
+  cat: 'carregar més',
+  es: 'cargar más',
+  en: 'load more'
+};
 
 function setImageAlt(img, text) {
   img.alt = text || '';
@@ -132,12 +140,15 @@ function renderProjects() {
   projectsArray.forEach(project => {
     const card = createProjectCard(project);
     projectsContainer.appendChild(card);
+    card.dataset.index = projectCards.length;
     card.dataset.visible = 'true';
     card.style.display = '';
     projectCards.push(card);
   });
   
+  visibleLimit = LOAD_BATCH;
   applyFilter(); // asegurar estado inicial coherente
+  updateLoadMoreLabel();
 }
 
 // Crear tarjeta de proyecto
@@ -205,6 +216,17 @@ function updateProjectCardsText() {
   });
 }
 
+function updateLoadMoreLabel() {
+  if (loadMoreBtn) {
+    loadMoreBtn.textContent = TEXT_LOAD_MORE[currentLanguage];
+  }
+}
+
+function updateLoadMoreVisibility(hasMore) {
+  if (!loadMoreBtn) return;
+  loadMoreBtn.style.display = hasMore ? 'inline-block' : 'none';
+}
+
 // Convertir hex a rgba
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -216,7 +238,21 @@ function hexToRgba(hex, alpha) {
 // Animación FLIP del filtrado
 function applyFilter() {
   const reduceMotion = reduceMotionQuery.matches;
-  const shouldShow = (card) => !activeCategory || card.dataset.category === activeCategory;
+  
+  // Determinar qué tarjetas deben ser visibles según filtro y paginación
+  const allowed = new Set();
+  let matchingCount = 0;
+  projectCards.forEach(card => {
+    if (activeCategory && card.dataset.category !== activeCategory) {
+      return;
+    }
+    matchingCount += 1;
+    if (matchingCount <= visibleLimit) {
+      allowed.add(card);
+    }
+  });
+  
+  const shouldShow = (card) => allowed.has(card);
   
   const staying = [];
   const entering = [];
@@ -335,6 +371,8 @@ function applyFilter() {
     
     card.addEventListener('transitionend', onEnd);
   });
+  
+  updateLoadMoreVisibility(matchingCount > visibleLimit);
 }
 
 // Toggle de categoría
@@ -345,6 +383,7 @@ function toggleCategory(categoryCode, options = {}) {
   // Si se clickea la categoría activa, desactivar
   if (activeCategory === categoryCode && !keepActive) {
     activeCategory = null;
+    visibleLimit = LOAD_BATCH;
     
     // Restaurar todos los botones
     categoryButtons.forEach(btn => {
@@ -372,6 +411,8 @@ function toggleCategory(categoryCode, options = {}) {
         btn.style.color = '#000';
       }
     });
+    
+    visibleLimit = LOAD_BATCH;
     
     // Cambiar fondo al color de la categoría
     const categoryBg = categoriesData.home_categories[categoryCode].bg;
@@ -407,6 +448,7 @@ function changeLanguage(lang) {
   
   updateCategoryButtonsText();
   updateProjectCardsText();
+  updateLoadMoreLabel();
   applyFilter();
 }
 
@@ -430,6 +472,14 @@ function setupEventListeners() {
       toggleMenu();
     }
   });
+  
+  // Cargar más
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', () => {
+      visibleLimit += LOAD_BATCH;
+      applyFilter();
+    });
+  }
 }
 
 // Iniciar cuando el DOM esté listo

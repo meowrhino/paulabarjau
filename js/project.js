@@ -14,6 +14,7 @@ const menuPanel = document.getElementById('menu-panel');
 const backBtn = document.getElementById('back-btn');
 const moreCategoryBtn = document.getElementById('more-category-btn');
 const langButtons = document.querySelectorAll('.lang-btn');
+const mainEl = document.querySelector('main');
 
 // Textos y helpers
 const ERROR_TEXTS = {
@@ -237,6 +238,9 @@ function renderErrorState() {
   mainImageContainer.innerHTML = '';
   creditsContainer.innerHTML = '';
   galleryContainer.innerHTML = '';
+  mainImageContainer.style.display = 'none';
+  creditsContainer.style.display = 'none';
+  galleryContainer.style.display = 'none';
   
   const message = document.createElement('p');
   message.textContent = ERROR_TEXTS.message[currentLanguage] || ERROR_TEXTS.message.cat;
@@ -246,8 +250,19 @@ function renderErrorState() {
   homeLink.textContent = ERROR_TEXTS.home[currentLanguage] || ERROR_TEXTS.home.cat;
   homeLink.className = 'menu-action-btn';
   
-  creditsContainer.appendChild(message);
-  creditsContainer.appendChild(homeLink);
+  const errorBox = document.createElement('div');
+  errorBox.className = 'error-state-box';
+  errorBox.appendChild(message);
+  errorBox.appendChild(homeLink);
+  
+  if (mainEl) {
+    mainEl.style.display = 'flex';
+    mainEl.style.flexDirection = 'column';
+    mainEl.style.alignItems = 'center';
+    mainEl.style.justifyContent = 'center';
+    mainEl.style.minHeight = '70vh';
+    mainEl.appendChild(errorBox);
+  }
   
   menuToggle.style.display = 'none';
   menuPanel.style.display = 'none';
