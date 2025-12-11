@@ -108,12 +108,12 @@ h1 {
 /* Botón del menú */
 .menu-toggle {
   position: fixed;
-  bottom: 30px;
+  bottom: 1px;
   left: 50%;
   transform: translateX(-50%);
-  background: #000;
-  color: #fff;
-  border: 2px solid #000;
+  background: transparent;
+  color: #000;
+  border: 2px solid transparent;
   padding: 12px 30px;
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -125,12 +125,8 @@ h1 {
   transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.menu-toggle:hover {
-  background: #333;
-}
-
 .menu-toggle.menu-open {
-  bottom: calc(var(--menu-height, 200px) + 20px);
+  bottom: calc(var(--menu-height, 200px));
 }
 
 /* Panel del menú */
