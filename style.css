@@ -1,9 +1,10 @@
 /* Fuente principal: Josefin Sans */
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap");
 
 /* Variables globales */
 :root {
-  --font-sans: "Josefin Sans", "Futura", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: "Josefin Sans", "Futura", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-features: normal;
   --font-tracking: -0.05em;
   --max-width: 800px;
@@ -15,7 +16,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   font-family: var(--font-sans);
@@ -105,16 +107,13 @@ h1 {
   pointer-events: auto;
 }
 
-/* Botón del menú */
+/* Botón del menú (base común) */
 .menu-toggle {
   position: fixed;
-  bottom: 1px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  background: transparent;
-  color: #000;
-  border: 2px solid transparent;
-  padding: 12px 30px;
+  padding: 12px 32px;
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 500;
@@ -123,11 +122,50 @@ h1 {
   z-index: 100;
   text-transform: lowercase;
   transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 0;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* OPCION LENGUETA (actual) */
+/* .menu-toggle {
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+} 
+  
+.menu-toggle.menu-open {
+  bottom: var(--menu-height, 200px);
+}*/
+
+/* OPCION BOTON (estilo sólido clásico) */
+.menu-toggle {
+  background: #000;
+  color: #fff;
+  bottom: 20px;
+
+  box-shadow: none;
 }
 
 .menu-toggle.menu-open {
-  bottom: calc(var(--menu-height, 200px));
+  bottom: calc(var(--menu-height, 200px) + 20px);
 }
+
+
+/* OPCION TEXTO SOLO (estilo minimal) */
+/* .menu-toggle {
+  background: transparent;
+  color: #000;
+  border: 2px solid transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+  
+.menu-toggle.menu-open {
+  bottom: var(--menu-height, 200px);
+}*/
 
 /* Panel del menú */
 .menu-panel {
