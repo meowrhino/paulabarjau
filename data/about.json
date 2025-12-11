@@ -1,0 +1,24 @@
+{
+  "title": {
+    "cat": "sobre mi",
+    "es": "sobre mí",
+    "en": "about me"
+  },
+  "paragraphs": {
+    "cat": [
+      "Maquilladora i hairstylist basada a Barcelona, especialitzada en moda, retrat i audiovisual.",
+      "Col·laboro amb equips creatius per construir looks nets, amb textura i que respectin la pell.",
+      "M'agrada cuidar el procés: preproducció clara, rodets tranquils i resultats que brillin."
+    ],
+    "es": [
+      "Maquilladora y hairstylist afincada en Barcelona, especializada en moda, retrato y audiovisual.",
+      "Trabajo con equipos creativos para construir looks limpios, con textura y respetuosos con la piel.",
+      "Disfruto cuidando el proceso: preproducción clara, rodajes tranquilos y resultados que brillen."
+    ],
+    "en": [
+      "Makeup artist and hairstylist based in Barcelona, focused on fashion, portrait and film work.",
+      "I team up with creative crews to build clean, textured looks that respect the skin.",
+      "I like looking after the process: clear prep, calm sets, and results that shine."
+    ]
+  }
+}
