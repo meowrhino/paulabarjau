@@ -64,6 +64,12 @@ h1 {
   display: none;
 }
 
+.project-card.hiding {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  pointer-events: none;
+}
+
 .project-card img {
   width: 100%;
   height: auto;
@@ -224,6 +230,19 @@ h1 {
   font-weight: 600;
 }
 
+<<<<<<< ours
+=======
+@media (prefers-reduced-motion: reduce) {
+  .project-card {
+    transition: none;
+  }
+  
+  .project-card.hiding {
+    transform: none;
+  }
+}
+
+>>>>>>> theirs
 /* Responsive */
 @media (min-width: 600px) {
   h1 {
