@@ -11,6 +11,26 @@ const menuPanel = document.getElementById('menu-panel');
 const categoriesContainer = document.getElementById('categories-container');
 const langButtons = document.querySelectorAll('.lang-btn');
 
+// Helpers
+function setImageAlt(img, text) {
+  img.alt = text || '';
+}
+
+function compareProjects(a, b) {
+  const relevanceA = Number.isFinite(Number(a.relevance)) ? Number(a.relevance) : Number.MAX_SAFE_INTEGER;
+  const relevanceB = Number.isFinite(Number(b.relevance)) ? Number(b.relevance) : Number.MAX_SAFE_INTEGER;
+  
+  if (relevanceA !== relevanceB) {
+    return relevanceA - relevanceB;
+  }
+  
+  return new Date(b.date) - new Date(a.date);
+}
+
+function closeAllOverlays() {
+  document.querySelectorAll('.project-overlay.active').forEach(o => o.classList.remove('active'));
+}
+
 // Inicialización
 async function init() {
   try {
@@ -82,7 +102,7 @@ function renderProjects() {
     ...projects[key]
   }));
   
-  projectsArray.sort((a, b) => new Date(b.date) - new Date(a.date));
+  projectsArray.sort(compareProjects);
   
   // Renderizar cada proyecto
   projectsArray.forEach(project => {
@@ -104,7 +124,7 @@ function createProjectCard(project) {
   // Imagen
   const img = document.createElement('img');
   img.src = `data/${project.slug}/img/${project.imatge_home}`;
-  img.alt = project.sinopsis[currentLanguage];
+  setImageAlt(img, project.sinopsis[currentLanguage]);
   img.loading = 'lazy';
   
   // Overlay
@@ -157,12 +177,14 @@ function hexToRgba(hex, alpha) {
 }
 
 // Toggle de categoría
-function toggleCategory(categoryCode) {
+function toggleCategory(categoryCode, options = {}) {
+  const { keepActive = false } = options;
   const categoryButtons = document.querySelectorAll('.category-btn');
   const projectCards = document.querySelectorAll('.project-card');
+  closeAllOverlays();
   
   // Si se clickea la categoría activa, desactivar
-  if (activeCategory === categoryCode) {
+  if (activeCategory === categoryCode && !keepActive) {
     activeCategory = null;
     
     // Restaurar todos los botones
@@ -226,6 +248,7 @@ function toggleMenu() {
 // Cambiar idioma
 function changeLanguage(lang) {
   currentLanguage = lang;
+  closeAllOverlays();
   
   // Actualizar botones de idioma
   langButtons.forEach(btn => {
@@ -241,12 +264,7 @@ function changeLanguage(lang) {
   
   // Mantener el filtro activo si existe
   if (activeCategory) {
-    const categoryButtons = document.querySelectorAll('.category-btn');
-    categoryButtons.forEach(btn => {
-      if (btn.dataset.category === activeCategory) {
-        btn.click();
-      }
-    });
+    toggleCategory(activeCategory, { keepActive: true });
   }
 }
 

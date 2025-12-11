@@ -15,6 +15,29 @@ const backBtn = document.getElementById('back-btn');
 const moreCategoryBtn = document.getElementById('more-category-btn');
 const langButtons = document.querySelectorAll('.lang-btn');
 
+// Textos y helpers
+const ERROR_TEXTS = {
+  title: {
+    cat: 'Projecte no trobat',
+    es: 'Proyecto no encontrado',
+    en: 'Project not found'
+  },
+  message: {
+    cat: "No hem pogut carregar aquest projecte. Torna a l'inici.",
+    es: 'No hemos podido cargar este proyecto. Vuelve al inicio.',
+    en: 'We could not load this project. Go back home.'
+  },
+  home: {
+    cat: "tornar a l'inici",
+    es: 'volver al inicio',
+    en: 'go back home'
+  }
+};
+
+function setImageAlt(img, text) {
+  img.alt = text || '';
+}
+
 // Inicialización
 async function init() {
   try {
@@ -34,6 +57,7 @@ async function init() {
     console.log('Página de proyecto inicializada correctamente');
   } catch (error) {
     console.error('Error al inicializar la página de proyecto:', error);
+    renderErrorState();
   }
 }
 
@@ -44,6 +68,14 @@ async function loadData() {
       fetch('data/home_categories.json'),
       fetch(`data/${projectSlug}/${projectSlug}.json`)
     ]);
+    
+    if (!categoriesResponse.ok) {
+      throw new Error('No se pudieron cargar las categorías');
+    }
+    
+    if (!projectResponse.ok) {
+      throw new Error('No se encontraron datos del proyecto');
+    }
     
     categoriesData = await categoriesResponse.json();
     projectData = await projectResponse.json();
@@ -81,7 +113,7 @@ function renderProject() {
 function renderMainImage() {
   const img = document.createElement('img');
   img.src = `data/${projectSlug}/img/${projectData.imatge_principal}`;
-  img.alt = projectData.titulo;
+  setImageAlt(img, projectData.titulo);
   mainImageContainer.appendChild(img);
 }
 
@@ -138,7 +170,7 @@ function renderGallery() {
         
         const img = document.createElement('img');
         img.src = `data/${projectSlug}/img/${foto}`;
-        img.alt = projectData.titulo;
+        setImageAlt(img, projectData.titulo);
         img.loading = 'lazy';
         
         item.appendChild(img);
@@ -194,6 +226,30 @@ function updateMoreCategoryButton() {
   
   moreCategoryBtn.textContent = `${seeMoreText} ${categoryName}`;
   moreCategoryBtn.style.color = category.color;
+}
+
+// Mostrar error visible cuando faltan datos del proyecto
+function renderErrorState() {
+  document.body.style.backgroundColor = '#fff';
+  projectTitle.textContent = ERROR_TEXTS.title[currentLanguage] || ERROR_TEXTS.title.cat;
+  
+  mainImageContainer.innerHTML = '';
+  creditsContainer.innerHTML = '';
+  galleryContainer.innerHTML = '';
+  
+  const message = document.createElement('p');
+  message.textContent = ERROR_TEXTS.message[currentLanguage] || ERROR_TEXTS.message.cat;
+  
+  const homeLink = document.createElement('a');
+  homeLink.href = 'index.html';
+  homeLink.textContent = ERROR_TEXTS.home[currentLanguage] || ERROR_TEXTS.home.cat;
+  homeLink.className = 'menu-action-btn';
+  
+  creditsContainer.appendChild(message);
+  creditsContainer.appendChild(homeLink);
+  
+  menuToggle.style.display = 'none';
+  menuPanel.style.display = 'none';
 }
 
 // Toggle del menú
