@@ -24,7 +24,6 @@ html, body {
   letter-spacing: var(--font-tracking);
   background: var(--page-bg, #fff);
   color: #000;
-  transition: background-color 0.45s ease;
 }
 
 /* Main container */
@@ -34,7 +33,6 @@ main {
   padding: 20px;
   padding-bottom: 100px; /* Espacio para el botón del menú */
   background: var(--page-bg, #fff);
-  transition: background-color 0.45s ease;
 }
 
 /* Título principal */
@@ -59,13 +57,11 @@ h1 {
   width: 100%;
   overflow: hidden;
   cursor: pointer;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
-.project-card.hiding {
-  opacity: 0;
-  transform: translateY(8px) scale(0.98);
-  pointer-events: none;
+.project-card.hidden {
+  display: none;
 }
 
 .project-card img {
@@ -149,9 +145,6 @@ h1 {
   background: var(--page-bg, #fff);
   z-index: 99;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  transition-property: transform, background-color;
-  transition-duration: 0.4s, 0.45s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1), ease;
 }
 
 .menu-panel.open {
@@ -229,16 +222,6 @@ h1 {
 .lang-btn.active {
   opacity: 1;
   font-weight: 600;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project-card {
-    transition: none;
-  }
-  
-  .project-card.hiding {
-    transform: none;
-  }
 }
 
 /* Responsive */
