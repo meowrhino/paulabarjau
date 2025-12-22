@@ -7,8 +7,9 @@
     BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-features: normal;
   --font-tracking: -0.05em;
-  --max-width: 800px;
+  --max-width: 1200px;
   --page-bg: #fff;
+  --menu-gap: 3dvh;
 }
 
 /* Reset y base */
@@ -150,13 +151,13 @@ h1 {
 .menu-toggle {
   background: #000;
   color: #fff;
-  bottom: 20px;
+  bottom: var(--menu-gap, 20px);
 
   box-shadow: none;
 }
 
 .menu-toggle.menu-open {
-  bottom: calc(var(--menu-height, 200px) + 20px);
+  bottom: calc(var(--menu-height, 200px) + var(--menu-gap, 20px));
 }
 
 

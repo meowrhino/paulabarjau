@@ -5,6 +5,7 @@
   <title>formateador de créditos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data/navicon.png" type="image/png" />
   <style>
     :root {
       --panel-border: #e5e5e5;
@@ -467,10 +468,11 @@
       }
 
       function refreshOutput(warnings = []) {
-        const json = creditos.length ? JSON.stringify(creditos, null, 2) : '[]';
-        outputEl.textContent = json;
+        const arrayJson = creditos.length ? JSON.stringify(creditos, null, 2) : '[]';
+        const block = `"creditos": ${arrayJson}`;
+        outputEl.textContent = block;
         warningsEl.textContent = warnings.join('\\n');
-        updateLink(json);
+        updateLink(block);
       }
 
       function handleFieldChange(idx, field, value) {
