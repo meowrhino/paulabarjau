@@ -39,6 +39,12 @@ function setImageAlt(img, text) {
   img.alt = text || '';
 }
 
+function resolveMediaSrc(path) {
+  if (!path) return null;
+  if (/^https?:\/\//i.test(path) || path.startsWith('//')) return path;
+  return `data/${projectSlug}/img/${path}`;
+}
+
 // Inicialización
 async function init() {
   try {
@@ -112,10 +118,53 @@ function renderProject() {
 
 // Renderizar imagen principal
 function renderMainImage() {
-  const img = document.createElement('img');
-  img.src = `data/${projectSlug}/img/${projectData.imatge_principal}`;
-  setImageAlt(img, projectData.titulo);
-  mainImageContainer.appendChild(img);
+  mainImageContainer.innerHTML = '';
+  const media = projectData.imatge_principal;
+  if (!media) return;
+
+  const renderBlock = (bloque) => {
+    if (!bloque) return;
+    const type = bloque.tipo || 'fotos';
+    const firstUrl = Array.isArray(bloque.url) ? bloque.url[0] : bloque.url;
+    if (!firstUrl) return;
+
+    if (type === 'youtube') {
+      const videoId = extractYouTubeId(firstUrl);
+      if (!videoId) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${videoId}`;
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      mainImageContainer.appendChild(iframe);
+      return;
+    }
+
+    if (type === 'video' || type === 'webm') {
+      const videoSrc = resolveMediaSrc(firstUrl);
+      if (!videoSrc) return;
+      const video = document.createElement('video');
+      video.src = videoSrc;
+      video.controls = true;
+      video.preload = 'metadata';
+      mainImageContainer.appendChild(video);
+      return;
+    }
+
+    const imgSrc = resolveMediaSrc(firstUrl);
+    if (!imgSrc) return;
+    const img = document.createElement('img');
+    img.src = imgSrc;
+    setImageAlt(img, projectData.titulo);
+    mainImageContainer.appendChild(img);
+  };
+
+  if (typeof media === 'string') {
+    renderBlock({ tipo: 'fotos', url: media });
+  } else if (Array.isArray(media)) {
+    renderBlock(media[0]);
+  } else if (media && typeof media === 'object') {
+    renderBlock(media);
+  }
 }
 
 // Renderizar créditos

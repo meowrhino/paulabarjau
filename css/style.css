@@ -351,6 +351,22 @@ h1 {
   display: block;
 }
 
+#main-image-container iframe,
+#main-image-container video,
+.gallery-item iframe,
+.gallery-item video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  border: 0;
+  background: #000;
+}
+
+#main-image-container video,
+.gallery-item video {
+  height: auto;
+}
+
 /* Créditos */
 #credits-container {
   margin-bottom: 40px;
