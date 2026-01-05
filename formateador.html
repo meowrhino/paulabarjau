@@ -144,6 +144,7 @@
       border: 1px solid var(--panel-border);
       /* border-radius: 8px; */
       padding: 10px;
+      padding-right: 78px;
       background: #fff;
       display: flex;
       flex-direction: column;
@@ -189,20 +190,32 @@
       color: #0066cc;
     }
 
-    .remove-btn {
+    .row-actions {
       position: absolute;
       top: 8px;
       right: 8px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .action-btn {
       background: transparent;
       border: none;
       border-radius: 0;
-      padding: 4px 10px;
+      padding: 4px 8px;
       font-size: 0.85rem;
       cursor: pointer;
+      line-height: 1;
     }
 
-    .remove-btn:hover {
+    .action-btn:hover {
       opacity: 0.7;
+    }
+
+    .action-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
     }
   </style>
 </head>
@@ -494,6 +507,16 @@
         refreshOutput();
       }
 
+      function moveCredito(fromIndex, toIndex) {
+        if (fromIndex === toIndex) return;
+        if (toIndex < 0 || toIndex >= creditos.length) return;
+        const [item] = creditos.splice(fromIndex, 1);
+        if (!item) return;
+        creditos.splice(toIndex, 0, item);
+        renderPreview();
+        refreshOutput();
+      }
+
       function renderPreview() {
         previewList.innerHTML = '';
         if (!creditos.length) return;
@@ -501,16 +524,48 @@
           const row = document.createElement('div');
           row.className = 'credit-row';
 
+          const actions = document.createElement('div');
+          actions.className = 'row-actions';
+
+          if (idx > 0) {
+            const upBtn = document.createElement('button');
+            upBtn.type = 'button';
+            upBtn.className = 'action-btn';
+            upBtn.textContent = '^';
+            upBtn.title = 'Subir';
+            upBtn.addEventListener('click', (event) => {
+              event.stopPropagation();
+              moveCredito(idx, idx - 1);
+            });
+            actions.appendChild(upBtn);
+          }
+
+          if (idx < creditos.length - 1) {
+            const downBtn = document.createElement('button');
+            downBtn.type = 'button';
+            downBtn.className = 'action-btn';
+            downBtn.textContent = 'v';
+            downBtn.title = 'Bajar';
+            downBtn.addEventListener('click', (event) => {
+              event.stopPropagation();
+              moveCredito(idx, idx + 1);
+            });
+            actions.appendChild(downBtn);
+          }
+
           const removeBtn = document.createElement('button');
-          removeBtn.className = 'remove-btn';
+          removeBtn.type = 'button';
+          removeBtn.className = 'action-btn remove-btn';
           removeBtn.textContent = 'x';
           removeBtn.title = 'Eliminar';
-          removeBtn.addEventListener('click', () => {
+          removeBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
             creditos.splice(idx, 1);
             renderPreview();
             refreshOutput();
           });
-          row.appendChild(removeBtn);
+          actions.appendChild(removeBtn);
+          row.appendChild(actions);
 
           if (cred.tipo === 'extra') {
             const line = document.createElement('div');
