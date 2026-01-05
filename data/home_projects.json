@@ -2,21 +2,21 @@
     "home_projects": {
         "aitanaBonmati": {
             "sinopsis": {
-                "es": "fotos chulisimas hechas con ropa de uniqlo",
-                "en": "super cool photos made with uniqlo clothes",
-                "cat": "fotos xulíssimes fetes amb roba de uniqlo"
+                "es": "LA MAJA",
+                "en": "LA MAJA",
+                "cat": "LA MAJA"
             },
             "categoria": "commercial",
             "date": "2025-01-25",
             "relevance": 1,
             "imatge_home": "fake_1.webp"
         },
-
+        
         "torito": {
             "sinopsis": {
-                "es": "un cortometraje sobre un torito de lidia que quiere ser vegetariano",
-                "en": "a short film about a fighting bull who wants to be vegetarian",
-                "cat": "un curtmetratge sobre un torito de llidia que vol ser vegetarià"
+                "es": "TORITO - Vernat.mp3",
+                "en": "TORITO - Vernat.mp3",
+                "cat": "TORITO - Vernat.mp3"
             },
             "categoria": "videoclip",
             "date": "2024-10-24",
@@ -24,65 +24,16 @@
             "imatge_home": "TORITO_ANNAIZQUIERDO_1.webp"
         },
 
-        "fake_fashion_1": {
+        "siMurieraMañana": {
             "sinopsis": {
-                "es": "editorial luminosa en exteriores",
-                "en": "bright outdoor editorial",
-                "cat": "editorial lluminosa a l'exterior"
-            },
-            "categoria": "fashion",
-            "date": "2024-09-12",
-            "relevance": 2,
-            "imatge_home": "fake_fashion_1.webp"
-        },
-
-        "fake_commercial_1": {
-            "sinopsis": {
-                "es": "campaña fresca con acentos pop",
-                "en": "fresh campaign with pop accents",
-                "cat": "campanya fresca amb accents pop"
-            },
-            "categoria": "commercial",
-            "date": "2024-07-05",
-            "relevance": 2,
-            "imatge_home": "fake_commercial_1.webp"
-        },
-
-        "fake_videoclip_1": {
-            "sinopsis": {
-                "es": "videoclip nocturno con neones",
-                "en": "night video with neon lights",
-                "cat": "videoclip nocturn amb neons"
+                "es": "Si Muriera Mañana - Rigoberta Bandini",
+                "en": "Si Muriera Mañana - Rigoberta Bandini",
+                "cat": "Si Muriera Mañana - Rigoberta Bandini"
             },
             "categoria": "videoclip",
-            "date": "2023-12-20",
-            "relevance": 2,
-            "imatge_home": "fake_videoclip_1.webp"
-        },
-
-        "fake_fashion_2": {
-            "sinopsis": {
-                "es": "beauty editorial minimalista",
-                "en": "minimal beauty editorial",
-                "cat": "editorial beauty minimalista"
-            },
-            "categoria": "fashion",
-            "date": "2024-03-15",
-            "relevance": 3,
-            "imatge_home": "fake_fashion_2.webp"
-        },
-
-        "fake_commercial_2": {
-            "sinopsis": {
-                "es": "lookbook desenfadado para ecommerce",
-                "en": "casual lookbook for ecommerce",
-                "cat": "lookbook desenfadat per a ecommerce"
-            },
-            "categoria": "commercial",
-            "date": "2023-06-01",
-            "relevance": 4,
-            "imatge_home": "fake_commercial_2.webp"
+            "date": "2024-09-27",
+            "relevance": 1,
+            "imatge_home": "rigo_siMuriera_2.webp"
         }
     }
-
 }

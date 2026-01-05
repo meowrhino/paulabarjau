@@ -1,0 +1,145 @@
+        {
+            "slug": "siMurieraMañana",
+            "titulo": "SI MURIERA MAÑANA",
+            "categoria": "videoclip",
+            "imatge_principal": "rigo_siMuriera_2.webp",
+            "galeria": [{
+                "tipo": "fotos",
+                "url": [
+                "rigo_siMuriera_1.webp",
+                "rigo_siMuriera_2.webp",
+                "rigo_siMuriera_3.webp",
+                "rigo_siMuriera_4.webp",
+                "rigo_siMuriera_5.webp",
+                "rigo_siMuriera_6.webp"
+                ]
+        }],
+            "creditos": [
+                {
+                    "titulo": {
+                        "es": "Prod.",
+                        "en": "Production",
+                        "cat": "Producció"
+                    },
+                    "nombre": "@wearekarabot",
+                    "link": "https://www.instagram.com/wearekarabot/"
+                },
+                {
+                    "titulo": {
+                        "es": "Producción ejecutiva",
+                        "en": "Executive Production",
+                        "cat": "Producció executiva"
+                    },
+                    "nombre": "@jonajaraba",
+                    "link": "https://www.instagram.com/jonajaraba/"
+                },
+                {
+                    "titulo": {
+                        "es": "Ay. de Producción",
+                        "en": "Production Assist.",
+                        "cat": "Aj. de Producció"
+                    },
+                    "nombre": "@hernanfrito",
+                    "link": "https://www.instagram.com/hernanfrito/"
+                },
+                {
+                    "titulo": {
+                        "es": "Director",
+                        "en": "Director",
+                        "cat": "Director"
+                    },
+                    "nombre": "@german_delahoz",
+                    "link": "https://www.instagram.com/german_delahoz/"
+                },
+                {
+                    "titulo": {
+                        "es": "AD",
+                        "en": "AD",
+                        "cat": "AD"
+                    },
+                    "nombre": "@carlos.batllo",
+                    "link": "https://www.instagram.com/carlos.batllo/"
+                },
+                {
+                    "titulo": {
+                        "es": "Fotógrafo",
+                        "en": "Stills",
+                        "cat": "Fotògraf"
+                    },
+                    "nombre": "@miguelreveriego",
+                    "link": "https://www.instagram.com/miguelreveriego/"
+                },
+                {
+                    "titulo": {
+                        "es": "Dir. de Arte",
+                        "en": "Art Director",
+                        "cat": "Dir. d’Art"
+                    },
+                    "nombre": "@j.puigbanchs",
+                    "link": "https://www.instagram.com/j.puigbanchs/"
+                },
+                {
+                    "titulo": {
+                        "es": "Dir. de Arte",
+                        "en": "Art Director",
+                        "cat": "Dir. d’Art"
+                    },
+                    "nombre": "@lertupido",
+                    "link": "https://www.instagram.com/lertupido/"
+                },
+                {
+                    "titulo": {
+                        "es": "Estilista",
+                        "en": "Stylist",
+                        "cat": "Estilista"
+                    },
+                    "nombre": "@oliviaqkla",
+                    "link": "https://www.instagram.com/oliviaqkla/"
+                },
+                {
+                    "titulo": {
+                        "es": "Confección",
+                        "en": "Seamstress",
+                        "cat": "Confecció"
+                    },
+                    "nombre": "@lolavillaescusastylist",
+                    "link": "https://www.instagram.com/lolavillaescusastylist/"
+                },
+                {
+                    "titulo": {
+                        "es": "Peluquera",
+                        "en": "Hairstylist",
+                        "cat": "Perruquera"
+                    },
+                    "nombre": "@paula_educationrp",
+                    "link": "https://www.instagram.com/paula_educationrp/"
+                },
+                {
+                    "titulo": {
+                        "es": "Maquillaje",
+                        "en": "Make up",
+                        "cat": "Maquillatge"
+                    },
+                    "nombre": "@paulabarjau",
+                    "link": "https://www.instagram.com/paulabarjau/"
+                },
+                {
+                    "titulo": {
+                        "es": "As. de Maquillaje",
+                        "en": "Make up Assist.",
+                        "cat": "As. de Maquillatge"
+                    },
+                    "nombre": "@ldomenech_muah",
+                    "link": "https://www.instagram.com/ldomenech_muah/"
+                },
+                {
+                    "titulo": {
+                        "es": "As. de Maquillaje",
+                        "en": "Make up Assist.",
+                        "cat": "As. de Maquillatge"
+                    },
+                    "nombre": "@lauraasturgomakeup",
+                    "link": "https://www.instagram.com/lauraasturgomakeup/"
+                }
+            ]
+        }
