@@ -85,13 +85,18 @@ h1 {
   left: 0;
   right: 0;
   bottom: 0;
+  --overlay-edge-gap: clamp(28px, 5vw, 56px);
+  --overlay-corner-gap: clamp(10px, 2vw, 20px);
   background: rgba(0, 0, 0, 0.5);
   opacity: 0;
   transition: opacity 0.3s ease;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(28px, 5vw, 56px);
+  justify-content: flex-start;
+  padding-top: var(--overlay-edge-gap);
+  padding-left: var(--overlay-edge-gap);
+  padding-right: var(--overlay-edge-gap);
+  padding-bottom: var(--overlay-edge-gap);
   color: #fff;
   pointer-events: none;
 }
@@ -101,20 +106,17 @@ h1 {
 }
 
 .project-sinopsis {
-  font-size: 1rem;
-  line-height: 1.2;
+  font-size: clamp(2.8rem, 12vw, 7rem);
+  line-height: 0.9;
   text-align: left;
   white-space: normal;
   overflow-wrap: anywhere;
-  transition: font-size 0.25s ease, line-height 0.25s ease;
-}
-
-.project-card:hover .project-sinopsis {
-  font-size: clamp(2.8rem, 12vw, 7rem);
-  line-height: 0.9;
 }
 
 .project-see-more {
+  position: absolute;
+  right: var(--overlay-corner-gap);
+  bottom: var(--overlay-corner-gap);
   font-size: 0.9rem;
   text-align: right;
   text-transform: lowercase;

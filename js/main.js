@@ -44,6 +44,7 @@ const OG_LOCALE_MAP = {
   es: 'es_ES',
   en: 'en_US'
 };
+const SITE_ORIGIN = 'https://paulabarjau.studio';
 const HOME_SEO = {
   cat: {
     title: 'Paula Barjau | Maquilladora a Barcelona',
@@ -99,7 +100,7 @@ function resolveLangFromUrl() {
 }
 
 function getBasePageUrl() {
-  return `${window.location.origin}${window.location.pathname}`;
+  return `${SITE_ORIGIN}/`;
 }
 
 function updateAboutLink() {
@@ -115,7 +116,7 @@ function updateAboutLink() {
 function updateHomeSeo() {
   const seo = HOME_SEO[currentLanguage] || HOME_SEO.cat;
   const pageUrl = getBasePageUrl();
-  const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, window.location.href).href;
+  const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
 
   document.title = seo.title;
   document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';

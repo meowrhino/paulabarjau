@@ -31,6 +31,7 @@ const OG_LOCALE_MAP = {
   es: 'es_ES',
   en: 'en_US'
 };
+const SITE_ORIGIN = 'https://paulabarjau.studio';
 const ABOUT_LABELS = {
   cat: 'sobre mi',
   es: 'sobre mí',
@@ -81,8 +82,8 @@ function updateAboutSeo() {
   const label = aboutData?.title?.[currentLanguage] || ABOUT_LABELS[currentLanguage];
   const description = aboutData?.paragraphs?.[currentLanguage]?.[0] || ABOUT_FALLBACK_DESCRIPTION[currentLanguage];
   const title = `${label} | ${ABOUT_TITLE_SUFFIX[currentLanguage]}`;
-  const pageUrl = `${window.location.origin}${window.location.pathname}`;
-  const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, window.location.href).href;
+  const pageUrl = `${SITE_ORIGIN}/about.html`;
+  const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
 
   document.title = title;
   document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';

@@ -55,6 +55,7 @@ const OG_LOCALE_MAP = {
   es: 'es_ES',
   en: 'en_US'
 };
+const SITE_ORIGIN = 'https://paulabarjau.studio';
 const PROJECT_META_SUFFIX = {
   cat: 'Paula Barjau maquilladora a Barcelona',
   es: 'Paula Barjau maquilladora en Barcelona',
@@ -87,12 +88,12 @@ function resolveLangFromUrl() {
 }
 
 function getCanonicalProjectUrl() {
-  return `${window.location.origin}${window.location.pathname}?slug=${encodeURIComponent(projectSlug)}`;
+  return `${SITE_ORIGIN}/project.html?slug=${encodeURIComponent(projectSlug)}`;
 }
 
 function getProjectSocialImageUrl() {
   if (!projectData) {
-    return new URL(DEFAULT_SOCIAL_IMAGE, window.location.href).href;
+    return new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
   }
 
   let imagePath = null;
@@ -123,7 +124,7 @@ function getProjectSocialImageUrl() {
     imagePath = DEFAULT_SOCIAL_IMAGE;
   }
 
-  return new URL(imagePath, window.location.href).href;
+  return new URL(imagePath, `${SITE_ORIGIN}/`).href;
 }
 
 function updateUrlState() {

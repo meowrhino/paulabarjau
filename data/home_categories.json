@@ -38,6 +38,14 @@
             "name_en": "videoclip",
             "color": "#B28DFF",
             "bg": "#D9C6FF"
+        },
+        "editorial": {
+            "code": "editorial",
+            "name_cat": "editorial",
+            "name_es": "editorial",
+            "name_en": "editorial",
+            "color": "#7DB3AF",
+            "bg": "#D2E4E3"
         }
     }
 }
