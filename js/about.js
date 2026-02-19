@@ -32,6 +32,7 @@ const OG_LOCALE_MAP = {
   en: 'en_US'
 };
 const SITE_ORIGIN = 'https://paulabarjau.studio';
+const TAB_TITLE = 'paula barjau';
 const ABOUT_LABELS = {
   cat: 'sobre mi',
   es: 'sobre mí',
@@ -81,21 +82,21 @@ function updateUrlState() {
 function updateAboutSeo() {
   const label = aboutData?.title?.[currentLanguage] || ABOUT_LABELS[currentLanguage];
   const description = aboutData?.paragraphs?.[currentLanguage]?.[0] || ABOUT_FALLBACK_DESCRIPTION[currentLanguage];
-  const title = `${label} | ${ABOUT_TITLE_SUFFIX[currentLanguage]}`;
+  const seoTitle = `${label} | ${ABOUT_TITLE_SUFFIX[currentLanguage]}`;
   const pageUrl = `${SITE_ORIGIN}/about.html`;
   const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
 
-  document.title = title;
+  document.title = TAB_TITLE;
   document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
 
   if (metaDescriptionEl) metaDescriptionEl.content = description;
   if (canonicalLinkEl) canonicalLinkEl.href = pageUrl;
-  if (ogTitleEl) ogTitleEl.content = title;
+  if (ogTitleEl) ogTitleEl.content = seoTitle;
   if (ogDescriptionEl) ogDescriptionEl.content = description;
   if (ogUrlEl) ogUrlEl.content = pageUrl;
   if (ogImageEl) ogImageEl.content = imageUrl;
   if (ogLocaleEl) ogLocaleEl.content = OG_LOCALE_MAP[currentLanguage] || OG_LOCALE_MAP.cat;
-  if (twitterTitleEl) twitterTitleEl.content = title;
+  if (twitterTitleEl) twitterTitleEl.content = seoTitle;
   if (twitterDescriptionEl) twitterDescriptionEl.content = description;
   if (twitterImageEl) twitterImageEl.content = imageUrl;
 }

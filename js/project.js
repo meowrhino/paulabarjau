@@ -56,11 +56,7 @@ const OG_LOCALE_MAP = {
   en: 'en_US'
 };
 const SITE_ORIGIN = 'https://paulabarjau.studio';
-const PROJECT_META_SUFFIX = {
-  cat: 'Paula Barjau maquilladora a Barcelona',
-  es: 'Paula Barjau maquilladora en Barcelona',
-  en: 'Paula Barjau makeup artist in Barcelona'
-};
+const TAB_TITLE = 'paula barjau';
 const PROJECT_DESCRIPTION_TEMPLATES = {
   cat: (title, category) => `${title}. Projecte de ${category} de Paula Barjau, maquilladora i hairstylist a Barcelona.`,
   es: (title, category) => `${title}. Proyecto de ${category} de Paula Barjau, maquilladora y hairstylist en Barcelona.`,
@@ -174,7 +170,7 @@ function updateProjectSeo() {
   const categoryName = category?.[`name_${currentLanguage}`] || projectData.categoria;
   const template = PROJECT_DESCRIPTION_TEMPLATES[currentLanguage] || PROJECT_DESCRIPTION_TEMPLATES.cat;
   const description = template(projectData.titulo, categoryName);
-  const title = `${projectData.titulo} | ${PROJECT_META_SUFFIX[currentLanguage] || PROJECT_META_SUFFIX.cat}`;
+  const title = TAB_TITLE;
   const canonicalUrl = getCanonicalProjectUrl();
   const imageUrl = getProjectSocialImageUrl();
 
@@ -443,7 +439,7 @@ function renderErrorState() {
   document.body.style.backgroundColor = '#fff';
   document.documentElement.style.setProperty('--page-bg', '#fff');
   document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
-  document.title = ERROR_TEXTS.title[currentLanguage] || ERROR_TEXTS.title.cat;
+  document.title = TAB_TITLE;
   if (metaDescriptionEl) {
     metaDescriptionEl.content = ERROR_TEXTS.message[currentLanguage] || ERROR_TEXTS.message.cat;
   }

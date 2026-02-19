@@ -45,19 +45,20 @@ const OG_LOCALE_MAP = {
   en: 'en_US'
 };
 const SITE_ORIGIN = 'https://paulabarjau.studio';
+const TAB_TITLE = 'paula barjau';
 const HOME_SEO = {
   cat: {
-    title: 'Paula Barjau | Maquilladora a Barcelona',
+    title: TAB_TITLE,
     description: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.',
     intro: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.'
   },
   es: {
-    title: 'Paula Barjau | Maquilladora en Barcelona',
+    title: TAB_TITLE,
     description: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.',
     intro: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.'
   },
   en: {
-    title: 'Paula Barjau | Makeup Artist in Barcelona',
+    title: TAB_TITLE,
     description: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.',
     intro: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.'
   }
