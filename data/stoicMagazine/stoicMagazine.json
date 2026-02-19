@@ -1,0 +1,83 @@
+        {
+            "slug": "stoicMagazine",
+            "titulo": "STOIC MAGAZINE",
+            "categoria": "editorial",
+            "imatge_principal": "stoicMagazine_15.webp",
+            "galeria": [
+                {
+                    "tipo": "fotos",
+                    "url": [
+                        "stoicMagazine_1.webp",
+                        "stoicMagazine_2.webp",
+                        "stoicMagazine_3.webp",
+                        "stoicMagazine_4.webp",
+                        "stoicMagazine_5.webp",
+                        "stoicMagazine_6.webp",
+                        "stoicMagazine_7.webp",
+                        "stoicMagazine_8.webp",
+                        "stoicMagazine_9.webp",
+                        "stoicMagazine_14.webp",
+                        "stoicMagazine_12.webp",
+                        "stoicMagazine_13.webp",
+                        "stoicMagazine_14.webp",
+                        "stoicMagazine_10.webp"
+                    ]
+                }
+            ],
+            "creditos": [
+                {
+                    "titulo": {
+                        "es": "Fotógrafo",
+                        "en": "Stills",
+                        "cat": "Fotògraf"
+                    },
+                    "nombre": "Josifina del Villlar",
+                    "link": "https://www.instagram.com/jo.delbrillar/"
+                },
+                {
+                    "titulo": {
+                        "es": "Estilista",
+                        "en": "Stylist",
+                        "cat": "Estilista"
+                    },
+                    "nombre": "@oliviaqkla",
+                    "link": "https://www.instagram.com/s_ingular/"
+                },
+                {
+                    "titulo": {
+                        "es": "Dir. de Arte",
+                        "en": "Art Director",
+                        "cat": "Dir. d’Art"
+                    },
+                    "nombre": "@lertupido",
+                    "link": "https://www.instagram.com/papitaa_criolla/"
+                },
+                {
+                    "titulo": {
+                        "es": "Maquillaje y Pelo",
+                        "en": "Make up and Hair",
+                        "cat": "Maquillatge i Perruqueria"
+                    },
+                    "nombre": "@paulabarjau",
+                    "link": "https://www.instagram.com/paulabarjau/"
+                },
+                {
+                    "titulo": {
+                        "es": "Luces + Digitech",
+                        "en": "Ligths + Digitech",
+                        "cat": "Llums + Digitech"
+                    },
+                    "nombre": "Daniel Dulford",
+                    "link": "https://www.instagram.com/dtmulford/"
+                },
+                {
+                    "titulo": {
+                        "es": "Modelo",
+                        "en": "Model",
+                        "cat": "Model"
+                    },
+                    "nombre": "Rosangela",
+                    "link": "https://www.instagram.com/yinsvegarosangela/"
+                }
+            ]
+        }

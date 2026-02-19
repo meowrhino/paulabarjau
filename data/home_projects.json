@@ -34,6 +34,17 @@
             "date": "2024-09-27",
             "relevance": 1,
             "imatge_home": "rigo_siMuriera_2.webp"
+        },
+        "stoicMagazine": {
+            "sinopsis": {
+                "es": "STOIC MAGAZINE",
+                "en": "STOIC MAGAZINE",
+                "cat": "STOIC MAGAZINE"
+            },
+            "categoria": "editorial",
+            "date": "2026-02-05",
+            "relevance": 1,
+            "imatge_home": "stoicMagazine_15.webp"
         }
     }
 }
