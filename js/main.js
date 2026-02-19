@@ -14,6 +14,18 @@ const menuToggle = document.getElementById('menu-toggle');
 const menuPanel = document.getElementById('menu-panel');
 const categoriesContainer = document.getElementById('categories-container');
 const langButtons = document.querySelectorAll('.lang-btn');
+const aboutLink = document.getElementById('about-link');
+const homeIntro = document.getElementById('home-intro');
+const metaDescriptionEl = document.getElementById('meta-description');
+const canonicalLinkEl = document.getElementById('canonical-link');
+const ogTitleEl = document.getElementById('og-title');
+const ogDescriptionEl = document.getElementById('og-description');
+const ogUrlEl = document.getElementById('og-url');
+const ogImageEl = document.getElementById('og-image');
+const ogLocaleEl = document.getElementById('og-locale');
+const twitterTitleEl = document.getElementById('twitter-title');
+const twitterDescriptionEl = document.getElementById('twitter-description');
+const twitterImageEl = document.getElementById('twitter-image');
 
 // Helpers
 const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -22,6 +34,34 @@ const TEXT_LOAD_MORE = {
   es: 'cargar más',
   en: 'load more'
 };
+const HTML_LANG_MAP = {
+  cat: 'ca',
+  es: 'es',
+  en: 'en'
+};
+const OG_LOCALE_MAP = {
+  cat: 'ca_ES',
+  es: 'es_ES',
+  en: 'en_US'
+};
+const HOME_SEO = {
+  cat: {
+    title: 'Paula Barjau | Maquilladora a Barcelona',
+    description: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.',
+    intro: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.'
+  },
+  es: {
+    title: 'Paula Barjau | Maquilladora en Barcelona',
+    description: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.',
+    intro: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.'
+  },
+  en: {
+    title: 'Paula Barjau | Makeup Artist in Barcelona',
+    description: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.',
+    intro: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.'
+  }
+};
+const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/fake_1.webp';
 
 function setImageAlt(img, text) {
   img.alt = text || '';
@@ -49,9 +89,73 @@ function clearInlineLayout(card) {
   card.style.transform = '';
 }
 
+function isValidLanguage(lang) {
+  return Boolean(TEXT_LOAD_MORE[lang]);
+}
+
+function resolveLangFromUrl() {
+  const urlLang = new URLSearchParams(window.location.search).get('lang');
+  return isValidLanguage(urlLang) ? urlLang : 'cat';
+}
+
+function getBasePageUrl() {
+  return `${window.location.origin}${window.location.pathname}`;
+}
+
+function updateAboutLink() {
+  if (!aboutLink) return;
+  const params = new URLSearchParams();
+  if (currentLanguage !== 'cat') {
+    params.set('lang', currentLanguage);
+  }
+  const query = params.toString();
+  aboutLink.href = `about.html${query ? `?${query}` : ''}`;
+}
+
+function updateHomeSeo() {
+  const seo = HOME_SEO[currentLanguage] || HOME_SEO.cat;
+  const pageUrl = getBasePageUrl();
+  const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, window.location.href).href;
+
+  document.title = seo.title;
+  document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
+
+  if (homeIntro) homeIntro.textContent = seo.intro;
+  if (metaDescriptionEl) metaDescriptionEl.content = seo.description;
+  if (canonicalLinkEl) canonicalLinkEl.href = pageUrl;
+  if (ogTitleEl) ogTitleEl.content = seo.title;
+  if (ogDescriptionEl) ogDescriptionEl.content = seo.description;
+  if (ogUrlEl) ogUrlEl.content = pageUrl;
+  if (ogImageEl) ogImageEl.content = imageUrl;
+  if (ogLocaleEl) ogLocaleEl.content = OG_LOCALE_MAP[currentLanguage] || OG_LOCALE_MAP.cat;
+  if (twitterTitleEl) twitterTitleEl.content = seo.title;
+  if (twitterDescriptionEl) twitterDescriptionEl.content = seo.description;
+  if (twitterImageEl) twitterImageEl.content = imageUrl;
+}
+
+function updateUrlState() {
+  const params = new URLSearchParams(window.location.search);
+  if (activeCategory) {
+    params.set('category', activeCategory);
+  } else {
+    params.delete('category');
+  }
+
+  if (currentLanguage !== 'cat') {
+    params.set('lang', currentLanguage);
+  } else {
+    params.delete('lang');
+  }
+
+  const query = params.toString();
+  const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}`;
+  window.history.replaceState({}, '', nextUrl);
+}
+
 // Inicialización
 async function init() {
   try {
+    currentLanguage = resolveLangFromUrl();
     await loadData();
     renderCategories();
     renderProjects();
@@ -60,9 +164,18 @@ async function init() {
     // Verificar si hay una categoría en la URL
     const urlParams = new URLSearchParams(window.location.search);
     const categoryParam = urlParams.get('category');
-    if (categoryParam) {
+    if (categoryParam && categoriesData.home_categories[categoryParam]) {
       toggleCategory(categoryParam);
     }
+
+    langButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+    });
+    menuToggle.textContent = categoriesData.text_menu[currentLanguage];
+
+    updateHomeSeo();
+    updateAboutLink();
+    updateUrlState();
     
     console.log('Aplicación inicializada correctamente');
   } catch (error) {
@@ -189,7 +302,11 @@ function createProjectCard(project) {
   card.appendChild(img);
   card.appendChild(overlay);
   card.addEventListener('click', () => {
-    window.location.href = `project.html?slug=${project.slug}`;
+    const params = new URLSearchParams({ slug: project.slug });
+    if (currentLanguage !== 'cat') {
+      params.set('lang', currentLanguage);
+    }
+    window.location.href = `project.html?${params.toString()}`;
   });
   
   return card;
@@ -394,6 +511,7 @@ function toggleCategory(categoryCode, options = {}) {
     // Restaurar fondo
     document.documentElement.style.setProperty('--page-bg', '#fff');
     applyFilter();
+    updateUrlState();
   } else {
     // Activar nueva categoría
     activeCategory = categoryCode;
@@ -419,6 +537,7 @@ function toggleCategory(categoryCode, options = {}) {
     document.documentElement.style.setProperty('--page-bg', categoryBg);
     
     applyFilter();
+    updateUrlState();
   }
 }
 
@@ -449,7 +568,10 @@ function changeLanguage(lang) {
   updateCategoryButtonsText();
   updateProjectCardsText();
   updateLoadMoreLabel();
+  updateAboutLink();
+  updateHomeSeo();
   applyFilter();
+  updateUrlState();
 }
 
 // Configurar event listeners

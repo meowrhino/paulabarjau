@@ -15,6 +15,17 @@ const backBtn = document.getElementById('back-btn');
 const moreCategoryBtn = document.getElementById('more-category-btn');
 const langButtons = document.querySelectorAll('.lang-btn');
 const mainEl = document.querySelector('main');
+const metaDescriptionEl = document.getElementById('meta-description');
+const canonicalLinkEl = document.getElementById('canonical-link');
+const ogTitleEl = document.getElementById('og-title');
+const ogDescriptionEl = document.getElementById('og-description');
+const ogUrlEl = document.getElementById('og-url');
+const ogImageEl = document.getElementById('og-image');
+const ogLocaleEl = document.getElementById('og-locale');
+const twitterTitleEl = document.getElementById('twitter-title');
+const twitterDescriptionEl = document.getElementById('twitter-description');
+const twitterImageEl = document.getElementById('twitter-image');
+const projectSchemaEl = document.getElementById('project-schema');
 
 // Textos y helpers
 const ERROR_TEXTS = {
@@ -34,6 +45,27 @@ const ERROR_TEXTS = {
     en: 'go back home'
   }
 };
+const HTML_LANG_MAP = {
+  cat: 'ca',
+  es: 'es',
+  en: 'en'
+};
+const OG_LOCALE_MAP = {
+  cat: 'ca_ES',
+  es: 'es_ES',
+  en: 'en_US'
+};
+const PROJECT_META_SUFFIX = {
+  cat: 'Paula Barjau maquilladora a Barcelona',
+  es: 'Paula Barjau maquilladora en Barcelona',
+  en: 'Paula Barjau makeup artist in Barcelona'
+};
+const PROJECT_DESCRIPTION_TEMPLATES = {
+  cat: (title, category) => `${title}. Projecte de ${category} de Paula Barjau, maquilladora i hairstylist a Barcelona.`,
+  es: (title, category) => `${title}. Proyecto de ${category} de Paula Barjau, maquilladora y hairstylist en Barcelona.`,
+  en: (title, category) => `${title}. ${category} project by Paula Barjau, makeup artist and hairstylist in Barcelona.`
+};
+const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/fake_1.webp';
 
 function setImageAlt(img, text) {
   img.alt = text || '';
@@ -45,9 +77,128 @@ function resolveMediaSrc(path) {
   return `data/${projectSlug}/img/${path}`;
 }
 
+function isValidLanguage(lang) {
+  return Boolean(HTML_LANG_MAP[lang]);
+}
+
+function resolveLangFromUrl() {
+  const urlLang = new URLSearchParams(window.location.search).get('lang');
+  return isValidLanguage(urlLang) ? urlLang : 'cat';
+}
+
+function getCanonicalProjectUrl() {
+  return `${window.location.origin}${window.location.pathname}?slug=${encodeURIComponent(projectSlug)}`;
+}
+
+function getProjectSocialImageUrl() {
+  if (!projectData) {
+    return new URL(DEFAULT_SOCIAL_IMAGE, window.location.href).href;
+  }
+
+  let imagePath = null;
+  const mainMedia = projectData.imatge_principal;
+  if (typeof mainMedia === 'string') {
+    imagePath = resolveMediaSrc(mainMedia);
+  } else if (Array.isArray(mainMedia) && mainMedia.length > 0) {
+    const firstBlock = mainMedia[0];
+    const firstPath = Array.isArray(firstBlock?.url) ? firstBlock.url[0] : firstBlock?.url;
+    if (firstBlock?.tipo !== 'youtube') {
+      imagePath = resolveMediaSrc(firstPath);
+    }
+  } else if (mainMedia && typeof mainMedia === 'object') {
+    const firstPath = Array.isArray(mainMedia.url) ? mainMedia.url[0] : mainMedia.url;
+    if (mainMedia.tipo !== 'youtube') {
+      imagePath = resolveMediaSrc(firstPath);
+    }
+  }
+
+  if (!imagePath && Array.isArray(projectData.galeria)) {
+    const photosBlock = projectData.galeria.find(block => block.tipo === 'fotos' && Array.isArray(block.url) && block.url.length > 0);
+    if (photosBlock) {
+      imagePath = resolveMediaSrc(photosBlock.url[0]);
+    }
+  }
+
+  if (!imagePath) {
+    imagePath = DEFAULT_SOCIAL_IMAGE;
+  }
+
+  return new URL(imagePath, window.location.href).href;
+}
+
+function updateUrlState() {
+  const params = new URLSearchParams(window.location.search);
+  params.set('slug', projectSlug);
+  if (currentLanguage !== 'cat') {
+    params.set('lang', currentLanguage);
+  } else {
+    params.delete('lang');
+  }
+
+  const query = params.toString();
+  window.history.replaceState({}, '', `${window.location.pathname}?${query}`);
+}
+
+function updateProjectSchema(description, canonicalUrl, imageUrl, categoryName) {
+  if (!projectSchemaEl || !projectData) return;
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: projectData.titulo,
+    description,
+    url: canonicalUrl,
+    inLanguage: HTML_LANG_MAP[currentLanguage] || 'ca',
+    genre: categoryName,
+    image: imageUrl,
+    creator: {
+      '@type': 'Person',
+      name: 'Paula Barjau',
+      jobTitle: 'Maquilladora y hairstylist',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Barcelona',
+        addressCountry: 'ES'
+      }
+    }
+  };
+
+  projectSchemaEl.textContent = JSON.stringify(schema);
+}
+
+function updateProjectSeo() {
+  if (!projectData || !categoriesData) return;
+
+  const category = categoriesData.home_categories[projectData.categoria];
+  const categoryName = category?.[`name_${currentLanguage}`] || projectData.categoria;
+  const template = PROJECT_DESCRIPTION_TEMPLATES[currentLanguage] || PROJECT_DESCRIPTION_TEMPLATES.cat;
+  const description = template(projectData.titulo, categoryName);
+  const title = `${projectData.titulo} | ${PROJECT_META_SUFFIX[currentLanguage] || PROJECT_META_SUFFIX.cat}`;
+  const canonicalUrl = getCanonicalProjectUrl();
+  const imageUrl = getProjectSocialImageUrl();
+
+  document.title = title;
+  document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
+
+  if (metaDescriptionEl) metaDescriptionEl.content = description;
+  if (canonicalLinkEl) canonicalLinkEl.href = canonicalUrl;
+  if (ogTitleEl) ogTitleEl.content = title;
+  if (ogDescriptionEl) ogDescriptionEl.content = description;
+  if (ogUrlEl) ogUrlEl.content = canonicalUrl;
+  if (ogImageEl) ogImageEl.content = imageUrl;
+  if (ogLocaleEl) ogLocaleEl.content = OG_LOCALE_MAP[currentLanguage] || OG_LOCALE_MAP.cat;
+  if (twitterTitleEl) twitterTitleEl.content = title;
+  if (twitterDescriptionEl) twitterDescriptionEl.content = description;
+  if (twitterImageEl) twitterImageEl.content = imageUrl;
+
+  updateProjectSchema(description, canonicalUrl, imageUrl, categoryName);
+}
+
 // Inicialización
 async function init() {
   try {
+    currentLanguage = resolveLangFromUrl();
+
     // Obtener slug de la URL
     const urlParams = new URLSearchParams(window.location.search);
     projectSlug = urlParams.get('slug');
@@ -61,6 +212,13 @@ async function init() {
     await loadData();
     renderProject();
     setupEventListeners();
+    langButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+    });
+    menuToggle.textContent = categoriesData.text_menu[currentLanguage];
+    backBtn.textContent = categoriesData.text_back[currentLanguage];
+    updateProjectSeo();
+    updateUrlState();
     console.log('Página de proyecto inicializada correctamente');
   } catch (error) {
     console.error('Error al inicializar la página de proyecto:', error);
@@ -114,6 +272,7 @@ function renderProject() {
   
   // Botón "ver más [categoría]"
   updateMoreCategoryButton();
+  updateProjectSeo();
 }
 
 // Renderizar imagen principal
@@ -282,6 +441,11 @@ function updateMoreCategoryButton() {
 function renderErrorState() {
   document.body.style.backgroundColor = '#fff';
   document.documentElement.style.setProperty('--page-bg', '#fff');
+  document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
+  document.title = ERROR_TEXTS.title[currentLanguage] || ERROR_TEXTS.title.cat;
+  if (metaDescriptionEl) {
+    metaDescriptionEl.content = ERROR_TEXTS.message[currentLanguage] || ERROR_TEXTS.message.cat;
+  }
   projectTitle.textContent = ERROR_TEXTS.title[currentLanguage] || ERROR_TEXTS.title.cat;
   
   mainImageContainer.innerHTML = '';
@@ -295,7 +459,12 @@ function renderErrorState() {
   message.textContent = ERROR_TEXTS.message[currentLanguage] || ERROR_TEXTS.message.cat;
   
   const homeLink = document.createElement('a');
-  homeLink.href = 'index.html';
+  const homeParams = new URLSearchParams();
+  if (currentLanguage !== 'cat') {
+    homeParams.set('lang', currentLanguage);
+  }
+  const homeQuery = homeParams.toString();
+  homeLink.href = `index.html${homeQuery ? `?${homeQuery}` : ''}`;
   homeLink.textContent = ERROR_TEXTS.home[currentLanguage] || ERROR_TEXTS.home.cat;
   homeLink.className = 'menu-action-btn';
   
@@ -330,6 +499,7 @@ function toggleMenu() {
 
 // Cambiar idioma
 function changeLanguage(lang) {
+  if (!isValidLanguage(lang)) return;
   currentLanguage = lang;
   
   // Actualizar botones de idioma
@@ -346,6 +516,8 @@ function changeLanguage(lang) {
   // Re-renderizar créditos y botón de categoría
   renderCredits();
   updateMoreCategoryButton();
+  updateProjectSeo();
+  updateUrlState();
 }
 
 // Configurar event listeners
@@ -355,12 +527,21 @@ function setupEventListeners() {
   
   // Botón back
   backBtn.addEventListener('click', () => {
-    window.location.href = 'index.html';
+    const params = new URLSearchParams();
+    if (currentLanguage !== 'cat') {
+      params.set('lang', currentLanguage);
+    }
+    const query = params.toString();
+    window.location.href = `index.html${query ? `?${query}` : ''}`;
   });
   
   // Botón ver más de esta categoría
   moreCategoryBtn.addEventListener('click', () => {
-    window.location.href = `index.html?category=${projectData.categoria}`;
+    const params = new URLSearchParams({ category: projectData.categoria });
+    if (currentLanguage !== 'cat') {
+      params.set('lang', currentLanguage);
+    }
+    window.location.href = `index.html?${params.toString()}`;
   });
   
   // Cambio de idioma
