@@ -15,7 +15,6 @@ const menuPanel = document.getElementById('menu-panel');
 const categoriesContainer = document.getElementById('categories-container');
 const langButtons = document.querySelectorAll('.lang-btn');
 const aboutLink = document.getElementById('about-link');
-const homeIntro = document.getElementById('home-intro');
 const metaDescriptionEl = document.getElementById('meta-description');
 const canonicalLinkEl = document.getElementById('canonical-link');
 const ogTitleEl = document.getElementById('og-title');
@@ -49,18 +48,15 @@ const TAB_TITLE = 'paula barjau';
 const HOME_SEO = {
   cat: {
     title: TAB_TITLE,
-    description: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.',
-    intro: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.'
+    description: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.'
   },
   es: {
     title: TAB_TITLE,
-    description: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.',
-    intro: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.'
+    description: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.'
   },
   en: {
     title: TAB_TITLE,
-    description: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.',
-    intro: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.'
+    description: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.'
   }
 };
 const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/fake_1.webp';
@@ -122,7 +118,6 @@ function updateHomeSeo() {
   document.title = seo.title;
   document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
 
-  if (homeIntro) homeIntro.textContent = seo.intro;
   if (metaDescriptionEl) metaDescriptionEl.content = seo.description;
   if (canonicalLinkEl) canonicalLinkEl.href = pageUrl;
   if (ogTitleEl) ogTitleEl.content = seo.title;

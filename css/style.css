@@ -148,19 +148,6 @@ h1 {
   -webkit-appearance: none;
 }
 
-/* OPCION LENGUETA (actual) */
-/* .menu-toggle {
-  background: rgba(255, 255, 255, 0.9);
-  color: #000;
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-} 
-  
-.menu-toggle.menu-open {
-  bottom: var(--menu-height, 200px);
-}*/
-
-/* OPCION BOTON (estilo sólido clásico) */
 .menu-toggle {
   background: #000;
   color: #fff;
@@ -172,20 +159,6 @@ h1 {
 .menu-toggle.menu-open {
   bottom: calc(var(--menu-height, 200px) + var(--menu-gap, 20px));
 }
-
-
-/* OPCION TEXTO SOLO (estilo minimal) */
-/* .menu-toggle {
-  background: transparent;
-  color: #000;
-  border: 2px solid transparent;
-  border-radius: 0;
-  box-shadow: none;
-}
-  
-.menu-toggle.menu-open {
-  bottom: var(--menu-height, 200px);
-}*/
 
 /* Panel del menú */
 .menu-panel {
