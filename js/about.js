@@ -1,3 +1,7 @@
+import { SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl } from './lib/i18n.js';
+import { setupMenu } from './lib/menu.js';
+
 // Estado
 let aboutData = null;
 let categoriesData = null;
@@ -10,29 +14,7 @@ const menuToggle = document.getElementById('menu-toggle');
 const menuPanel = document.getElementById('menu-panel');
 const backBtn = document.getElementById('back-btn');
 const langButtons = document.querySelectorAll('.lang-btn');
-const metaDescriptionEl = document.getElementById('meta-description');
-const canonicalLinkEl = document.getElementById('canonical-link');
-const ogTitleEl = document.getElementById('og-title');
-const ogDescriptionEl = document.getElementById('og-description');
-const ogUrlEl = document.getElementById('og-url');
-const ogImageEl = document.getElementById('og-image');
-const ogLocaleEl = document.getElementById('og-locale');
-const twitterTitleEl = document.getElementById('twitter-title');
-const twitterDescriptionEl = document.getElementById('twitter-description');
-const twitterImageEl = document.getElementById('twitter-image');
 
-const HTML_LANG_MAP = {
-  cat: 'ca',
-  es: 'es',
-  en: 'en'
-};
-const OG_LOCALE_MAP = {
-  cat: 'ca_ES',
-  es: 'es_ES',
-  en: 'en_US'
-};
-const SITE_ORIGIN = 'https://paulabarjau.studio';
-const TAB_TITLE = 'paula barjau';
 const ABOUT_LABELS = {
   cat: 'sobre mi',
   es: 'sobre mí',
@@ -48,16 +30,6 @@ const ABOUT_FALLBACK_DESCRIPTION = {
   es: 'Conoce a Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.',
   en: 'Meet Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.'
 };
-const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/fake_1.webp';
-
-function isValidLanguage(lang) {
-  return Boolean(HTML_LANG_MAP[lang]);
-}
-
-function resolveLangFromUrl() {
-  const urlLang = new URLSearchParams(window.location.search).get('lang');
-  return isValidLanguage(urlLang) ? urlLang : 'cat';
-}
 
 function setMenuTexts() {
   if (categoriesData) {
@@ -66,39 +38,20 @@ function setMenuTexts() {
   }
 }
 
-function updateUrlState() {
-  const params = new URLSearchParams(window.location.search);
-  if (currentLanguage !== 'cat') {
-    params.set('lang', currentLanguage);
-  } else {
-    params.delete('lang');
-  }
-
-  const query = params.toString();
-  const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}`;
-  window.history.replaceState({}, '', nextUrl);
-}
-
 function updateAboutSeo() {
   const label = aboutData?.title?.[currentLanguage] || ABOUT_LABELS[currentLanguage];
   const description = aboutData?.paragraphs?.[currentLanguage]?.[0] || ABOUT_FALLBACK_DESCRIPTION[currentLanguage];
   const seoTitle = `${label} | ${ABOUT_TITLE_SUFFIX[currentLanguage]}`;
-  const pageUrl = `${SITE_ORIGIN}/about.html`;
+  const canonicalUrl = `${SITE_ORIGIN}/about.html`;
   const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
 
-  document.title = TAB_TITLE;
-  document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
-
-  if (metaDescriptionEl) metaDescriptionEl.content = description;
-  if (canonicalLinkEl) canonicalLinkEl.href = pageUrl;
-  if (ogTitleEl) ogTitleEl.content = seoTitle;
-  if (ogDescriptionEl) ogDescriptionEl.content = description;
-  if (ogUrlEl) ogUrlEl.content = pageUrl;
-  if (ogImageEl) ogImageEl.content = imageUrl;
-  if (ogLocaleEl) ogLocaleEl.content = OG_LOCALE_MAP[currentLanguage] || OG_LOCALE_MAP.cat;
-  if (twitterTitleEl) twitterTitleEl.content = seoTitle;
-  if (twitterDescriptionEl) twitterDescriptionEl.content = description;
-  if (twitterImageEl) twitterImageEl.content = imageUrl;
+  applyMeta({
+    title: seoTitle,
+    description,
+    canonicalUrl,
+    imageUrl,
+    lang: currentLanguage
+  });
 }
 
 async function loadData() {
@@ -135,15 +88,6 @@ function renderAbout() {
   updateAboutSeo();
 }
 
-function toggleMenu() {
-  const isOpen = menuPanel.classList.toggle('open');
-  menuToggle.classList.toggle('menu-open', isOpen);
-  if (isOpen) {
-    const menuHeight = menuPanel.offsetHeight;
-    document.documentElement.style.setProperty('--menu-height', `${menuHeight}px`);
-  }
-}
-
 function changeLanguage(lang) {
   if (!isValidLanguage(lang)) return;
   currentLanguage = lang;
@@ -152,32 +96,14 @@ function changeLanguage(lang) {
   });
   setMenuTexts();
   renderAbout();
-  updateUrlState();
+  updateUrlState(currentLanguage);
 }
 
 function setupListeners() {
-  menuToggle.addEventListener('click', toggleMenu);
+  setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange: changeLanguage });
+
   backBtn.addEventListener('click', () => {
-    const params = new URLSearchParams();
-    if (currentLanguage !== 'cat') {
-      params.set('lang', currentLanguage);
-    }
-    const query = params.toString();
-    window.location.href = `index.html${query ? `?${query}` : ''}`;
-  });
-
-  langButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      changeLanguage(btn.dataset.lang);
-    });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (menuPanel.classList.contains('open') &&
-        !menuPanel.contains(e.target) &&
-        !menuToggle.contains(e.target)) {
-      toggleMenu();
-    }
+    window.location.href = buildUrl('index.html', { lang: currentLanguage });
   });
 }
 
@@ -192,7 +118,7 @@ async function init() {
 
     setMenuTexts();
     renderAbout();
-    updateUrlState();
+    updateUrlState(currentLanguage);
     setupListeners();
   } catch (err) {
     console.error('Error cargando about:', err);

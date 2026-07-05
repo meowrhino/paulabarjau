@@ -1,3 +1,7 @@
+import { SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl } from './lib/i18n.js';
+import { setupMenu } from './lib/menu.js';
+
 // Estado global
 let categoriesData = null;
 let projectsData = null;
@@ -15,16 +19,6 @@ const menuPanel = document.getElementById('menu-panel');
 const categoriesContainer = document.getElementById('categories-container');
 const langButtons = document.querySelectorAll('.lang-btn');
 const aboutLink = document.getElementById('about-link');
-const metaDescriptionEl = document.getElementById('meta-description');
-const canonicalLinkEl = document.getElementById('canonical-link');
-const ogTitleEl = document.getElementById('og-title');
-const ogDescriptionEl = document.getElementById('og-description');
-const ogUrlEl = document.getElementById('og-url');
-const ogImageEl = document.getElementById('og-image');
-const ogLocaleEl = document.getElementById('og-locale');
-const twitterTitleEl = document.getElementById('twitter-title');
-const twitterDescriptionEl = document.getElementById('twitter-description');
-const twitterImageEl = document.getElementById('twitter-image');
 
 // Helpers
 const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -33,33 +27,11 @@ const TEXT_LOAD_MORE = {
   es: 'cargar más',
   en: 'load more'
 };
-const HTML_LANG_MAP = {
-  cat: 'ca',
-  es: 'es',
-  en: 'en'
+const HOME_SEO_DESCRIPTION = {
+  cat: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.',
+  es: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.',
+  en: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.'
 };
-const OG_LOCALE_MAP = {
-  cat: 'ca_ES',
-  es: 'es_ES',
-  en: 'en_US'
-};
-const SITE_ORIGIN = 'https://paulabarjau.studio';
-const TAB_TITLE = 'paula barjau';
-const HOME_SEO = {
-  cat: {
-    title: TAB_TITLE,
-    description: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.'
-  },
-  es: {
-    title: TAB_TITLE,
-    description: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.'
-  },
-  en: {
-    title: TAB_TITLE,
-    description: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.'
-  }
-};
-const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/fake_1.webp';
 
 function setImageAlt(img, text) {
   img.alt = text || '';
@@ -68,11 +40,11 @@ function setImageAlt(img, text) {
 function compareProjects(a, b) {
   const relevanceA = Number.isFinite(Number(a.relevance)) ? Number(a.relevance) : Number.MAX_SAFE_INTEGER;
   const relevanceB = Number.isFinite(Number(b.relevance)) ? Number(b.relevance) : Number.MAX_SAFE_INTEGER;
-  
+
   if (relevanceA !== relevanceB) {
     return relevanceA - relevanceB;
   }
-  
+
   return new Date(b.date) - new Date(a.date);
 }
 
@@ -87,66 +59,23 @@ function clearInlineLayout(card) {
   card.style.transform = '';
 }
 
-function isValidLanguage(lang) {
-  return Boolean(TEXT_LOAD_MORE[lang]);
-}
-
-function resolveLangFromUrl() {
-  const urlLang = new URLSearchParams(window.location.search).get('lang');
-  return isValidLanguage(urlLang) ? urlLang : 'cat';
-}
-
-function getBasePageUrl() {
-  return `${SITE_ORIGIN}/`;
-}
-
 function updateAboutLink() {
   if (!aboutLink) return;
-  const params = new URLSearchParams();
-  if (currentLanguage !== 'cat') {
-    params.set('lang', currentLanguage);
-  }
-  const query = params.toString();
-  aboutLink.href = `about.html${query ? `?${query}` : ''}`;
+  aboutLink.href = buildUrl('about.html', { lang: currentLanguage });
 }
 
 function updateHomeSeo() {
-  const seo = HOME_SEO[currentLanguage] || HOME_SEO.cat;
-  const pageUrl = getBasePageUrl();
+  const description = HOME_SEO_DESCRIPTION[currentLanguage] || HOME_SEO_DESCRIPTION.cat;
+  const canonicalUrl = `${SITE_ORIGIN}/`;
   const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
 
-  document.title = seo.title;
-  document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
-
-  if (metaDescriptionEl) metaDescriptionEl.content = seo.description;
-  if (canonicalLinkEl) canonicalLinkEl.href = pageUrl;
-  if (ogTitleEl) ogTitleEl.content = seo.title;
-  if (ogDescriptionEl) ogDescriptionEl.content = seo.description;
-  if (ogUrlEl) ogUrlEl.content = pageUrl;
-  if (ogImageEl) ogImageEl.content = imageUrl;
-  if (ogLocaleEl) ogLocaleEl.content = OG_LOCALE_MAP[currentLanguage] || OG_LOCALE_MAP.cat;
-  if (twitterTitleEl) twitterTitleEl.content = seo.title;
-  if (twitterDescriptionEl) twitterDescriptionEl.content = seo.description;
-  if (twitterImageEl) twitterImageEl.content = imageUrl;
-}
-
-function updateUrlState() {
-  const params = new URLSearchParams(window.location.search);
-  if (activeCategory) {
-    params.set('category', activeCategory);
-  } else {
-    params.delete('category');
-  }
-
-  if (currentLanguage !== 'cat') {
-    params.set('lang', currentLanguage);
-  } else {
-    params.delete('lang');
-  }
-
-  const query = params.toString();
-  const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}`;
-  window.history.replaceState({}, '', nextUrl);
+  applyMeta({
+    title: TAB_TITLE,
+    description,
+    canonicalUrl,
+    imageUrl,
+    lang: currentLanguage
+  });
 }
 
 // Inicialización
@@ -157,7 +86,7 @@ async function init() {
     renderCategories();
     renderProjects();
     setupEventListeners();
-    
+
     // Verificar si hay una categoría en la URL
     const urlParams = new URLSearchParams(window.location.search);
     const categoryParam = urlParams.get('category');
@@ -172,8 +101,8 @@ async function init() {
 
     updateHomeSeo();
     updateAboutLink();
-    updateUrlState();
-    
+    updateUrlState(currentLanguage, { category: activeCategory });
+
     console.log('Aplicación inicializada correctamente');
   } catch (error) {
     console.error('Error al inicializar la aplicación:', error);
@@ -187,10 +116,10 @@ async function loadData() {
       fetch('data/home_categories.json'),
       fetch('data/home_projects.json')
     ]);
-    
+
     categoriesData = await categoriesResponse.json();
     projectsData = await projectsResponse.json();
-    
+
     console.log('Datos cargados:', { categoriesData, projectsData });
   } catch (error) {
     console.error('Error al cargar los datos:', error);
@@ -201,9 +130,9 @@ async function loadData() {
 // Renderizar categorías en el menú
 function renderCategories() {
   categoriesContainer.innerHTML = '';
-  
+
   const categories = categoriesData.home_categories;
-  
+
   Object.keys(categories).forEach(categoryKey => {
     const category = categories[categoryKey];
     const button = document.createElement('button');
@@ -212,9 +141,9 @@ function renderCategories() {
     button.textContent = category[`name_${currentLanguage}`];
     button.dataset.color = category.color;
     button.style.color = category.color;
-    
+
     button.addEventListener('click', () => toggleCategory(category.code));
-    
+
     categoriesContainer.appendChild(button);
   });
 }
@@ -235,17 +164,17 @@ function updateCategoryButtonsText() {
 function renderProjects() {
   projectsContainer.innerHTML = '';
   projectCards = [];
-  
+
   const projects = projectsData.home_projects;
-  
+
   // Convertir a array y ordenar por fecha (más reciente primero)
   const projectsArray = Object.keys(projects).map(key => ({
     slug: key,
     ...projects[key]
   }));
-  
+
   projectsArray.sort(compareProjects);
-  
+
   // Renderizar cada proyecto
   projectsArray.forEach(project => {
     const card = createProjectCard(project);
@@ -255,19 +184,15 @@ function renderProjects() {
     card.style.display = '';
     projectCards.push(card);
   });
-  
+
   visibleLimit = LOAD_BATCH;
   applyFilter(); // asegurar estado inicial coherente
   updateLoadMoreLabel();
 }
 
 // Construir URL de un proyecto respetando el idioma activo
-function buildProjectUrl(slug) {
-  const params = new URLSearchParams({ slug });
-  if (currentLanguage !== 'cat') {
-    params.set('lang', currentLanguage);
-  }
-  return `project.html?${params.toString()}`;
+function projectUrl(slug) {
+  return buildUrl('project.html', { slug, lang: currentLanguage });
 }
 
 // Crear tarjeta de proyecto
@@ -276,36 +201,36 @@ function createProjectCard(project) {
   card.className = 'project-card';
   card.dataset.category = project.categoria;
   card.dataset.slug = project.slug;
-  card.href = buildProjectUrl(project.slug);
+  card.href = projectUrl(project.slug);
 
   // Obtener el color de la categoría
   const categoryColor = categoriesData.home_categories[project.categoria].color;
-  
+
   // Imagen
   const img = document.createElement('img');
   img.src = `data/${project.slug}/img/${project.imatge_home}`;
   setImageAlt(img, project.sinopsis[currentLanguage]);
   img.loading = 'lazy';
-  
+
   // Overlay
   const overlay = document.createElement('div');
   overlay.className = 'project-overlay';
   overlay.style.backgroundColor = hexToRgba(categoryColor, 0.5);
   overlay.dataset.category = project.categoria;
-  
+
   // Sinopsis
   const sinopsis = document.createElement('div');
   sinopsis.className = 'project-sinopsis';
   sinopsis.textContent = project.sinopsis[currentLanguage];
-  
+
   // Ver más
   const seeMore = document.createElement('div');
   seeMore.className = 'project-see-more';
   seeMore.textContent = categoriesData.text_see_more[currentLanguage];
-  
+
   overlay.appendChild(sinopsis);
   overlay.appendChild(seeMore);
-  
+
   card.appendChild(img);
   card.appendChild(overlay);
 
@@ -318,20 +243,20 @@ function updateProjectCardsText() {
     const slug = card.dataset.slug;
     const project = projectsData.home_projects[slug];
     if (!project) return;
-    
+
     const sinopsisText = project.sinopsis[currentLanguage];
     const seeMoreText = categoriesData.text_see_more[currentLanguage];
-    
+
     const img = card.querySelector('img');
     if (img) setImageAlt(img, sinopsisText);
-    
+
     const sinopsisEl = card.querySelector('.project-sinopsis');
     if (sinopsisEl) sinopsisEl.textContent = sinopsisText;
-    
+
     const seeMoreEl = card.querySelector('.project-see-more');
     if (seeMoreEl) seeMoreEl.textContent = seeMoreText;
 
-    card.href = buildProjectUrl(slug);
+    card.href = projectUrl(slug);
   });
 }
 
@@ -357,7 +282,7 @@ function hexToRgba(hex, alpha) {
 // Animación FLIP del filtrado
 function applyFilter() {
   const reduceMotion = reduceMotionQuery.matches;
-  
+
   // Determinar qué tarjetas deben ser visibles según filtro y paginación
   const allowed = new Set();
   let matchingCount = 0;
@@ -370,14 +295,14 @@ function applyFilter() {
       allowed.add(card);
     }
   });
-  
+
   const shouldShow = (card) => allowed.has(card);
-  
+
   const staying = [];
   const entering = [];
   const exiting = [];
   const initialRects = new Map();
-  
+
   // 1) Medir estado inicial de las cards visibles
   if (!reduceMotion) {
     projectCards.forEach(card => {
@@ -386,12 +311,12 @@ function applyFilter() {
       }
     });
   }
-  
+
   // 2) Clasificar cards según si se quedan, entran o salen
   projectCards.forEach(card => {
     const wasVisible = card.dataset.visible !== 'false';
     const willBeVisible = shouldShow(card);
-    
+
     if (wasVisible && willBeVisible) {
       staying.push(card);
     } else if (!wasVisible && willBeVisible) {
@@ -400,26 +325,26 @@ function applyFilter() {
       exiting.push(card);
     }
   });
-  
+
   if (reduceMotion) {
     entering.forEach(card => {
       card.dataset.visible = 'true';
       clearInlineLayout(card);
       card.style.display = '';
     });
-    
+
     exiting.forEach(card => {
       card.dataset.visible = 'false';
       clearInlineLayout(card);
       card.style.display = 'none';
     });
-    
+
     staying.forEach(clearInlineLayout);
     return;
   }
-  
+
   const containerRect = projectsContainer.getBoundingClientRect();
-  
+
   // 3) Sacar del flujo las que salen, fijando su tamaño/posición para animar la salida
   exiting.forEach(card => {
     const rect = initialRects.get(card);
@@ -434,7 +359,7 @@ function applyFilter() {
     card.style.opacity = '1';
     card.style.transform = '';
   });
-  
+
   // 4) Añadir las nuevas al flujo con estado inicial discreto
   entering.forEach(card => {
     card.dataset.visible = 'true';
@@ -443,28 +368,28 @@ function applyFilter() {
     card.style.opacity = '0';
     card.style.transform = 'translateY(12px) scale(0.98)';
   });
-  
+
   // 5) Medir posiciones finales de las que se quedan
   const finalRects = new Map();
   staying.forEach(card => finalRects.set(card, card.getBoundingClientRect()));
-  
+
   // 6) FLIP para las que permanecen
   staying.forEach(card => {
     const initial = initialRects.get(card);
     const final = finalRects.get(card);
     if (!initial || !final) return;
-    
+
     const dx = initial.left - final.left;
     const dy = initial.top - final.top;
     if (dx === 0 && dy === 0) return;
-    
+
     card.style.transition = 'none';
     card.style.transform = `translate(${dx}px, ${dy}px)`;
     card.getBoundingClientRect(); // fuerza reflow
     card.style.transition = '';
     card.style.transform = '';
   });
-  
+
   // Animar entradas
   requestAnimationFrame(() => {
     entering.forEach(card => {
@@ -472,14 +397,14 @@ function applyFilter() {
       card.style.transform = '';
     });
   });
-  
+
   // Animar salidas y limpiar estilos al terminar
   exiting.forEach(card => {
     requestAnimationFrame(() => {
       card.style.opacity = '0';
       card.style.transform = 'translateY(12px) scale(0.98)';
     });
-    
+
     const onEnd = (event) => {
       if (event.propertyName !== 'opacity') return;
       if (card.dataset.visible === 'true') return; // ya ha vuelto a ser visible
@@ -487,10 +412,10 @@ function applyFilter() {
       clearInlineLayout(card);
       card.removeEventListener('transitionend', onEnd);
     };
-    
+
     card.addEventListener('transitionend', onEnd);
   });
-  
+
   updateLoadMoreVisibility(matchingCount > visibleLimit);
 }
 
@@ -498,26 +423,26 @@ function applyFilter() {
 function toggleCategory(categoryCode, options = {}) {
   const { keepActive = false } = options;
   const categoryButtons = document.querySelectorAll('.category-btn');
-  
+
   // Si se clickea la categoría activa, desactivar
   if (activeCategory === categoryCode && !keepActive) {
     activeCategory = null;
     visibleLimit = LOAD_BATCH;
-    
+
     // Restaurar todos los botones
     categoryButtons.forEach(btn => {
       btn.style.color = btn.dataset.color;
       btn.classList.remove('active', 'inactive');
     });
-    
+
     // Restaurar fondo
     document.documentElement.style.setProperty('--page-bg', '#fff');
     applyFilter();
-    updateUrlState();
+    updateUrlState(currentLanguage, { category: activeCategory });
   } else {
     // Activar nueva categoría
     activeCategory = categoryCode;
-    
+
     // Actualizar botones
     categoryButtons.forEach(btn => {
       const cat = btn.dataset.category;
@@ -531,72 +456,44 @@ function toggleCategory(categoryCode, options = {}) {
         btn.style.color = '#000';
       }
     });
-    
+
     visibleLimit = LOAD_BATCH;
-    
+
     // Cambiar fondo al color de la categoría
     const categoryBg = categoriesData.home_categories[categoryCode].bg;
     document.documentElement.style.setProperty('--page-bg', categoryBg);
-    
-    applyFilter();
-    updateUrlState();
-  }
-}
 
-// Toggle del menú
-function toggleMenu() {
-  const isOpen = menuPanel.classList.toggle('open');
-  menuToggle.classList.toggle('menu-open', isOpen);
-  
-  if (isOpen) {
-    // Calcular altura del menú para ajustar el botón
-    const menuHeight = menuPanel.offsetHeight;
-    document.documentElement.style.setProperty('--menu-height', `${menuHeight}px`);
+    applyFilter();
+    updateUrlState(currentLanguage, { category: activeCategory });
   }
 }
 
 // Cambiar idioma
 function changeLanguage(lang) {
+  if (!isValidLanguage(lang)) return;
   currentLanguage = lang;
-  
+
   // Actualizar botones de idioma
   langButtons.forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
-  
+
   // Actualizar texto del botón del menú
   menuToggle.textContent = categoriesData.text_menu[lang];
-  
+
   updateCategoryButtonsText();
   updateProjectCardsText();
   updateLoadMoreLabel();
   updateAboutLink();
   updateHomeSeo();
   applyFilter();
-  updateUrlState();
+  updateUrlState(currentLanguage, { category: activeCategory });
 }
 
 // Configurar event listeners
 function setupEventListeners() {
-  // Toggle del menú
-  menuToggle.addEventListener('click', toggleMenu);
-  
-  // Cambio de idioma
-  langButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      changeLanguage(btn.dataset.lang);
-    });
-  });
-  
-  // Cerrar menú al hacer click fuera
-  document.addEventListener('click', (e) => {
-    if (menuPanel.classList.contains('open') && 
-        !menuPanel.contains(e.target) && 
-        !menuToggle.contains(e.target)) {
-      toggleMenu();
-    }
-  });
-  
+  setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange: changeLanguage });
+
   // Cargar más
   if (loadMoreBtn) {
     loadMoreBtn.addEventListener('click', () => {

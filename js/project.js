@@ -1,3 +1,7 @@
+import { HTML_LANG_MAP, SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl } from './lib/i18n.js';
+import { setupMenu } from './lib/menu.js';
+
 // Estado global
 let categoriesData = null;
 let projectData = null;
@@ -15,16 +19,6 @@ const backBtn = document.getElementById('back-btn');
 const moreCategoryBtn = document.getElementById('more-category-btn');
 const langButtons = document.querySelectorAll('.lang-btn');
 const mainEl = document.querySelector('main');
-const metaDescriptionEl = document.getElementById('meta-description');
-const canonicalLinkEl = document.getElementById('canonical-link');
-const ogTitleEl = document.getElementById('og-title');
-const ogDescriptionEl = document.getElementById('og-description');
-const ogUrlEl = document.getElementById('og-url');
-const ogImageEl = document.getElementById('og-image');
-const ogLocaleEl = document.getElementById('og-locale');
-const twitterTitleEl = document.getElementById('twitter-title');
-const twitterDescriptionEl = document.getElementById('twitter-description');
-const twitterImageEl = document.getElementById('twitter-image');
 const projectSchemaEl = document.getElementById('project-schema');
 
 // Textos y helpers
@@ -45,24 +39,11 @@ const ERROR_TEXTS = {
     en: 'go back home'
   }
 };
-const HTML_LANG_MAP = {
-  cat: 'ca',
-  es: 'es',
-  en: 'en'
-};
-const OG_LOCALE_MAP = {
-  cat: 'ca_ES',
-  es: 'es_ES',
-  en: 'en_US'
-};
-const SITE_ORIGIN = 'https://paulabarjau.studio';
-const TAB_TITLE = 'paula barjau';
 const PROJECT_DESCRIPTION_TEMPLATES = {
   cat: (title, category) => `${title}. Projecte de ${category} de Paula Barjau, maquilladora i hairstylist a Barcelona.`,
   es: (title, category) => `${title}. Proyecto de ${category} de Paula Barjau, maquilladora y hairstylist en Barcelona.`,
   en: (title, category) => `${title}. ${category} project by Paula Barjau, makeup artist and hairstylist in Barcelona.`
 };
-const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/fake_1.webp';
 
 function setImageAlt(img, text) {
   img.alt = text || '';
@@ -72,15 +53,6 @@ function resolveMediaSrc(path) {
   if (!path) return null;
   if (/^https?:\/\//i.test(path) || path.startsWith('//')) return path;
   return `data/${projectSlug}/img/${path}`;
-}
-
-function isValidLanguage(lang) {
-  return Boolean(HTML_LANG_MAP[lang]);
-}
-
-function resolveLangFromUrl() {
-  const urlLang = new URLSearchParams(window.location.search).get('lang');
-  return isValidLanguage(urlLang) ? urlLang : 'cat';
 }
 
 function getCanonicalProjectUrl() {
@@ -123,19 +95,6 @@ function getProjectSocialImageUrl() {
   return new URL(imagePath, `${SITE_ORIGIN}/`).href;
 }
 
-function updateUrlState() {
-  const params = new URLSearchParams(window.location.search);
-  params.set('slug', projectSlug);
-  if (currentLanguage !== 'cat') {
-    params.set('lang', currentLanguage);
-  } else {
-    params.delete('lang');
-  }
-
-  const query = params.toString();
-  window.history.replaceState({}, '', `${window.location.pathname}?${query}`);
-}
-
 function updateProjectSchema(description, canonicalUrl, imageUrl, categoryName) {
   if (!projectSchemaEl || !projectData) return;
 
@@ -170,23 +129,16 @@ function updateProjectSeo() {
   const categoryName = category?.[`name_${currentLanguage}`] || projectData.categoria;
   const template = PROJECT_DESCRIPTION_TEMPLATES[currentLanguage] || PROJECT_DESCRIPTION_TEMPLATES.cat;
   const description = template(projectData.titulo, categoryName);
-  const title = TAB_TITLE;
   const canonicalUrl = getCanonicalProjectUrl();
   const imageUrl = getProjectSocialImageUrl();
 
-  document.title = title;
-  document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
-
-  if (metaDescriptionEl) metaDescriptionEl.content = description;
-  if (canonicalLinkEl) canonicalLinkEl.href = canonicalUrl;
-  if (ogTitleEl) ogTitleEl.content = title;
-  if (ogDescriptionEl) ogDescriptionEl.content = description;
-  if (ogUrlEl) ogUrlEl.content = canonicalUrl;
-  if (ogImageEl) ogImageEl.content = imageUrl;
-  if (ogLocaleEl) ogLocaleEl.content = OG_LOCALE_MAP[currentLanguage] || OG_LOCALE_MAP.cat;
-  if (twitterTitleEl) twitterTitleEl.content = title;
-  if (twitterDescriptionEl) twitterDescriptionEl.content = description;
-  if (twitterImageEl) twitterImageEl.content = imageUrl;
+  applyMeta({
+    title: TAB_TITLE,
+    description,
+    canonicalUrl,
+    imageUrl,
+    lang: currentLanguage
+  });
 
   updateProjectSchema(description, canonicalUrl, imageUrl, categoryName);
 }
@@ -199,13 +151,13 @@ async function init() {
     // Obtener slug de la URL
     const urlParams = new URLSearchParams(window.location.search);
     projectSlug = urlParams.get('slug');
-    
+
     if (!projectSlug) {
       console.error('No se encontró el slug del proyecto');
       window.location.href = 'index.html';
       return;
     }
-    
+
     await loadData();
     renderProject();
     setupEventListeners();
@@ -215,7 +167,7 @@ async function init() {
     menuToggle.textContent = categoriesData.text_menu[currentLanguage];
     backBtn.textContent = categoriesData.text_back[currentLanguage];
     updateProjectSeo();
-    updateUrlState();
+    updateUrlState(currentLanguage, { slug: projectSlug });
     console.log('Página de proyecto inicializada correctamente');
   } catch (error) {
     console.error('Error al inicializar la página de proyecto:', error);
@@ -230,18 +182,18 @@ async function loadData() {
       fetch('data/home_categories.json'),
       fetch(`data/${projectSlug}/${projectSlug}.json`)
     ]);
-    
+
     if (!categoriesResponse.ok) {
       throw new Error('No se pudieron cargar las categorías');
     }
-    
+
     if (!projectResponse.ok) {
       throw new Error('No se encontraron datos del proyecto');
     }
-    
+
     categoriesData = await categoriesResponse.json();
     projectData = await projectResponse.json();
-    
+
     console.log('Datos del proyecto cargados:', { categoriesData, projectData });
   } catch (error) {
     console.error('Error al cargar los datos del proyecto:', error);
@@ -254,19 +206,19 @@ function renderProject() {
   // Aplicar color de fondo según categoría
   const category = categoriesData.home_categories[projectData.categoria];
   document.documentElement.style.setProperty('--page-bg', category.bg);
-  
+
   // Título
   projectTitle.textContent = projectData.titulo;
-  
+
   // Imagen principal
   renderMainImage();
-  
+
   // Créditos
   renderCredits();
-  
+
   // Galería
   renderGallery();
-  
+
   // Botón "ver más [categoría]"
   updateMoreCategoryButton();
   updateProjectSeo();
@@ -326,11 +278,11 @@ function renderMainImage() {
 // Renderizar créditos
 function renderCredits() {
   creditsContainer.innerHTML = '';
-  
+
   projectData.creditos.forEach(credito => {
     const creditItem = document.createElement('div');
     creditItem.className = 'credit-item';
-    
+
     if (credito.tipo === 'extra') {
       // Crédito extra (texto especial)
       creditItem.className = 'credit-extra';
@@ -340,10 +292,10 @@ function renderCredits() {
       const title = document.createElement('span');
       title.className = 'credit-title';
       title.textContent = credito.titulo[currentLanguage];
-      
+
       const name = document.createElement('span');
       name.className = 'credit-name';
-      
+
       if (credito.link) {
         const link = document.createElement('a');
         link.href = credito.link;
@@ -354,11 +306,11 @@ function renderCredits() {
       } else {
         name.textContent = credito.nombre;
       }
-      
+
       creditItem.appendChild(title);
       creditItem.appendChild(name);
     }
-    
+
     creditsContainer.appendChild(creditItem);
   });
 }
@@ -366,19 +318,19 @@ function renderCredits() {
 // Renderizar galería
 function renderGallery() {
   galleryContainer.innerHTML = '';
-  
+
   projectData.galeria.forEach(bloque => {
     if (bloque.tipo === 'fotos') {
       // Renderizar fotos
       bloque.url.forEach(foto => {
         const item = document.createElement('div');
         item.className = 'gallery-item';
-        
+
         const img = document.createElement('img');
         img.src = `data/${projectSlug}/img/${foto}`;
         setImageAlt(img, projectData.titulo);
         img.loading = 'lazy';
-        
+
         item.appendChild(img);
         galleryContainer.appendChild(item);
       });
@@ -387,14 +339,14 @@ function renderGallery() {
       bloque.url.forEach(videoUrl => {
         const item = document.createElement('div');
         item.className = 'gallery-item';
-        
+
         const videoId = extractYouTubeId(videoUrl);
         if (videoId) {
           const iframe = document.createElement('iframe');
           iframe.src = `https://www.youtube.com/embed/${videoId}`;
           iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
           iframe.allowFullscreen = true;
-          
+
           item.appendChild(iframe);
           galleryContainer.appendChild(item);
         }
@@ -404,12 +356,12 @@ function renderGallery() {
       bloque.url.forEach(videoFile => {
         const item = document.createElement('div');
         item.className = 'gallery-item';
-        
+
         const video = document.createElement('video');
         video.src = `data/${projectSlug}/img/${videoFile}`;
         video.controls = true;
         video.preload = 'metadata';
-        
+
         item.appendChild(video);
         galleryContainer.appendChild(item);
       });
@@ -429,7 +381,7 @@ function updateMoreCategoryButton() {
   const category = categoriesData.home_categories[projectData.categoria];
   const seeMoreText = categoriesData.text_see_more[currentLanguage];
   const categoryName = category[`name_${currentLanguage}`];
-  
+
   moreCategoryBtn.textContent = `${seeMoreText} ${categoryName}`;
   moreCategoryBtn.style.color = category.color;
 }
@@ -440,36 +392,32 @@ function renderErrorState() {
   document.documentElement.style.setProperty('--page-bg', '#fff');
   document.documentElement.lang = HTML_LANG_MAP[currentLanguage] || 'ca';
   document.title = TAB_TITLE;
+  const metaDescriptionEl = document.getElementById('meta-description');
   if (metaDescriptionEl) {
     metaDescriptionEl.content = ERROR_TEXTS.message[currentLanguage] || ERROR_TEXTS.message.cat;
   }
   projectTitle.textContent = ERROR_TEXTS.title[currentLanguage] || ERROR_TEXTS.title.cat;
-  
+
   mainImageContainer.innerHTML = '';
   creditsContainer.innerHTML = '';
   galleryContainer.innerHTML = '';
   mainImageContainer.style.display = 'none';
   creditsContainer.style.display = 'none';
   galleryContainer.style.display = 'none';
-  
+
   const message = document.createElement('p');
   message.textContent = ERROR_TEXTS.message[currentLanguage] || ERROR_TEXTS.message.cat;
-  
+
   const homeLink = document.createElement('a');
-  const homeParams = new URLSearchParams();
-  if (currentLanguage !== 'cat') {
-    homeParams.set('lang', currentLanguage);
-  }
-  const homeQuery = homeParams.toString();
-  homeLink.href = `index.html${homeQuery ? `?${homeQuery}` : ''}`;
+  homeLink.href = buildUrl('index.html', { lang: currentLanguage });
   homeLink.textContent = ERROR_TEXTS.home[currentLanguage] || ERROR_TEXTS.home.cat;
   homeLink.className = 'menu-action-btn';
-  
+
   const errorBox = document.createElement('div');
   errorBox.className = 'error-state-box';
   errorBox.appendChild(message);
   errorBox.appendChild(homeLink);
-  
+
   if (mainEl) {
     mainEl.style.display = 'flex';
     mainEl.style.flexDirection = 'column';
@@ -478,83 +426,46 @@ function renderErrorState() {
     mainEl.style.minHeight = '70vh';
     mainEl.appendChild(errorBox);
   }
-  
+
   menuToggle.style.display = 'none';
   menuPanel.style.display = 'none';
-}
-
-// Toggle del menú
-function toggleMenu() {
-  const isOpen = menuPanel.classList.toggle('open');
-  menuToggle.classList.toggle('menu-open', isOpen);
-  
-  if (isOpen) {
-    const menuHeight = menuPanel.offsetHeight;
-    document.documentElement.style.setProperty('--menu-height', `${menuHeight}px`);
-  }
 }
 
 // Cambiar idioma
 function changeLanguage(lang) {
   if (!isValidLanguage(lang)) return;
   currentLanguage = lang;
-  
+
   // Actualizar botones de idioma
   langButtons.forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
-  
+
   // Actualizar texto del botón del menú
   menuToggle.textContent = categoriesData.text_menu[lang];
-  
+
   // Actualizar texto del botón back
   backBtn.textContent = categoriesData.text_back[lang];
-  
+
   // Re-renderizar créditos y botón de categoría
   renderCredits();
   updateMoreCategoryButton();
   updateProjectSeo();
-  updateUrlState();
+  updateUrlState(currentLanguage, { slug: projectSlug });
 }
 
 // Configurar event listeners
 function setupEventListeners() {
-  // Toggle del menú
-  menuToggle.addEventListener('click', toggleMenu);
-  
+  setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange: changeLanguage });
+
   // Botón back
   backBtn.addEventListener('click', () => {
-    const params = new URLSearchParams();
-    if (currentLanguage !== 'cat') {
-      params.set('lang', currentLanguage);
-    }
-    const query = params.toString();
-    window.location.href = `index.html${query ? `?${query}` : ''}`;
+    window.location.href = buildUrl('index.html', { lang: currentLanguage });
   });
-  
+
   // Botón ver más de esta categoría
   moreCategoryBtn.addEventListener('click', () => {
-    const params = new URLSearchParams({ category: projectData.categoria });
-    if (currentLanguage !== 'cat') {
-      params.set('lang', currentLanguage);
-    }
-    window.location.href = `index.html?${params.toString()}`;
-  });
-  
-  // Cambio de idioma
-  langButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      changeLanguage(btn.dataset.lang);
-    });
-  });
-  
-  // Cerrar menú al hacer click fuera
-  document.addEventListener('click', (e) => {
-    if (menuPanel.classList.contains('open') && 
-        !menuPanel.contains(e.target) && 
-        !menuToggle.contains(e.target)) {
-      toggleMenu();
-    }
+    window.location.href = buildUrl('index.html', { category: projectData.categoria, lang: currentLanguage });
   });
 }
 
