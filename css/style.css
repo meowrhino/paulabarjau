@@ -66,9 +66,12 @@ h1 {
 /* Tarjeta de proyecto */
 .project-card {
   position: relative;
+  display: block;
   width: 100%;
   overflow: hidden;
   cursor: pointer;
+  color: inherit;
+  text-decoration: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 

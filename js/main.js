@@ -266,13 +266,23 @@ function renderProjects() {
   updateLoadMoreLabel();
 }
 
+// Construir URL de un proyecto respetando el idioma activo
+function buildProjectUrl(slug) {
+  const params = new URLSearchParams({ slug });
+  if (currentLanguage !== 'cat') {
+    params.set('lang', currentLanguage);
+  }
+  return `project.html?${params.toString()}`;
+}
+
 // Crear tarjeta de proyecto
 function createProjectCard(project) {
-  const card = document.createElement('div');
+  const card = document.createElement('a');
   card.className = 'project-card';
   card.dataset.category = project.categoria;
   card.dataset.slug = project.slug;
-  
+  card.href = buildProjectUrl(project.slug);
+
   // Obtener el color de la categoría
   const categoryColor = categoriesData.home_categories[project.categoria].color;
   
@@ -303,14 +313,7 @@ function createProjectCard(project) {
   
   card.appendChild(img);
   card.appendChild(overlay);
-  card.addEventListener('click', () => {
-    const params = new URLSearchParams({ slug: project.slug });
-    if (currentLanguage !== 'cat') {
-      params.set('lang', currentLanguage);
-    }
-    window.location.href = `project.html?${params.toString()}`;
-  });
-  
+
   return card;
 }
 
@@ -332,6 +335,8 @@ function updateProjectCardsText() {
     
     const seeMoreEl = card.querySelector('.project-see-more');
     if (seeMoreEl) seeMoreEl.textContent = seeMoreText;
+
+    card.href = buildProjectUrl(slug);
   });
 }
 
