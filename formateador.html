@@ -256,7 +256,6 @@
       const addCreditBtn = document.getElementById('add-credit');
       const addExtraBtn = document.getElementById('add-extra');
 
-      let blobUrl = null;
       let creditos = [];
 
       function normalizeLink(link) {
@@ -323,21 +322,12 @@
         const warnings = [];
         const creditos = [];
 
-        raw.split('\\n').forEach((line, idx) => {
+        raw.split('\n').forEach((line, idx) => {
           const parsed = parseLine(line, idx, warnings);
           if (parsed) creditos.push(parsed);
         });
 
         return { creditos, warnings };
-      }
-
-      function updateLink(json) {
-        if (blobUrl) {
-          URL.revokeObjectURL(blobUrl);
-          blobUrl = null;
-        }
-        const blob = new Blob([json], { type: 'application/json' });
-        blobUrl = URL.createObjectURL(blob);
       }
 
       async function copyJson() {
@@ -398,7 +388,7 @@
         if (!trimmed) return null;
 
         const variants = [];
-        const noTrailing = trimmed.replace(/,\\s*$/, '');
+        const noTrailing = trimmed.replace(/,\s*$/, '');
 
         uniquePush(variants, trimmed);
         uniquePush(variants, noTrailing);
@@ -484,8 +474,7 @@
         const arrayJson = creditos.length ? JSON.stringify(creditos, null, 2) : '[]';
         const block = `"creditos": ${arrayJson}`;
         outputEl.textContent = block;
-        warningsEl.textContent = warnings.join('\\n');
-        updateLink(block);
+        warningsEl.textContent = warnings.join('\n');
       }
 
       function handleFieldChange(idx, field, value) {
