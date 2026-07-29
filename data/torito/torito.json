@@ -2,17 +2,17 @@
             "slug": "torito",
             "titulo": "TORITO! - Vernat.mp3",
             "categoria": "videoclip",
-            "imatge_principal": "TORITO_ANNAIZQUIERDO_1.webp",
+            "imatge_principal": {
+                "tipo": "youtube",
+                "url": [
+                    "https://www.youtube.com/watch?v=6k0b_MKujBw"
+                ]
+            },
             "galeria": [
-                {
-                    "tipo": "youtube",
-                    "url": [
-                        "https://www.youtube.com/watch?v=6k0b_MKujBw"
-                    ]
-                },
                 {
                     "tipo": "fotos",
                     "url": [
+                        "TORITO_ANNAIZQUIERDO_1.webp",
                         "TORITO_ANNAIZQUIERDO_2.webp",
                         "TORITO_ANNAIZQUIERDO_3.webp",
                         "TORITO_ANNAIZQUIERDO_4.webp",

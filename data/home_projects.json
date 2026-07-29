@@ -2,14 +2,14 @@
     "home_projects": {
         "aitanaBonmati": {
             "sinopsis": {
-                "es": "LA MAJA",
-                "en": "LA MAJA",
-                "cat": "LA MAJA"
+                "es": "uniq ONE + AITANA",
+                "en": "uniq ONE + AITANA",
+                "cat": "uniq ONE + AITANA"
             },
             "categoria": "commercial",
             "date": "2025-01-25",
             "relevance": 1,
-            "imatge_home": "fake_1.webp"
+            "imatge_home": "aitanaBonmati_1.webp"
         },
         
         "torito": {

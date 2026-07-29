@@ -14,7 +14,7 @@ export const OG_LOCALE_MAP = {
 
 export const SITE_ORIGIN = 'https://paulabarjau.studio';
 export const TAB_TITLE = 'paula barjau';
-export const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/fake_1.webp';
+export const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/aitanaBonmati_1.webp';
 
 const metaDescriptionEl = document.getElementById('meta-description');
 const canonicalLinkEl = document.getElementById('canonical-link');

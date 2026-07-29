@@ -1,17 +1,24 @@
         {
             "slug": "aitanaBonmati",
-            "titulo": "AITANA BONMATÍ x UNIq ONE",
+            "titulo": "uniq ONE + AITANA",
             "categoria": "commercial",
-            "imatge_principal": "fake_1.webp",
-            "galeria": [{
-                "tipo": "fotos",
+            "imatge_principal": {
+                "tipo": "youtube",
                 "url": [
-                "fake_2.webp",
-                "fake_3.webp",
-                "fake_4.webp",
-                "fake_5.webp"
+                    "https://www.youtube.com/watch?v=7hHM8G3xFCU"
                 ]
-        }],
+            },
+            "galeria": [
+                {
+                    "tipo": "fotos",
+                    "url": [
+                        "aitanaBonmati_1.webp",
+                        "aitanaBonmati_2.webp",
+                        "aitanaBonmati_3.webp",
+                        "aitanaBonmati_4.webp"
+                    ]
+                }
+            ],
             "creditos": [
                 {
                     "titulo": {
