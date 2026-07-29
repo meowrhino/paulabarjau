@@ -61,7 +61,7 @@ function clearInlineLayout(card) {
 
 function updateAboutLink() {
   if (!aboutLink) return;
-  aboutLink.href = buildUrl('about.html', { lang: currentLanguage });
+  aboutLink.href = buildUrl('about/', { lang: currentLanguage });
 }
 
 function updateHomeSeo() {

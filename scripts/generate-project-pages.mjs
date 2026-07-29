@@ -33,8 +33,12 @@ const LANG = 'cat';
 const HTML_LANG = 'ca';
 const OG_LOCALE = 'ca_ES';
 
+// En català "de" s'apostrofa davant de vocal o h: d'editorial, però de moda.
+// Duplicado de js/project.js a propósito (ver nota sobre seo.js más arriba).
+const catDe = (word) => (/^[aeiouàèéíòóúh]/i.test(word) ? `d'${word}` : `de ${word}`);
+
 const describe = (title, category) =>
-  `${title}. Projecte de ${category} de Paula Barjau, maquilladora i hairstylist a Barcelona.`;
+  `${title}. Projecte ${catDe(category)} de Paula Barjau, maquilladora i hairstylist a Barcelona.`;
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 
@@ -130,10 +134,31 @@ function buildPage(template, slug, project, categories) {
   return html;
 }
 
+// El about también tiene URL limpia (/about/). Solo necesita el <base> y su
+// canonical: el resto de sus meta ya son correctas en about.html.
+function writeAboutPage() {
+  const canonical = `${SITE_ORIGIN}/about/`;
+  let html = fs.readFileSync(path.join(rootDir, 'about.html'), 'utf8');
+
+  html = html.replace(
+    '<meta charset="utf-8" />',
+    '<meta charset="utf-8" />\n  <base href="../" />'
+  );
+  html = html.replace(
+    /(<link rel="canonical" id="canonical-link" href=")[^"]*(")/,
+    `$1${canonical}$2`
+  );
+  html = setMeta(html, 'id="og-url"', canonical);
+
+  const dir = path.join(rootDir, 'about');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
+}
+
 function writeSitemap(slugs) {
   const urls = [
     `${SITE_ORIGIN}/`,
-    `${SITE_ORIGIN}/about.html`,
+    `${SITE_ORIGIN}/about/`,
     ...slugs.map((s) => `${SITE_ORIGIN}/p/${encodeURIComponent(s)}/`)
   ];
   const xml = [
@@ -169,5 +194,6 @@ for (const slug of slugs) {
   fs.writeFileSync(path.join(dir, 'index.html'), buildPage(template, slug, project, categories), 'utf8');
 }
 
+writeAboutPage();
 writeSitemap(slugs);
-console.log(`Generadas ${slugs.length} páginas en p/ y actualizado sitemap.xml`);
+console.log(`Generadas ${slugs.length} páginas en p/, about/ y actualizado sitemap.xml`);

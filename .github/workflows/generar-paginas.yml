@@ -1,0 +1,53 @@
+# Regenera las páginas de p/, about/ y el sitemap cuando cambia el contenido.
+#
+# Para qué: así nadie tiene que ejecutar nada a mano. Se puede añadir un
+# proyecto editando los JSON y subiendo las imágenes desde la web de GitHub o
+# desde VS Code, y las páginas con URL limpia salen solas.
+#
+# El disparador no incluye p/, about/ ni sitemap.xml, que son justo lo que
+# escribe este flujo: así su propio commit no vuelve a dispararlo.
+
+name: Generar páginas
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'project.html'
+      - 'about.html'
+      - 'scripts/**'
+      - '.github/workflows/generar-paginas.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generar-paginas
+  cancel-in-progress: false
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generar páginas y sitemap
+        run: node scripts/generate-project-pages.mjs
+
+      - name: Publicar si hay cambios
+        run: |
+          if [ -z "$(git status --porcelain p about sitemap.xml)" ]; then
+            echo "Nada que regenerar."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add p about sitemap.xml
+          git commit -m 'Regenerar páginas de proyecto y sitemap'
+          git push

@@ -1,5 +1,5 @@
 import { SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
-import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl } from './lib/i18n.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, navigateTo } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
 
 // Estado
@@ -43,7 +43,7 @@ function updateAboutSeo() {
   const label = aboutData?.title?.[currentLanguage] || ABOUT_LABELS[currentLanguage];
   const description = aboutData?.paragraphs?.[currentLanguage]?.[0] || ABOUT_FALLBACK_DESCRIPTION[currentLanguage];
   const seoTitle = `${label} | ${ABOUT_TITLE_SUFFIX[currentLanguage]}`;
-  const canonicalUrl = `${SITE_ORIGIN}/about.html`;
+  const canonicalUrl = `${SITE_ORIGIN}/about/`;
   const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
 
   applyMeta({
@@ -132,7 +132,7 @@ function setupListeners() {
   setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange: changeLanguage });
 
   backBtn.addEventListener('click', () => {
-    window.location.href = buildUrl('index.html', { lang: currentLanguage });
+    navigateTo('index.html', { lang: currentLanguage });
   });
 }
 

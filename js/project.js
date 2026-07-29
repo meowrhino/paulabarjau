@@ -38,8 +38,13 @@ const ERROR_TEXTS = {
     en: 'go back home'
   }
 };
+// En català "de" s'apostrofa davant de vocal o h: d'editorial, però de moda
+function catDe(word) {
+  return /^[aeiouàèéíòóúh]/i.test(word) ? `d'${word}` : `de ${word}`;
+}
+
 const PROJECT_DESCRIPTION_TEMPLATES = {
-  cat: (title, category) => `${title}. Projecte de ${category} de Paula Barjau, maquilladora i hairstylist a Barcelona.`,
+  cat: (title, category) => `${title}. Projecte ${catDe(category)} de Paula Barjau, maquilladora i hairstylist a Barcelona.`,
   es: (title, category) => `${title}. Proyecto de ${category} de Paula Barjau, maquilladora y hairstylist en Barcelona.`,
   en: (title, category) => `${title}. ${category} project by Paula Barjau, makeup artist and hairstylist in Barcelona.`
 };
