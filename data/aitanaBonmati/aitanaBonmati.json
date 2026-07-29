@@ -58,6 +58,15 @@
                 },
                 {
                     "titulo": {
+                        "es": "Dir. de Fotografía",
+                        "en": "DOP",
+                        "cat": "Dir. de Fotografia"
+                    },
+                    "nombre": "Angel Manrique",
+                    "link": null
+                },
+                {
+                    "titulo": {
                         "es": "AD",
                         "en": "AD",
                         "cat": "AD"
