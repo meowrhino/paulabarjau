@@ -1,0 +1,59 @@
+        {
+            "slug": "ainara",
+            "titulo": "AINARA",
+            "categoria": "editorial",
+            "imatge_principal": "ainara_1.webp",
+            "galeria": [
+                {
+                    "tipo": "fotos",
+                    "url": [
+                        "ainara_2.webp",
+                        "ainara_3.webp",
+                        "ainara_4.webp",
+                        "ainara_5.webp",
+                        "ainara_6.webp",
+                        "ainara_7.webp",
+                        "ainara_8.webp",
+                        "ainara_9.webp"
+                    ]
+                }
+            ],
+            "creditos": [
+                {
+                    "titulo": {
+                        "es": "Fotografía",
+                        "en": "Photography",
+                        "cat": "Fotografia"
+                    },
+                    "nombre": "Andrés Bustamante",
+                    "link": "https://www.instagram.com/andresbte/"
+                },
+                {
+                    "titulo": {
+                        "es": "Escenografía y dir. de arte",
+                        "en": "Set design & art direction",
+                        "cat": "Escenografia i dir. d’art"
+                    },
+                    "nombre": "Jhonson Camilo",
+                    "link": "https://www.instagram.com/papitaa_criolla/"
+                },
+                {
+                    "titulo": {
+                        "es": "Estilismo",
+                        "en": "Styling",
+                        "cat": "Estilisme"
+                    },
+                    "nombre": "Margarita",
+                    "link": "https://www.instagram.com/kichukrita/"
+                },
+                {
+                    "titulo": {
+                        "es": "Peluquería y maquillaje",
+                        "en": "Hair & make-up",
+                        "cat": "Perruqueria i maquillatge"
+                    },
+                    "nombre": "Paula Barjau",
+                    "link": "https://www.instagram.com/paulabarjau/"
+                }
+            ]
+        }

@@ -1,0 +1,67 @@
+        {
+            "slug": "alMagazine",
+            "titulo": "AL MAGAZINE",
+            "categoria": "editorial",
+            "imatge_principal": "alMagazine_1.webp",
+            "galeria": [
+                {
+                    "tipo": "fotos",
+                    "url": [
+                        "alMagazine_2.webp",
+                        "alMagazine_3.webp",
+                        "alMagazine_4.webp",
+                        "alMagazine_5.webp",
+                        "alMagazine_6.webp",
+                        "alMagazine_7.webp",
+                        "alMagazine_8.webp"
+                    ]
+                }
+            ],
+            "creditos": [
+                {
+                    "titulo": {
+                        "es": "Fotografía",
+                        "en": "Photography",
+                        "cat": "Fotografia"
+                    },
+                    "nombre": "@gonlugurozge",
+                    "link": "https://www.instagram.com/gonlugurozge/"
+                },
+                {
+                    "titulo": {
+                        "es": "Estilismo",
+                        "en": "Styling",
+                        "cat": "Estilisme"
+                    },
+                    "nombre": "@noty0ur_angel",
+                    "link": "https://www.instagram.com/noty0ur_angel/"
+                },
+                {
+                    "titulo": {
+                        "es": "Modelo",
+                        "en": "Model",
+                        "cat": "Model"
+                    },
+                    "nombre": "@laura7eroy",
+                    "link": "https://www.instagram.com/laura7eroy/"
+                },
+                {
+                    "titulo": {
+                        "es": "Agencia",
+                        "en": "Agency",
+                        "cat": "Agència"
+                    },
+                    "nombre": "@onemanagement",
+                    "link": "https://www.instagram.com/onemanagement/"
+                },
+                {
+                    "titulo": {
+                        "es": "Peluquería y maquillaje",
+                        "en": "Hair and make-up",
+                        "cat": "Perruqueria i maquillatge"
+                    },
+                    "nombre": "@paulabarjau",
+                    "link": "https://www.instagram.com/paulabarjau/"
+                }
+            ]
+        }

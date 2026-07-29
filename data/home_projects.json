@@ -45,6 +45,28 @@
             "date": "2026-02-05",
             "relevance": 1,
             "imatge_home": "stoicMagazine_15.webp"
+        },
+        "alMagazine": {
+            "sinopsis": {
+                "es": "AL MAGAZINE",
+                "en": "AL MAGAZINE",
+                "cat": "AL MAGAZINE"
+            },
+            "categoria": "editorial",
+            "date": "2026-03-08",
+            "relevance": 1,
+            "imatge_home": "alMagazine_1.webp"
+        },
+        "ainara": {
+            "sinopsis": {
+                "es": "AINARA",
+                "en": "AINARA",
+                "cat": "AINARA"
+            },
+            "categoria": "editorial",
+            "date": "2025-05-05",
+            "relevance": 1,
+            "imatge_home": "ainara_1.webp"
         }
     }
 }
