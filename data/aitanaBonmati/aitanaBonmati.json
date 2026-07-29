@@ -22,30 +22,12 @@
             "creditos": [
                 {
                     "titulo": {
-                        "es": "Prod.",
+                        "es": "Productora",
                         "en": "Production",
-                        "cat": "Producció"
+                        "cat": "Productora"
                     },
-                    "nombre": "@wearekarabot",
+                    "nombre": "Karabot",
                     "link": "https://www.instagram.com/wearekarabot/"
-                },
-                {
-                    "titulo": {
-                        "es": "Producción ejecutiva",
-                        "en": "Executive Production",
-                        "cat": "Producció executiva"
-                    },
-                    "nombre": "@jonajaraba",
-                    "link": "https://www.instagram.com/jonajaraba/"
-                },
-                {
-                    "titulo": {
-                        "es": "Ay. de Producción",
-                        "en": "Production Assist.",
-                        "cat": "Aj. de Producció"
-                    },
-                    "nombre": "@hernanfrito",
-                    "link": "https://www.instagram.com/hernanfrito/"
                 },
                 {
                     "titulo": {
@@ -53,7 +35,7 @@
                         "en": "Director",
                         "cat": "Director"
                     },
-                    "nombre": "@german_delahoz",
+                    "nombre": "German De La Hoz",
                     "link": "https://www.instagram.com/german_delahoz/"
                 },
                 {
@@ -67,66 +49,21 @@
                 },
                 {
                     "titulo": {
-                        "es": "AD",
-                        "en": "AD",
-                        "cat": "AD"
+                        "es": "Fotografía",
+                        "en": "Photography",
+                        "cat": "Fotografia"
                     },
-                    "nombre": "@carlos.batllo",
-                    "link": "https://www.instagram.com/carlos.batllo/"
+                    "nombre": "Elisabet Penya",
+                    "link": "https://www.instagram.com/eli.penya/"
                 },
                 {
                     "titulo": {
-                        "es": "Fotógrafo",
-                        "en": "Stills",
-                        "cat": "Fotògraf"
+                        "es": "Estilismo",
+                        "en": "Styling",
+                        "cat": "Estilisme"
                     },
-                    "nombre": "@miguelreveriego",
-                    "link": "https://www.instagram.com/miguelreveriego/"
-                },
-                {
-                    "titulo": {
-                        "es": "Dir. de Arte",
-                        "en": "Art Director",
-                        "cat": "Dir. d’Art"
-                    },
-                    "nombre": "@j.puigbanchs",
-                    "link": "https://www.instagram.com/j.puigbanchs/"
-                },
-                {
-                    "titulo": {
-                        "es": "Dir. de Arte",
-                        "en": "Art Director",
-                        "cat": "Dir. d’Art"
-                    },
-                    "nombre": "@lertupido",
-                    "link": "https://www.instagram.com/lertupido/"
-                },
-                {
-                    "titulo": {
-                        "es": "Estilista",
-                        "en": "Stylist",
-                        "cat": "Estilista"
-                    },
-                    "nombre": "@oliviaqkla",
-                    "link": "https://www.instagram.com/oliviaqkla/"
-                },
-                {
-                    "titulo": {
-                        "es": "Confección",
-                        "en": "Seamstress",
-                        "cat": "Confecció"
-                    },
-                    "nombre": "@lolavillaescusastylist",
-                    "link": "https://www.instagram.com/lolavillaescusastylist/"
-                },
-                {
-                    "titulo": {
-                        "es": "Peluquera",
-                        "en": "Hairstylist",
-                        "cat": "Perruquera"
-                    },
-                    "nombre": "@paula_educationrp",
-                    "link": "https://www.instagram.com/paula_educationrp/"
+                    "nombre": "Claudia Civit",
+                    "link": "https://www.instagram.com/claudiacivit/"
                 },
                 {
                     "titulo": {
@@ -134,7 +71,7 @@
                         "en": "Make up",
                         "cat": "Maquillatge"
                     },
-                    "nombre": "@paulabarjau",
+                    "nombre": "Paula Barjau",
                     "link": "https://www.instagram.com/paulabarjau/"
                 },
                 {
@@ -143,7 +80,7 @@
                         "en": "Make up Assist.",
                         "cat": "As. de Maquillatge"
                     },
-                    "nombre": "@ldomenech_muah",
+                    "nombre": "Laura Domenech",
                     "link": "https://www.instagram.com/ldomenech_muah/"
                 },
                 {
@@ -152,7 +89,7 @@
                         "en": "Make up Assist.",
                         "cat": "As. de Maquillatge"
                     },
-                    "nombre": "@lauraasturgomakeup",
+                    "nombre": "Laura Asturgo",
                     "link": "https://www.instagram.com/lauraasturgomakeup/"
                 }
             ]
