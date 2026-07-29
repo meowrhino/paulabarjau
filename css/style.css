@@ -7,7 +7,7 @@
     BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-features: normal;
   --font-tracking: -0.05em;
-  --max-width: 1200px;
+  --max-width: 1000px;
   --page-bg: #fff;
   --menu-gap: 3dvh;
 }
@@ -59,7 +59,7 @@ h1 {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 60px;
   margin-bottom: 30px;
 }
 
