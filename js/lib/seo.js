@@ -1,20 +1,18 @@
-// Constantes y helpers compartidos para las meta etiquetas SEO/social
+// Aplicación de las meta etiquetas SEO/social al DOM.
+// Las constantes y los textos viven en site.js, que no toca el DOM y por eso
+// también lo puede importar el generador de páginas desde Node.
 
-export const HTML_LANG_MAP = {
-  cat: 'ca',
-  es: 'es',
-  en: 'en'
-};
+import { HTML_LANG_MAP, OG_LOCALE_MAP, TAB_TITLE } from './site.js';
 
-export const OG_LOCALE_MAP = {
-  cat: 'ca_ES',
-  es: 'es_ES',
-  en: 'en_US'
-};
-
-export const SITE_ORIGIN = 'https://paulabarjau.studio';
-export const TAB_TITLE = 'paula barjau';
-export const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/aitanaBonmati_1.webp';
+export {
+  HTML_LANG_MAP,
+  OG_LOCALE_MAP,
+  SITE_ORIGIN,
+  TAB_TITLE,
+  DEFAULT_SOCIAL_IMAGE,
+  projectDescription,
+  projectSocialImagePath
+} from './site.js';
 
 const metaDescriptionEl = document.getElementById('meta-description');
 const canonicalLinkEl = document.getElementById('canonical-link');

@@ -1,4 +1,4 @@
-import { HTML_LANG_MAP, SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
+import { HTML_LANG_MAP, SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta, projectDescription, projectSocialImagePath } from './lib/seo.js';
 import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, navigateTo, resolveSlugFromUrl, isCleanProjectUrl } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
 
@@ -38,16 +38,6 @@ const ERROR_TEXTS = {
     en: 'go back home'
   }
 };
-// En català "de" s'apostrofa davant de vocal o h: d'editorial, però de moda
-function catDe(word) {
-  return /^[aeiouàèéíòóúh]/i.test(word) ? `d'${word}` : `de ${word}`;
-}
-
-const PROJECT_DESCRIPTION_TEMPLATES = {
-  cat: (title, category) => `${title}. Projecte ${catDe(category)} de Paula Barjau, maquilladora i hairstylist a Barcelona.`,
-  es: (title, category) => `${title}. Proyecto de ${category} de Paula Barjau, maquilladora y hairstylist en Barcelona.`,
-  en: (title, category) => `${title}. ${category} project by Paula Barjau, makeup artist and hairstylist in Barcelona.`
-};
 
 function setImageAlt(img, text) {
   img.alt = text || '';
@@ -64,39 +54,10 @@ function getCanonicalProjectUrl() {
 }
 
 function getProjectSocialImageUrl() {
-  if (!projectData) {
-    return new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
-  }
-
-  let imagePath = null;
-  const mainMedia = projectData.imatge_principal;
-  if (typeof mainMedia === 'string') {
-    imagePath = resolveMediaSrc(mainMedia);
-  } else if (Array.isArray(mainMedia) && mainMedia.length > 0) {
-    const firstBlock = mainMedia[0];
-    const firstPath = Array.isArray(firstBlock?.url) ? firstBlock.url[0] : firstBlock?.url;
-    if (firstBlock?.tipo !== 'youtube') {
-      imagePath = resolveMediaSrc(firstPath);
-    }
-  } else if (mainMedia && typeof mainMedia === 'object') {
-    const firstPath = Array.isArray(mainMedia.url) ? mainMedia.url[0] : mainMedia.url;
-    if (mainMedia.tipo !== 'youtube') {
-      imagePath = resolveMediaSrc(firstPath);
-    }
-  }
-
-  if (!imagePath && Array.isArray(projectData.galeria)) {
-    const photosBlock = projectData.galeria.find(block => block.tipo === 'fotos' && Array.isArray(block.url) && block.url.length > 0);
-    if (photosBlock) {
-      imagePath = resolveMediaSrc(photosBlock.url[0]);
-    }
-  }
-
-  if (!imagePath) {
-    imagePath = DEFAULT_SOCIAL_IMAGE;
-  }
-
-  return new URL(imagePath, `${SITE_ORIGIN}/`).href;
+  const path = projectData
+    ? projectSocialImagePath(projectData, projectSlug)
+    : DEFAULT_SOCIAL_IMAGE;
+  return new URL(path, `${SITE_ORIGIN}/`).href;
 }
 
 function updateProjectSchema(description, canonicalUrl, imageUrl, categoryName) {
@@ -131,8 +92,7 @@ function updateProjectSeo() {
 
   const category = categoriesData.home_categories[projectData.categoria];
   const categoryName = category?.[`name_${currentLanguage}`] || projectData.categoria;
-  const template = PROJECT_DESCRIPTION_TEMPLATES[currentLanguage] || PROJECT_DESCRIPTION_TEMPLATES.cat;
-  const description = template(projectData.titulo, categoryName);
+  const description = projectDescription(projectData.titulo, categoryName, currentLanguage);
   const canonicalUrl = getCanonicalProjectUrl();
   const imageUrl = getProjectSocialImageUrl();
 

@@ -1,0 +1,9 @@
+{
+  "name": "paulabarjau",
+  "private": true,
+  "type": "module",
+  "description": "Web de Paula Barjau. Sitio estático sin dependencias: no hay que instalar nada. Este package.json existe solo para que Node trate los .js como ES modules y el generador pueda importar js/lib/site.js.",
+  "scripts": {
+    "generar": "node scripts/generate-project-pages.mjs"
+  }
+}

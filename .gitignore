@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Herramientas locales de Claude Code (servidor de previsualización, etc.)
+.claude/
+
+# Node (el sitio no tiene dependencias, pero por si acaso)
+node_modules/

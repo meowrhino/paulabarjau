@@ -15,30 +15,25 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  SITE_ORIGIN,
+  TAB_TITLE,
+  HTML_LANG_MAP,
+  OG_LOCALE_MAP,
+  projectDescription,
+  projectSocialImagePath
+} from '../js/lib/site.js';
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outputDir = path.join(rootDir, 'p');
 const templatePath = path.join(rootDir, 'project.html');
 
-// Duplicados de js/lib/seo.js a propósito: ese módulo toca `document` y no se
-// puede importar desde Node. Si cambian allí, cambiarlos aquí.
-const SITE_ORIGIN = 'https://paulabarjau.studio';
-const TAB_TITLE = 'paula barjau';
-const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/aitanaBonmati_1.webp';
-
 // Las páginas se generan en el idioma por defecto del sitio (catalán), que es
 // lo que ve quien entra sin ?lang. Al cargar, el JS reescribe las meta si el
 // visitante cambia de idioma.
 const LANG = 'cat';
-const HTML_LANG = 'ca';
-const OG_LOCALE = 'ca_ES';
-
-// En català "de" s'apostrofa davant de vocal o h: d'editorial, però de moda.
-// Duplicado de js/project.js a propósito (ver nota sobre seo.js más arriba).
-const catDe = (word) => (/^[aeiouàèéíòóúh]/i.test(word) ? `d'${word}` : `de ${word}`);
-
-const describe = (title, category) =>
-  `${title}. Projecte ${catDe(category)} de Paula Barjau, maquilladora i hairstylist a Barcelona.`;
+const HTML_LANG = HTML_LANG_MAP[LANG];
+const OG_LOCALE = OG_LOCALE_MAP[LANG];
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 
@@ -57,23 +52,6 @@ function setMeta(html, marker, value) {
   return html.replace(withContentFirst, `$1${escapeHtml(value)}$2`);
 }
 
-// Imagen social: la principal si es una foto; si es un vídeo, la primera de la
-// galería. Misma lógica que getProjectSocialImageUrl() en js/project.js.
-function socialImagePath(project, slug) {
-  const media = project.imatge_principal;
-  const block = typeof media === 'string' ? { tipo: 'fotos', url: media } : Array.isArray(media) ? media[0] : media;
-
-  if (block && block.tipo !== 'youtube') {
-    const first = Array.isArray(block.url) ? block.url[0] : block.url;
-    if (first) return /^https?:\/\//i.test(first) ? first : `data/${slug}/img/${first}`;
-  }
-
-  for (const b of project.galeria || []) {
-    if (b.tipo === 'fotos' && b.url?.length) return `data/${slug}/img/${b.url[0]}`;
-  }
-  return DEFAULT_SOCIAL_IMAGE;
-}
-
 const absolute = (relPath) =>
   /^https?:\/\//i.test(relPath)
     ? relPath
@@ -82,9 +60,9 @@ const absolute = (relPath) =>
 function buildPage(template, slug, project, categories) {
   const category = categories.home_categories[project.categoria];
   const categoryName = category?.[`name_${LANG}`] || project.categoria;
-  const description = describe(project.titulo, categoryName);
+  const description = projectDescription(project.titulo, categoryName, LANG);
   const canonical = `${SITE_ORIGIN}/p/${encodeURIComponent(slug)}/`;
-  const image = absolute(socialImagePath(project, slug));
+  const image = absolute(projectSocialImagePath(project, slug));
 
   let html = template;
 

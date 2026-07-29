@@ -128,13 +128,15 @@ h1 {
   pointer-events: auto;
 }
 
-/* Botón del menú (base común) */
+/* Botón del menú, pegado al borde derecho de la ventana (no a la columna).
+   Al abrirse sube por encima del panel. */
 .menu-toggle {
   position: fixed;
-  bottom: 0;
-  /* Pegado al borde derecho de la ventana, sin depender de la columna */
+  bottom: var(--menu-gap, 20px);
   right: var(--page-padding);
   padding: 12px 32px;
+  background: #000;
+  color: #fff;
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 500;
@@ -149,20 +151,12 @@ h1 {
   -webkit-appearance: none;
 }
 
-.menu-toggle {
-  background: #000;
-  color: #fff;
-  bottom: var(--menu-gap, 20px);
-
-  box-shadow: none;
-}
-
 .menu-toggle.menu-open {
   bottom: calc(var(--menu-height, 200px) + var(--menu-gap, 20px));
 }
 
-/* Panel del menú. En móvil: tira que ocupa todo el ancho y sube desde abajo.
-   En ordenador (ver media query más abajo): caja que entra desde la derecha. */
+/* Panel del menú: tira a lo ancho de la ventana, anclada abajo. Cambia de qué
+   lado entra según el tamaño (ver media query al final del bloque). */
 .menu-panel {
   position: fixed;
   bottom: 0;
@@ -207,15 +201,12 @@ h1 {
   letter-spacing: var(--font-tracking);
   cursor: pointer;
   text-transform: lowercase;
-  transition: all 0.3s ease;
+  /* El color de la categoría activa lo pone el JS */
+  transition: color 0.3s ease, opacity 0.3s ease;
 }
 
 .category-btn:hover {
   opacity: 0.8;
-}
-
-.category-btn.active {
-  /* El color se aplicará dinámicamente via JS */
 }
 
 .category-btn.inactive {
@@ -230,30 +221,16 @@ h1 {
   justify-content: flex-end;
 }
 
-/* En ordenador el menú deja de ser una tira de lado a lado y pasa a ser una
-   caja en la esquina inferior derecha que entra desplazándose desde fuera.
+/* En ordenador el panel es igual que en móvil (misma tira, las categorías en
+   una sola línea), pero entra de derecha a izquierda en vez de subir.
    Va después de las reglas base a propósito, para poder sobreescribirlas. */
 @media (min-width: 700px) {
   .menu-panel {
-    left: auto;
-    width: max-content;
-    max-width: min(360px, 100vw);
     transform: translateX(100%);
   }
 
   .menu-panel.open {
     transform: translateX(0);
-  }
-
-  .menu-content {
-    padding: 26px var(--page-padding);
-    gap: 1.5em;
-  }
-
-  /* En una caja estrecha las categorías caben mejor apiladas que en fila */
-  .categories-container {
-    flex-direction: column;
-    gap: 10px;
   }
 }
 
