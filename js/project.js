@@ -10,7 +10,6 @@ let projectSlug = null;
 
 // Elementos del DOM
 const projectTitle = document.getElementById('project-title');
-const mainImageContainer = document.getElementById('main-image-container');
 const creditsContainer = document.getElementById('credits-container');
 const galleryContainer = document.getElementById('gallery-container');
 const menuToggle = document.getElementById('menu-toggle');
@@ -210,69 +209,15 @@ function renderProject() {
   // Título
   projectTitle.textContent = projectData.titulo;
 
-  // Imagen principal
-  renderMainImage();
-
   // Créditos
   renderCredits();
 
-  // Galería
+  // Galería (incluye la imagen principal como primer item)
   renderGallery();
 
   // Botón "ver más [categoría]"
   updateMoreCategoryButton();
   updateProjectSeo();
-}
-
-// Renderizar imagen principal
-function renderMainImage() {
-  mainImageContainer.innerHTML = '';
-  const media = projectData.imatge_principal;
-  if (!media) return;
-
-  const renderBlock = (bloque) => {
-    if (!bloque) return;
-    const type = bloque.tipo || 'fotos';
-    const firstUrl = Array.isArray(bloque.url) ? bloque.url[0] : bloque.url;
-    if (!firstUrl) return;
-
-    if (type === 'youtube') {
-      const videoId = extractYouTubeId(firstUrl);
-      if (!videoId) return;
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${videoId}`;
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      iframe.allowFullscreen = true;
-      mainImageContainer.appendChild(iframe);
-      return;
-    }
-
-    if (type === 'video' || type === 'webm') {
-      const videoSrc = resolveMediaSrc(firstUrl);
-      if (!videoSrc) return;
-      const video = document.createElement('video');
-      video.src = videoSrc;
-      video.controls = true;
-      video.preload = 'metadata';
-      mainImageContainer.appendChild(video);
-      return;
-    }
-
-    const imgSrc = resolveMediaSrc(firstUrl);
-    if (!imgSrc) return;
-    const img = document.createElement('img');
-    img.src = imgSrc;
-    setImageAlt(img, projectData.titulo);
-    mainImageContainer.appendChild(img);
-  };
-
-  if (typeof media === 'string') {
-    renderBlock({ tipo: 'fotos', url: media });
-  } else if (Array.isArray(media)) {
-    renderBlock(media[0]);
-  } else if (media && typeof media === 'object') {
-    renderBlock(media);
-  }
 }
 
 // Renderizar créditos
@@ -315,57 +260,68 @@ function renderCredits() {
   });
 }
 
-// Renderizar galería
+// La imagen principal puede venir como string, como bloque o como array de bloques
+function normalizeMainMedia(media) {
+  if (!media) return null;
+  if (typeof media === 'string') return { tipo: 'fotos', url: media };
+  if (Array.isArray(media)) return media[0] || null;
+  if (typeof media === 'object') return media;
+  return null;
+}
+
+// Añadir un item a la galería (foto, vídeo de YouTube o vídeo local)
+function appendGalleryItem(tipo, url, { lazy = true } = {}) {
+  if (!url) return;
+
+  const item = document.createElement('div');
+  item.className = 'gallery-item';
+
+  if (tipo === 'youtube') {
+    const videoId = extractYouTubeId(url);
+    if (!videoId) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}`;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    item.appendChild(iframe);
+  } else if (tipo === 'video' || tipo === 'webm') {
+    const videoSrc = resolveMediaSrc(url);
+    if (!videoSrc) return;
+    const video = document.createElement('video');
+    video.src = videoSrc;
+    video.controls = true;
+    video.preload = 'metadata';
+    item.appendChild(video);
+  } else {
+    const imgSrc = resolveMediaSrc(url);
+    if (!imgSrc) return;
+    const img = document.createElement('img');
+    img.src = imgSrc;
+    setImageAlt(img, projectData.titulo);
+    if (lazy) img.loading = 'lazy';
+    item.appendChild(img);
+  }
+
+  galleryContainer.appendChild(item);
+}
+
+// Renderizar galería. La imagen principal va como primer item.
 function renderGallery() {
   galleryContainer.innerHTML = '';
 
+  const mainBlock = normalizeMainMedia(projectData.imatge_principal);
+  const mainUrl = mainBlock ? (Array.isArray(mainBlock.url) ? mainBlock.url[0] : mainBlock.url) : null;
+
+  if (mainUrl) {
+    appendGalleryItem(mainBlock.tipo || 'fotos', mainUrl, { lazy: false });
+  }
+
   projectData.galeria.forEach(bloque => {
-    if (bloque.tipo === 'fotos') {
-      // Renderizar fotos
-      bloque.url.forEach(foto => {
-        const item = document.createElement('div');
-        item.className = 'gallery-item';
-
-        const img = document.createElement('img');
-        img.src = `data/${projectSlug}/img/${foto}`;
-        setImageAlt(img, projectData.titulo);
-        img.loading = 'lazy';
-
-        item.appendChild(img);
-        galleryContainer.appendChild(item);
-      });
-    } else if (bloque.tipo === 'youtube') {
-      // Renderizar videos de YouTube
-      bloque.url.forEach(videoUrl => {
-        const item = document.createElement('div');
-        item.className = 'gallery-item';
-
-        const videoId = extractYouTubeId(videoUrl);
-        if (videoId) {
-          const iframe = document.createElement('iframe');
-          iframe.src = `https://www.youtube.com/embed/${videoId}`;
-          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-          iframe.allowFullscreen = true;
-
-          item.appendChild(iframe);
-          galleryContainer.appendChild(item);
-        }
-      });
-    } else if (bloque.tipo === 'video' || bloque.tipo === 'webm') {
-      // Renderizar videos locales (webm)
-      bloque.url.forEach(videoFile => {
-        const item = document.createElement('div');
-        item.className = 'gallery-item';
-
-        const video = document.createElement('video');
-        video.src = `data/${projectSlug}/img/${videoFile}`;
-        video.controls = true;
-        video.preload = 'metadata';
-
-        item.appendChild(video);
-        galleryContainer.appendChild(item);
-      });
-    }
+    bloque.url.forEach(url => {
+      // Si la imagen principal también está en la galería, no la repetimos
+      if (url === mainUrl) return;
+      appendGalleryItem(bloque.tipo || 'fotos', url);
+    });
   });
 }
 
@@ -398,10 +354,8 @@ function renderErrorState() {
   }
   projectTitle.textContent = ERROR_TEXTS.title[currentLanguage] || ERROR_TEXTS.title.cat;
 
-  mainImageContainer.innerHTML = '';
   creditsContainer.innerHTML = '';
   galleryContainer.innerHTML = '';
-  mainImageContainer.style.display = 'none';
   creditsContainer.style.display = 'none';
   galleryContainer.style.display = 'none';
 

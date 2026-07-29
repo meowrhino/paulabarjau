@@ -8,6 +8,7 @@
   --font-features: normal;
   --font-tracking: -0.05em;
   --max-width: 1000px;
+  --page-padding: 20px;
   --page-bg: #fff;
   --menu-gap: 3dvh;
 }
@@ -34,7 +35,7 @@ body {
 main {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--page-padding);
   padding-bottom: 40px;
   background: var(--page-bg, #fff);
   transition: background-color 0.45s ease;
@@ -131,8 +132,9 @@ h1 {
 .menu-toggle {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  /* Alineado con el borde derecho de la columna de contenido */
+  left: calc(min(50% + var(--max-width) / 2, 100%) - var(--page-padding));
+  transform: translateX(-100%);
   padding: 12px 32px;
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -180,10 +182,10 @@ h1 {
 }
 
 .menu-content {
-  padding: 30px 20px;
+  padding: 30px var(--page-padding);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   gap: 2.5em;
 }
 
@@ -192,7 +194,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .category-btn {
@@ -226,7 +228,7 @@ h1 {
 .languages-container {
   display: flex;
   gap: 20px;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 /* Paginación */
@@ -319,26 +321,12 @@ h1 {
 /* Título del proyecto */
 #project-title {
   font-size: 1.8rem;
-  text-align: center;
+  text-align: left;
   margin: 20px 0 40px 0;
   text-transform: none;
   font-weight: 600;
 }
 
-/* Imagen principal */
-#main-image-container {
-  width: 100%;
-  margin-bottom: 30px;
-}
-
-#main-image-container img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-#main-image-container iframe,
-#main-image-container video,
 .gallery-item iframe,
 .gallery-item video {
   width: 100%;
@@ -348,7 +336,6 @@ h1 {
   background: #000;
 }
 
-#main-image-container video,
 .gallery-item video {
   height: auto;
 }
@@ -485,7 +472,7 @@ h1 {
   letter-spacing: var(--font-tracking);
   cursor: pointer;
   text-transform: lowercase;
-  text-align: center;
+  text-align: right;
   margin: 0;
   transition: opacity 0.3s ease;
 }
