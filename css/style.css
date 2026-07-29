@@ -132,9 +132,8 @@ h1 {
 .menu-toggle {
   position: fixed;
   bottom: 0;
-  /* Alineado con el borde derecho de la columna de contenido */
-  left: calc(min(50% + var(--max-width) / 2, 100%) - var(--page-padding));
-  transform: translateX(-100%);
+  /* Pegado al borde derecho de la ventana, sin depender de la columna */
+  right: var(--page-padding);
   padding: 12px 32px;
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -162,14 +161,13 @@ h1 {
   bottom: calc(var(--menu-height, 200px) + var(--menu-gap, 20px));
 }
 
-/* Panel del menú */
+/* Panel del menú: ocupa todo el ancho de la ventana, no la columna */
 .menu-panel {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) translateY(100%);
-  width: 100%;
-  max-width: var(--max-width);
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
   background: var(--page-bg, #fff);
   z-index: 99;
   transition-property: transform, background-color;
@@ -178,7 +176,7 @@ h1 {
 }
 
 .menu-panel.open {
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 
 .menu-content {
