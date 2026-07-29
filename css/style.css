@@ -161,7 +161,8 @@ h1 {
   bottom: calc(var(--menu-height, 200px) + var(--menu-gap, 20px));
 }
 
-/* Panel del menú: ocupa todo el ancho de la ventana, no la columna */
+/* Panel del menú. En móvil: tira que ocupa todo el ancho y sube desde abajo.
+   En ordenador (ver media query más abajo): caja que entra desde la derecha. */
 .menu-panel {
   position: fixed;
   bottom: 0;
@@ -227,6 +228,33 @@ h1 {
   display: flex;
   gap: 20px;
   justify-content: flex-end;
+}
+
+/* En ordenador el menú deja de ser una tira de lado a lado y pasa a ser una
+   caja en la esquina inferior derecha que entra desplazándose desde fuera.
+   Va después de las reglas base a propósito, para poder sobreescribirlas. */
+@media (min-width: 700px) {
+  .menu-panel {
+    left: auto;
+    width: max-content;
+    max-width: min(360px, 100vw);
+    transform: translateX(100%);
+  }
+
+  .menu-panel.open {
+    transform: translateX(0);
+  }
+
+  .menu-content {
+    padding: 26px var(--page-padding);
+    gap: 1.5em;
+  }
+
+  /* En una caja estrecha las categorías caben mejor apiladas que en fila */
+  .categories-container {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 /* Paginación */
@@ -423,11 +451,32 @@ h1 {
   font-size: 1.05rem;
   line-height: 1.6;
   margin-top: auto;
-  margin-bottom: auto;
 }
 
 .about-text p {
   margin: 0;
+}
+
+/* Contacto: una línea por dato, debajo del texto.
+   El margin-bottom: auto centra verticalmente el bloque texto + contacto. */
+.about-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: auto;
+}
+
+.about-contact a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.about-contact a:hover {
+  opacity: 0.8;
 }
 
 .about-web {

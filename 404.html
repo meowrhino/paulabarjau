@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ca">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>paula barjau</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/data/navicon.png" type="image/png" />
+    <script>
+      // Red de seguridad para /p/<slug>/ sin página generada (proyecto nuevo en
+      // home_projects.json sin haber ejecutado scripts/generate-project-pages.mjs).
+      // Se redirige a project.html?slug=<slug>, que carga el proyecto vía JS.
+      (function () {
+        var match = window.location.pathname.match(/^(.*)\/p\/([^/]+)\/?$/);
+        if (match) {
+          window.location.replace(match[1] + '/project.html?slug=' + encodeURIComponent(match[2]) + window.location.search.replace(/^\?/, '&').replace(/^&$/, ''));
+        }
+      })();
+    </script>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Josefin Sans", "Futura", system-ui, sans-serif;
+        letter-spacing: -0.05em;
+        background: #fff;
+        color: #000;
+      }
+      a { color: inherit; }
+    </style>
+</head>
+<body>
+    <p>aquesta pàgina no existeix — <a href="/">tornar a l'inici</a></p>
+</body>
+</html>

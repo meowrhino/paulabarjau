@@ -1,5 +1,5 @@
 import { HTML_LANG_MAP, SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
-import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl } from './lib/i18n.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, navigateTo, resolveSlugFromUrl, isCleanProjectUrl } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
 
 // Estado global
@@ -55,7 +55,7 @@ function resolveMediaSrc(path) {
 }
 
 function getCanonicalProjectUrl() {
-  return `${SITE_ORIGIN}/project.html?slug=${encodeURIComponent(projectSlug)}`;
+  return `${SITE_ORIGIN}/p/${encodeURIComponent(projectSlug)}/`;
 }
 
 function getProjectSocialImageUrl() {
@@ -147,13 +147,12 @@ async function init() {
   try {
     currentLanguage = resolveLangFromUrl();
 
-    // Obtener slug de la URL
-    const urlParams = new URLSearchParams(window.location.search);
-    projectSlug = urlParams.get('slug');
+    // Obtener slug de la URL (ruta limpia /p/<slug>/ o ?slug= antiguo)
+    projectSlug = resolveSlugFromUrl();
 
     if (!projectSlug) {
       console.error('No se encontró el slug del proyecto');
-      window.location.href = 'index.html';
+      navigateTo('index.html');
       return;
     }
 
@@ -166,7 +165,7 @@ async function init() {
     menuToggle.textContent = categoriesData.text_menu[currentLanguage];
     backBtn.textContent = categoriesData.text_back[currentLanguage];
     updateProjectSeo();
-    updateUrlState(currentLanguage, { slug: projectSlug });
+    updateUrlState(currentLanguage, isCleanProjectUrl() ? {} : { slug: projectSlug });
     console.log('Página de proyecto inicializada correctamente');
   } catch (error) {
     console.error('Error al inicializar la página de proyecto:', error);
@@ -363,7 +362,7 @@ function renderErrorState() {
   message.textContent = ERROR_TEXTS.message[currentLanguage] || ERROR_TEXTS.message.cat;
 
   const homeLink = document.createElement('a');
-  homeLink.href = buildUrl('index.html', { lang: currentLanguage });
+  homeLink.href = new URL(buildUrl('index.html', { lang: currentLanguage }), document.baseURI).href;
   homeLink.textContent = ERROR_TEXTS.home[currentLanguage] || ERROR_TEXTS.home.cat;
   homeLink.className = 'menu-action-btn';
 
@@ -405,7 +404,7 @@ function changeLanguage(lang) {
   renderCredits();
   updateMoreCategoryButton();
   updateProjectSeo();
-  updateUrlState(currentLanguage, { slug: projectSlug });
+  updateUrlState(currentLanguage, isCleanProjectUrl() ? {} : { slug: projectSlug });
 }
 
 // Configurar event listeners
@@ -414,12 +413,12 @@ function setupEventListeners() {
 
   // Botón back
   backBtn.addEventListener('click', () => {
-    window.location.href = buildUrl('index.html', { lang: currentLanguage });
+    navigateTo('index.html', { lang: currentLanguage });
   });
 
   // Botón ver más de esta categoría
   moreCategoryBtn.addEventListener('click', () => {
-    window.location.href = buildUrl('index.html', { category: projectData.categoria, lang: currentLanguage });
+    navigateTo('index.html', { category: projectData.categoria, lang: currentLanguage });
   });
 }
 

@@ -1,5 +1,5 @@
 import { SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
-import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl } from './lib/i18n.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, projectUrl as buildProjectUrl } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
 
 // Estado global
@@ -192,7 +192,7 @@ function renderProjects() {
 
 // Construir URL de un proyecto respetando el idioma activo
 function projectUrl(slug) {
-  return buildUrl('project.html', { slug, lang: currentLanguage });
+  return buildProjectUrl(slug, currentLanguage);
 }
 
 // Crear tarjeta de proyecto

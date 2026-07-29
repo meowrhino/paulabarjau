@@ -14,5 +14,15 @@
     "en": [
       "hi! i'm a makeup artist based in barcelona."
     ]
-  }
+  },
+  "contact": [
+    {
+      "text": "@paulabarjau",
+      "link": "https://www.instagram.com/paulabarjau/"
+    },
+    {
+      "text": "paulabarjaugilboy@gmail.com",
+      "link": "mailto:paulabarjaugilboy@gmail.com"
+    }
+  ]
 }

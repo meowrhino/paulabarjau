@@ -35,6 +35,31 @@ export function updateUrlState(lang, extraParams = {}) {
   window.history.replaceState({}, '', nextUrl);
 }
 
+// URL limpia de un proyecto: p/<slug>/ en vez de project.html?slug=<slug>
+export function projectUrl(slug, lang) {
+  return buildUrl(`p/${encodeURIComponent(slug)}/`, { lang });
+}
+
+// Saca el slug de la URL, venga de la ruta limpia (/p/<slug>/) o del
+// ?slug=<slug> antiguo, que se mantiene para no romper enlaces ya publicados.
+export function resolveSlugFromUrl() {
+  const fromQuery = new URLSearchParams(window.location.search).get('slug');
+  if (fromQuery) return fromQuery;
+  const match = window.location.pathname.match(/\/p\/([^/]+)\/?$/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+export function isCleanProjectUrl() {
+  return /\/p\/[^/]+\/?$/.test(window.location.pathname);
+}
+
+// Navega a una página relativa. Hace falta resolver contra document.baseURI
+// porque las páginas de p/<slug>/ llevan <base href="../../">, y a diferencia
+// de un href, asignar location.href ignora el <base>.
+export function navigateTo(page, params = {}) {
+  window.location.href = new URL(buildUrl(page, params), document.baseURI).href;
+}
+
 // Construye la URL de una página añadiendo params.lang solo cuando no es "cat"
 export function buildUrl(page, params = {}) {
   const searchParams = new URLSearchParams();

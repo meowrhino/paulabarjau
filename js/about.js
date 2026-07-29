@@ -10,6 +10,7 @@ let currentLanguage = 'cat';
 // DOM
 const aboutTitleEl = document.getElementById('about-title');
 const aboutTextEl = document.getElementById('about-text');
+const aboutContactEl = document.getElementById('about-contact');
 const menuToggle = document.getElementById('menu-toggle');
 const menuPanel = document.getElementById('menu-panel');
 const backBtn = document.getElementById('back-btn');
@@ -85,7 +86,35 @@ function renderAbout() {
     aboutTextEl.appendChild(p);
   });
 
+  renderContact();
   updateAboutSeo();
+}
+
+// Instagram y correo, uno por línea, debajo del texto
+function renderContact() {
+  if (!aboutContactEl) return;
+  aboutContactEl.innerHTML = '';
+
+  (aboutData.contact || []).forEach(item => {
+    if (!item?.text) return;
+    const line = document.createElement('div');
+    line.className = 'about-contact-line';
+
+    if (item.link) {
+      const link = document.createElement('a');
+      link.href = item.link;
+      link.textContent = item.text;
+      if (!item.link.startsWith('mailto:')) {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      }
+      line.appendChild(link);
+    } else {
+      line.textContent = item.text;
+    }
+
+    aboutContactEl.appendChild(line);
+  });
 }
 
 function changeLanguage(lang) {
