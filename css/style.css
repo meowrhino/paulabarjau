@@ -163,11 +163,9 @@ h1 {
   left: 0;
   right: 0;
   transform: translateY(100%);
-  background: var(--page-bg, #fff);
+  background: transparent;
   z-index: 99;
-  transition-property: transform, background-color;
-  transition-duration: 0.4s, 0.45s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1), ease;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .menu-panel.open {
@@ -237,9 +235,10 @@ h1 {
     transform: translateX(0);
   }
 
-  /* Sin esto la fila de categorías se partiría al estrecharse la caja */
+  /* Apiladas, para que la caja sea estrecha y tape lo mínimo de la foto */
   .categories-container {
-    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
@@ -309,10 +308,6 @@ h1 {
 
 .project-page {
   background: var(--page-bg, #fff);
-}
-
-.project-page .menu-panel {
-  background: inherit;
 }
 
 .project-page main {

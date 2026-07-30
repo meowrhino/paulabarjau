@@ -1,9 +1,11 @@
 // Servidor estático mínimo para previsualizar el sitio en local.
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+// ES module porque el package.json de la raíz declara "type": "module".
+import http from 'node:http';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = 8000;
 
 const TYPES = {
