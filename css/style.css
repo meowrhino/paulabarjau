@@ -159,12 +159,16 @@ h1 {
   bottom: calc(var(--menu-height, 200px) + var(--menu-gap, 20px));
 }
 
-/* En ordenador el botón se va a la derecha, encima de los idiomas */
+/* En ordenador el botón se va a la derecha, encima de los idiomas. Sin padding
+   lateral, para que el borde derecho de la palabra caiga justo donde el de los
+   idiomas; en móvil el padding se queda, que ahí va centrado y hace de área de
+   toque. */
 @media (min-width: 700px) {
   .menu-toggle {
     left: auto;
     right: var(--page-padding);
     translate: 0 0;
+    padding-inline: 0;
   }
 }
 
@@ -296,6 +300,9 @@ h1 {
 .lang-btn {
   background: none;
   border: none;
+  /* Sin el reset, el padding por defecto del navegador mete 6px a cada lado y
+     descuadra el borde derecho respecto al botón del menú */
+  padding: 0;
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 400;
