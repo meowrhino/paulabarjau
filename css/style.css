@@ -128,16 +128,17 @@ h1 {
   pointer-events: auto;
 }
 
-/* Botón del menú: centrado abajo en móvil, pegado al borde derecho de la
-   ventana en ordenador (ver media query justo debajo). El fondo sigue siempre
-   al color de fondo de la página y la letra va en negro. Al abrirse sube por
-   encima del panel. */
+/* Botón del menú: pegado al borde derecho de la ventana, encima de los idiomas,
+   en todos los tamaños. Sin padding lateral, para que el borde derecho de la
+   palabra caiga justo donde el de los idiomas y no 32px antes. El fondo sigue
+   siempre al color de fondo de la página y la letra va en negro. Al abrirse sube
+   por encima del panel. */
 .menu-toggle {
   position: fixed;
   bottom: var(--menu-gap, 20px);
-  left: 50%;
-  translate: -50% 0;
-  padding: 12px 32px;
+  right: var(--page-padding);
+  padding-block: 12px;
+  padding-inline: 0;
   background: var(--page-bg, #fff);
   color: #000;
   font-family: var(--font-sans);
@@ -157,19 +158,6 @@ h1 {
 
 .menu-toggle.menu-open {
   bottom: calc(var(--menu-height, 200px) + var(--menu-gap, 20px));
-}
-
-/* En ordenador el botón se va a la derecha, encima de los idiomas. Sin padding
-   lateral, para que el borde derecho de la palabra caiga justo donde el de los
-   idiomas; en móvil el padding se queda, que ahí va centrado y hace de área de
-   toque. */
-@media (min-width: 700px) {
-  .menu-toggle {
-    left: auto;
-    right: var(--page-padding);
-    translate: 0 0;
-    padding-inline: 0;
-  }
 }
 
 /* Panel del menú: lengüeta de todo el ancho de la ventana, anclada abajo, con
@@ -268,6 +256,9 @@ h1 {
   display: flex;
   gap: 20px;
   justify-content: center;
+  /* A la derecha, debajo del botón. El margen automático gana al align-items
+     del contenedor en móvil, y en ordenador se suma al justify-self: end. */
+  margin-left: auto;
 }
 
 /* Paginación */
