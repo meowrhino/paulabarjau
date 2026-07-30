@@ -130,16 +130,15 @@ h1 {
 
 /* Botón del menú: pegado al borde derecho de la ventana, encima de los idiomas,
    en todos los tamaños. Sin padding lateral, para que el borde derecho de la
-   palabra caiga justo donde el de los idiomas y no 32px antes. El fondo sigue
-   siempre al color de fondo de la página y la letra va en negro. Al abrirse sube
-   por encima del panel. */
+   palabra caiga justo donde el de los idiomas y no 32px antes. Sin fondo: solo
+   la palabra en negro, sin caja. Al abrirse sube por encima del panel. */
 .menu-toggle {
   position: fixed;
   bottom: var(--menu-gap, 20px);
   right: var(--page-padding);
   padding-block: 12px;
   padding-inline: 0;
-  background: var(--page-bg, #fff);
+  background: transparent;
   color: #000;
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -148,8 +147,7 @@ h1 {
   cursor: pointer;
   z-index: 100;
   text-transform: lowercase;
-  transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 0.45s ease;
+  transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 0;
   outline: none;
   appearance: none;
@@ -179,14 +177,21 @@ h1 {
   transform: translateY(0);
 }
 
-/* En móvil, todo en columna y centrado, en el orden del HTML: volver, el bloque
-   del medio y los idiomas. */
+/* En móvil, cada cosa en su fila y con el mismo criterio que la fila de
+   ordenador: volver pegado a la izquierda, el medio centrado y los idiomas a la
+   derecha (los márgenes automáticos de #back-btn y .languages-container ganan al
+   align-items del contenedor). */
 .menu-content {
   padding: 30px var(--page-padding);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2.5em;
+}
+
+/* A la izquierda. En ordenador se suma al justify-self: start de su área. */
+#back-btn {
+  margin-right: auto;
 }
 
 /* En ordenador los tres pasan a la misma fila: volver a la izquierda, el medio
