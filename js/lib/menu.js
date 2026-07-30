@@ -1,14 +1,18 @@
 // Menú deslizable compartido: toggle, cierre al clicar fuera y cambio de idioma
 
 export function setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange }) {
+  // El botón sube por encima del panel con --menu-height, y el CSS no puede
+  // medir a un hermano, así que la altura se mide aquí.
+  function syncMenuHeight() {
+    document.documentElement.style.setProperty('--menu-height', `${menuPanel.offsetHeight}px`);
+  }
+
   function toggleMenu() {
     const isOpen = menuPanel.classList.toggle('open');
     menuToggle.classList.toggle('menu-open', isOpen);
 
     if (isOpen) {
-      // Calcular altura del menú para ajustar el botón
-      const menuHeight = menuPanel.offsetHeight;
-      document.documentElement.style.setProperty('--menu-height', `${menuHeight}px`);
+      syncMenuHeight();
     }
   }
 
@@ -22,6 +26,17 @@ export function setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange
   }
 
   menuToggle.addEventListener('click', toggleMenu);
+
+  // Si el panel cambia de alto con el menú ya abierto (girar el móvil,
+  // redimensionar la ventana cruzando el breakpoint), hay que volver a medir: si
+  // no, el botón se queda a la altura vieja y llega a solaparse con la lengüeta.
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(() => {
+      if (menuPanel.classList.contains('open')) {
+        syncMenuHeight();
+      }
+    }).observe(menuPanel);
+  }
 
   document.addEventListener('click', (e) => {
     if (menuPanel.classList.contains('open') &&

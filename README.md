@@ -310,62 +310,101 @@ sitio.
 
 GitHub Pages, sirviendo la rama `main` desde la raíz. Cada push publica solo,
 sin workflow de deploy propio (lo hace el `pages-build-deployment` de GitHub).
-La URL de Pages de este repositorio es
-<https://meowrhino.github.io/paulabarjau/>.
 
-⚠️ **El dominio `paulabarjau.studio` no sale de la configuración de este
-repositorio.** `js/lib/site.js` declara `SITE_ORIGIN = 'https://paulabarjau.studio'`
-—y de ahí salen todos los canonical, los `og:url` y el sitemap— pero la API de
-Pages de este repositorio dice `cname: null`, y en el historial nunca ha habido
-un archivo `CNAME`. Comprobado el 2026-07-30: el dominio servía una versión
-anterior a un push que la URL de github.io ya tenía. Quien herede esto debería
-averiguar de qué sitio de Pages cuelga el dominio antes de dar por hecho que un
-push a este repositorio lo actualiza.
+⚠️ **Hay DOS repositorios con este mismo código, y solo uno sirve el dominio.**
+
+| repositorio | URL que sirve | papel |
+|---|---|---|
+| `meowrhino/paulabarjau` | <https://meowrhino.github.io/paulabarjau/> | donde se trabaja |
+| `paulabarjau/web` | <https://paulabarjau.studio/> (tiene el `CNAME`) | el que ve el público |
+
+No están conectados por git: son dos repositorios independientes con historias
+distintas y los mismos cambios aplicados a mano en cada uno. **Un push al
+primero no actualiza el dominio.** Comprobado el 2026-07-30: seis commits
+llegaron a github.io mientras `paulabarjau.studio` seguía sirviendo el build
+anterior, porque nadie los había llevado al segundo.
+
+Para llevar los cambios de aquí al del dominio, con el repo de trabajo al día:
+
+```bash
+git remote add cliente https://github.com/paulabarjau/web.git
+git fetch cliente
+git cherry-pick <primer-commit-nuevo>..HEAD   # sobre una rama sacada de cliente/main
+git push cliente HEAD:main
+```
+
+Conviene comprobar antes que los contenidos coinciden
+(`git diff cliente/main <commit-equivalente>` sin salida), porque al ser
+historias separadas git no puede avisar de una divergencia real.
+
+`js/lib/site.js` declara `SITE_ORIGIN = 'https://paulabarjau.studio'`, y de ahí
+salen los canonical, los `og:url` y el sitemap. O sea que las páginas servidas en
+github.io apuntan al dominio: correcto para el SEO del sitio público, pero es la
+razón de que la copia de trabajo no deba indexarse.
 
 ## El menú, que es la parte con más CSS
 
 Tres piezas en `css/style.css`:
 
-- **`.menu-toggle`** — botón `position: fixed`. Centrado abajo en móvil; a partir
-  de 700px se va al borde derecho de la ventana, con `padding-inline: 0` para que
-  el borde derecho de la palabra caiga justo donde el de los idiomas. Al abrirse
-  sube con `bottom: calc(var(--menu-height) + var(--menu-gap))`.
+- **`.menu-toggle`** — botón `position: fixed`, pegado al borde derecho de la
+  ventana en todos los tamaños, justo encima de los idiomas. Lleva
+  `padding-inline: 0` para que el borde derecho de la palabra caiga donde el de
+  los idiomas y no 32px antes. Al abrirse sube con
+  `bottom: calc(var(--menu-height) + var(--menu-gap))`.
 - **`.menu-panel`** — la lengüeta, de todo el ancho de la ventana, escondida con
   `translateY(100%)` (el 100% es de su propia altura, así que se esconde exacta
   sin necesidad de una altura fija).
-- **`.menu-content`** — en móvil, columna centrada en el orden del HTML. A partir
-  de 700px, una sola fila con áreas de grid (`"izq medio der"`): volver a la
-  izquierda, categorías o "ver más" centradas y los idiomas a la derecha. Al ser
-  áreas con nombre, el hueco que no se usa no descoloca a los demás: la portada
-  no tiene "volver" y el about no tiene nada en el medio.
+- **`.menu-content`** — tres huecos con el mismo criterio en los dos tamaños:
+  volver a la izquierda, categorías o "ver más" centradas y los idiomas a la
+  derecha. En móvil es una columna, y cada cosa se coloca con márgenes
+  automáticos (`#back-btn` con `margin-right: auto`, `.languages-container` con
+  `margin-left: auto`), que ganan al `align-items: center` del contenedor. A
+  partir de 700px pasa a una sola fila con áreas de grid (`"izq medio der"`): al
+  ser áreas con nombre, el hueco que no se usa no descoloca a los demás, y eso
+  importa porque la portada no tiene "volver" y el about no tiene nada en medio.
 
 **El color lo manda una sola variable.** `--page-bg` se declara en `:root` y el
-JS la reescribe sobre `<html>` según la categoría o el proyecto. El botón, la
-lengüeta, `html`, `body` y `main` leen `var(--page-bg)`; ninguno tiene color
-propio. Para cambiar cómo se colorea el sitio se toca esa variable y nada más.
+JS la reescribe sobre `<html>` según la categoría o el proyecto. La lengüeta,
+`html`, `body` y `main` leen `var(--page-bg)`; ninguno tiene color propio. Para
+cambiar cómo se colorea el sitio se toca esa variable y nada más.
+
+**El botón no tiene fondo, y por eso la letra se invierte.** Al no haber caja, la
+palabra tiene que leerse igual sobre el fondo claro de la página que sobre una
+foto oscura, así que va en blanco con `mix-blend-mode: difference`: el resultado
+es el inverso de lo que tenga detrás (negra sobre claro, blanca sobre oscuro).
+Tiene una contrapartida medida: sobre un gris medio la letra sale también gris
+medio. En `/p/torito/` cae sobre una zona de luminancia 171 y el contraste baja a
+3,3:1, cuando en negro plano habrían sido 9,1:1. A cambio rescata los fondos
+oscuros, donde en negro era literalmente invisible (1:1 sobre una zona de
+luminancia 4). Si algún día molesta más de lo que arregla, la alternativa es
+letra negra con `text-shadow: 0 0 8px var(--page-bg)`.
 
 **`--menu-height` la calcula el JS**, no el CSS: `js/lib/menu.js` mide
 `menuPanel.offsetHeight` al abrir y la escribe en `<html>`, porque el botón
-necesita saber cuánto tiene que subir y el CSS no puede medir un hermano.
+necesita saber cuánto tiene que subir y el CSS no puede medir a un hermano. Un
+`ResizeObserver` la vuelve a medir si el panel cambia de alto con el menú ya
+abierto (girar el móvil, redimensionar cruzando los 700px); sin eso el botón se
+quedaba a la altura vieja y llegaba a solaparse 31px con la lengüeta.
+
+**El menú se cierra al usarlo.** `closeMenu()` en `js/lib/menu.js` lo llaman los
+idiomas (dentro del propio módulo, así vale para las tres páginas) y las
+categorías (en `main.js`). Comprueba que esté abierto antes de cerrar, porque
+`toggleCategory()` también se llama al cargar la página con `?category=` y sin
+esa comprobación abriría el menú al entrar. Volver y "ver más" no lo necesitan
+porque navegan a otra página.
 
 ## Cosas pendientes / a tener en cuenta
 
-- **`--menu-height` se queda vieja si el panel cambia de altura con el menú ya
-  abierto** (girar el móvil, redimensionar la ventana cruzando los 700px). Se
-  calcula solo al abrir, así que el botón queda descolocado —medido: hasta 31px
-  de solape sobre la lengüeta— hasta que se cierra y se vuelve a abrir. Se
-  arregla observando el panel en `js/lib/menu.js`:
-
-  ```js
-  new ResizeObserver(() => {
-    if (menuPanel.classList.contains('open')) {
-      document.documentElement.style.setProperty('--menu-height', `${menuPanel.offsetHeight}px`);
-    }
-  }).observe(menuPanel);
-  ```
-
+- **El área de toque del botón del menú es de 36x40px**, por debajo de los ~44
+  que se recomiendan para el dedo, y es la única manera de abrir el menú. Es
+  consecuencia de quitarle el padding lateral para alinearlo con los idiomas. Se
+  puede agrandar sin mover la palabra con un pseudoelemento:
+  `.menu-toggle::after { content: ""; position: absolute; inset: -4px -20px; }`
+- **El `mix-blend-mode: difference` del botón flojea sobre grises medios** (ver
+  la sección del menú). No está probado en Safari ni en iOS, solo en Chromium.
 - **El botón del menú lleva `outline: none`** sin alternativa visible, así que
-  quien navegue con teclado no ve dónde tiene el foco.
+  quien navegue con teclado no ve dónde tiene el foco. Tampoco hay
+  `aria-expanded` en el botón ni `aria-hidden` en el panel.
 - **Dos breakpoints distintos**: el menú usa 700px y los tamaños de letra 600px.
   No es un error, pero conviene saberlo antes de añadir un tercero.
 - **`.DS_Store` está rastreado en git** aunque `.gitignore` lo liste (se
