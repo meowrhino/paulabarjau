@@ -10,6 +10,8 @@ let activeCategory = null;
 let projectCards = [];
 const LOAD_BATCH = 6;
 let visibleLimit = LOAD_BATCH;
+// La rellena setupMenu; hasta entonces no hay menú que cerrar
+let closeMenu = () => {};
 
 // Elementos del DOM
 const projectsContainer = document.getElementById('projects-container');
@@ -142,7 +144,10 @@ function renderCategories() {
     button.dataset.color = category.color;
     button.style.color = category.color;
 
-    button.addEventListener('click', () => toggleCategory(category.code));
+    button.addEventListener('click', () => {
+      toggleCategory(category.code);
+      closeMenu();
+    });
 
     categoriesContainer.appendChild(button);
   });
@@ -492,7 +497,7 @@ function changeLanguage(lang) {
 
 // Configurar event listeners
 function setupEventListeners() {
-  setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange: changeLanguage });
+  ({ closeMenu } = setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange: changeLanguage }));
 
   // Cargar más
   if (loadMoreBtn) {

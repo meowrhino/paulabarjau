@@ -12,6 +12,15 @@ export function setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange
     }
   }
 
+  // Cerrar tras usar una opción del menú, para no tener que cerrarlo a mano.
+  // Comprueba que esté abierto: así los llamados desde la carga de la página
+  // (por ejemplo aplicar ?category= al entrar) no lo abren sin querer.
+  function closeMenu() {
+    if (menuPanel.classList.contains('open')) {
+      toggleMenu();
+    }
+  }
+
   menuToggle.addEventListener('click', toggleMenu);
 
   document.addEventListener('click', (e) => {
@@ -25,8 +34,9 @@ export function setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange
   langButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       onLanguageChange(btn.dataset.lang);
+      closeMenu();
     });
   });
 
-  return { toggleMenu };
+  return { toggleMenu, closeMenu };
 }

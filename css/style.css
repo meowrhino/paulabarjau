@@ -139,7 +139,12 @@ h1 {
   padding-block: 12px;
   padding-inline: 0;
   background: transparent;
-  color: #000;
+  /* Sin caja, la palabra tiene que leerse igual sobre el blanco de la página que
+     sobre una foto oscura. En blanco y con blend difference sale invertida
+     respecto a lo que tenga detrás: negra sobre el fondo claro, blanca sobre las
+     fotos oscuras. */
+  color: #fff;
+  mix-blend-mode: difference;
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 500;
