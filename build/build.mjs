@@ -174,7 +174,7 @@ const redirect = (to) => `<!DOCTYPE html>
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
-for (const f of ['css', 'js', 'data', 'projects', '404.html']) cpSync(at(f), join(OUT, f), { recursive: true, filter: (x) => !x.endsWith('.DS_Store') });
+for (const f of ['css', 'js', 'fonts', 'data', 'projects', '404.html']) cpSync(at(f), join(OUT, f), { recursive: true, filter: (x) => !x.endsWith('.DS_Store') });
 // project.html y about.html siguen valiendo (?slug=, enlaces viejos), ya construidas
 for (const f of ['project.html', 'about.html']) writeFileSync(join(OUT, f), readFileSync(at(f), 'utf8').replace('<html lang="ca">', '<html lang="ca" data-built>'));
 writeFileSync(join(OUT, 'index.html'), homePage());

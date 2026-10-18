@@ -63,6 +63,7 @@ export function isCleanProjectUrl() {
 // porque las páginas de p/<slug>/ llevan <base href="../../">, y a diferencia
 // de un href, asignar location.href ignora el <base>.
 export function navigateTo(page, params = {}) {
+  try { sessionStorage.setItem('transicion', '{}'); } catch {} // la siguiente página llega tapada (transición de la casa)
   window.location.href = new URL(buildUrl(page, params), document.baseURI).href;
 }
 
