@@ -8,7 +8,7 @@
 
 export const SITE_ORIGIN = 'https://paulabarjau.studio';
 export const TAB_TITLE = 'paula barjau';
-export const DEFAULT_SOCIAL_IMAGE = 'data/aitanaBonmati/img/aitanaBonmati_1.webp';
+export const DEFAULT_SOCIAL_IMAGE = 'projects/aitanaBonmati/img/aitanaBonmati_1.webp';
 
 export const HTML_LANG_MAP = {
   cat: 'ca',
@@ -46,7 +46,7 @@ export function projectDescription(title, categoryName, lang) {
 // sitio (o la URL tal cual si ya era absoluta).
 export function projectSocialImagePath(project, slug) {
   const resolve = (file) =>
-    !file ? null : /^https?:\/\//i.test(file) || file.startsWith('//') ? file : `data/${slug}/img/${file}`;
+    !file ? null : /^https?:\/\//i.test(file) || file.startsWith('//') ? file : `projects/${slug}/img/${file}`;
 
   const media = project?.imatge_principal;
   const block = typeof media === 'string'

@@ -1,0 +1,87 @@
+{
+  "$schema": "../../schema/project.json",
+  "title": "STOIC MAGAZINE",
+  "category": "editorial",
+  "date": "2026-02-05",
+  "relevance": 1,
+  "cover": "stoicMagazine_15.webp",
+  "summary": {
+    "es": "STOIC MAGAZINE",
+    "en": "STOIC MAGAZINE",
+    "ca": "STOIC MAGAZINE"
+  },
+  "main": "stoicMagazine_15.webp",
+  "photos": [
+    "stoicMagazine_1.webp",
+    "stoicMagazine_2.webp",
+    "stoicMagazine_3.webp",
+    "stoicMagazine_4.webp",
+    "stoicMagazine_5.webp",
+    "stoicMagazine_6.webp",
+    "stoicMagazine_7.webp",
+    "stoicMagazine_8.webp",
+    "stoicMagazine_9.webp",
+    "stoicMagazine_11.webp",
+    "stoicMagazine_12.webp",
+    "stoicMagazine_13.webp",
+    "stoicMagazine_14.webp",
+    "stoicMagazine_10.webp",
+    "stoicMagazine_16.webp"
+  ],
+  "credits": [
+    {
+      "role": {
+        "es": "Fotógrafo",
+        "en": "Stills",
+        "ca": "Fotògraf"
+      },
+      "name": "Josifina del Villlar",
+      "url": "https://www.instagram.com/jo.delbrillar/"
+    },
+    {
+      "role": {
+        "es": "Estilista",
+        "en": "Stylist",
+        "ca": "Estilista"
+      },
+      "name": "@oliviaqkla",
+      "url": "https://www.instagram.com/s_ingular/"
+    },
+    {
+      "role": {
+        "es": "Dir. de Arte",
+        "en": "Art Director",
+        "ca": "Dir. d’Art"
+      },
+      "name": "@lertupido",
+      "url": "https://www.instagram.com/papitaa_criolla/"
+    },
+    {
+      "role": {
+        "es": "Maquillaje y Pelo",
+        "en": "Make up and Hair",
+        "ca": "Maquillatge i Perruqueria"
+      },
+      "name": "@paulabarjau",
+      "url": "https://www.instagram.com/paulabarjau/"
+    },
+    {
+      "role": {
+        "es": "Luces + Digitech",
+        "en": "Ligths + Digitech",
+        "ca": "Llums + Digitech"
+      },
+      "name": "Daniel Dulford",
+      "url": "https://www.instagram.com/dtmulford/"
+    },
+    {
+      "role": {
+        "es": "Modelo",
+        "en": "Model",
+        "ca": "Model"
+      },
+      "name": "Rosangela",
+      "url": "https://www.instagram.com/yinsvegarosangela/"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/project.json",
+  "title": "AL MAGAZINE",
+  "category": "editorial",
+  "date": "2026-03-08",
+  "relevance": 1,
+  "cover": "alMagazine_1.webp",
+  "summary": {
+    "es": "AL MAGAZINE",
+    "en": "AL MAGAZINE",
+    "ca": "AL MAGAZINE"
+  },
+  "main": "alMagazine_1.webp",
+  "photos": [
+    "alMagazine_2.webp",
+    "alMagazine_3.webp",
+    "alMagazine_4.webp",
+    "alMagazine_5.webp",
+    "alMagazine_6.webp",
+    "alMagazine_7.webp",
+    "alMagazine_8.webp"
+  ],
+  "credits": [
+    {
+      "role": {
+        "es": "Fotografía",
+        "en": "Photography",
+        "ca": "Fotografia"
+      },
+      "name": "@gonlugurozge",
+      "url": "https://www.instagram.com/gonlugurozge/"
+    },
+    {
+      "role": {
+        "es": "Estilismo",
+        "en": "Styling",
+        "ca": "Estilisme"
+      },
+      "name": "@noty0ur_angel",
+      "url": "https://www.instagram.com/noty0ur_angel/"
+    },
+    {
+      "role": {
+        "es": "Modelo",
+        "en": "Model",
+        "ca": "Model"
+      },
+      "name": "@laura7eroy",
+      "url": "https://www.instagram.com/laura7eroy/"
+    },
+    {
+      "role": {
+        "es": "Agencia",
+        "en": "Agency",
+        "ca": "Agència"
+      },
+      "name": "@onemanagement",
+      "url": "https://www.instagram.com/onemanagement/"
+    },
+    {
+      "role": {
+        "es": "Peluquería y maquillaje",
+        "en": "Hair and make-up",
+        "ca": "Perruqueria i maquillatge"
+      },
+      "name": "@paulabarjau",
+      "url": "https://www.instagram.com/paulabarjau/"
+    }
+  ]
+}

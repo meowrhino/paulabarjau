@@ -1,5 +1,6 @@
+import { getCategories, getHome } from './lib/carga.js';
 import { SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
-import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, projectUrl as buildProjectUrl } from './lib/i18n.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, projectUrl as buildProjectUrl, aboutPage } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
 
 // Estado global
@@ -63,7 +64,7 @@ function clearInlineLayout(card) {
 
 function updateAboutLink() {
   if (!aboutLink) return;
-  aboutLink.href = buildUrl('about/', { lang: currentLanguage });
+  aboutLink.href = buildUrl(aboutPage(), { lang: currentLanguage });
 }
 
 function updateHomeSeo() {
@@ -114,13 +115,7 @@ async function init() {
 // Cargar datos desde JSON
 async function loadData() {
   try {
-    const [categoriesResponse, projectsResponse] = await Promise.all([
-      fetch('data/home_categories.json'),
-      fetch('data/home_projects.json')
-    ]);
-
-    categoriesData = await categoriesResponse.json();
-    projectsData = await projectsResponse.json();
+    [categoriesData, projectsData] = await Promise.all([getCategories(), getHome()]);
 
     console.log('Datos cargados:', { categoriesData, projectsData });
   } catch (error) {
@@ -213,7 +208,7 @@ function createProjectCard(project) {
 
   // Imagen
   const img = document.createElement('img');
-  img.src = `data/${project.slug}/img/${project.imatge_home}`;
+  img.src = `projects/${project.slug}/img/${project.imatge_home}`;
   setImageAlt(img, project.sinopsis[currentLanguage]);
   img.loading = 'lazy';
 

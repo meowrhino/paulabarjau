@@ -1,0 +1,97 @@
+{
+  "$schema": "../../schema/project.json",
+  "title": "uniq ONE + AITANA",
+  "category": "commercial",
+  "date": "2025-01-25",
+  "relevance": 1,
+  "cover": "aitanaBonmati_1.webp",
+  "summary": {
+    "es": "uniq ONE + AITANA",
+    "en": "uniq ONE + AITANA",
+    "ca": "uniq ONE + AITANA"
+  },
+  "main": {
+    "youtube": [
+      "https://www.youtube.com/watch?v=7hHM8G3xFCU"
+    ]
+  },
+  "photos": [
+    "aitanaBonmati_1.webp",
+    "aitanaBonmati_2.webp",
+    "aitanaBonmati_3.webp",
+    "aitanaBonmati_4.webp"
+  ],
+  "credits": [
+    {
+      "role": {
+        "es": "Productora",
+        "en": "Production",
+        "ca": "Productora"
+      },
+      "name": "Karabot",
+      "url": "https://www.instagram.com/wearekarabot/"
+    },
+    {
+      "role": {
+        "es": "Director",
+        "en": "Director",
+        "ca": "Director"
+      },
+      "name": "German De La Hoz",
+      "url": "https://www.instagram.com/german_delahoz/"
+    },
+    {
+      "role": {
+        "es": "Dir. de Fotografía",
+        "en": "DOP",
+        "ca": "Dir. de Fotografia"
+      },
+      "name": "Angel Manrique"
+    },
+    {
+      "role": {
+        "es": "Fotografía",
+        "en": "Photography",
+        "ca": "Fotografia"
+      },
+      "name": "Elisabet Penya",
+      "url": "https://www.instagram.com/eli.penya/"
+    },
+    {
+      "role": {
+        "es": "Estilismo",
+        "en": "Styling",
+        "ca": "Estilisme"
+      },
+      "name": "Claudia Civit",
+      "url": "https://www.instagram.com/claudiacivit/"
+    },
+    {
+      "role": {
+        "es": "Maquillaje",
+        "en": "Make up",
+        "ca": "Maquillatge"
+      },
+      "name": "Paula Barjau",
+      "url": "https://www.instagram.com/paulabarjau/"
+    },
+    {
+      "role": {
+        "es": "As. de Maquillaje",
+        "en": "Make up Assist.",
+        "ca": "As. de Maquillatge"
+      },
+      "name": "Laura Domenech",
+      "url": "https://www.instagram.com/ldomenech_muah/"
+    },
+    {
+      "role": {
+        "es": "As. de Maquillaje",
+        "en": "Make up Assist.",
+        "ca": "As. de Maquillatge"
+      },
+      "name": "Laura Asturgo",
+      "url": "https://www.instagram.com/lauraasturgomakeup/"
+    }
+  ]
+}

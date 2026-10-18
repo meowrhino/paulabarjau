@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/project.json",
+  "title": "SI MURIERA MAÑANA",
+  "category": "videoclip",
+  "date": "2024-09-27",
+  "relevance": 1,
+  "cover": "rigo_siMuriera_2.webp",
+  "summary": {
+    "es": "Si Muriera Mañana - Rigoberta Bandini",
+    "en": "Si Muriera Mañana - Rigoberta Bandini",
+    "ca": "Si Muriera Mañana - Rigoberta Bandini"
+  },
+  "main": "rigo_siMuriera_2.webp",
+  "photos": [
+    "rigo_siMuriera_1.webp",
+    "rigo_siMuriera_2.webp",
+    "rigo_siMuriera_3.webp",
+    "rigo_siMuriera_4.webp",
+    "rigo_siMuriera_5.webp",
+    "rigo_siMuriera_6.webp"
+  ],
+  "credits": [
+    {
+      "role": {
+        "es": "Prod.",
+        "en": "Production",
+        "ca": "Producció"
+      },
+      "name": "@wearekarabot",
+      "url": "https://www.instagram.com/wearekarabot/"
+    },
+    {
+      "role": {
+        "es": "Producción ejecutiva",
+        "en": "Executive Production",
+        "ca": "Producció executiva"
+      },
+      "name": "@jonajaraba",
+      "url": "https://www.instagram.com/jonajaraba/"
+    },
+    {
+      "role": {
+        "es": "Ay. de Producción",
+        "en": "Production Assist.",
+        "ca": "Aj. de Producció"
+      },
+      "name": "@hernanfrito",
+      "url": "https://www.instagram.com/hernanfrito/"
+    },
+    {
+      "role": {
+        "es": "Director",
+        "en": "Director",
+        "ca": "Director"
+      },
+      "name": "@german_delahoz",
+      "url": "https://www.instagram.com/german_delahoz/"
+    },
+    {
+      "role": {
+        "es": "AD",
+        "en": "AD",
+        "ca": "AD"
+      },
+      "name": "@carlos.batllo",
+      "url": "https://www.instagram.com/carlos.batllo/"
+    },
+    {
+      "role": {
+        "es": "Fotógrafo",
+        "en": "Stills",
+        "ca": "Fotògraf"
+      },
+      "name": "@miguelreveriego",
+      "url": "https://www.instagram.com/miguelreveriego/"
+    },
+    {
+      "role": {
+        "es": "Dir. de Arte",
+        "en": "Art Director",
+        "ca": "Dir. d’Art"
+      },
+      "name": "@j.puigbanchs",
+      "url": "https://www.instagram.com/j.puigbanchs/"
+    },
+    {
+      "role": {
+        "es": "Dir. de Arte",
+        "en": "Art Director",
+        "ca": "Dir. d’Art"
+      },
+      "name": "@lertupido",
+      "url": "https://www.instagram.com/lertupido/"
+    },
+    {
+      "role": {
+        "es": "Estilista",
+        "en": "Stylist",
+        "ca": "Estilista"
+      },
+      "name": "@oliviaqkla",
+      "url": "https://www.instagram.com/oliviaqkla/"
+    },
+    {
+      "role": {
+        "es": "Confección",
+        "en": "Seamstress",
+        "ca": "Confecció"
+      },
+      "name": "@lolavillaescusastylist",
+      "url": "https://www.instagram.com/lolavillaescusastylist/"
+    },
+    {
+      "role": {
+        "es": "Peluquera",
+        "en": "Hairstylist",
+        "ca": "Perruquera"
+      },
+      "name": "@paula_educationrp",
+      "url": "https://www.instagram.com/paula_educationrp/"
+    },
+    {
+      "role": {
+        "es": "Maquillaje",
+        "en": "Make up",
+        "ca": "Maquillatge"
+      },
+      "name": "@paulabarjau",
+      "url": "https://www.instagram.com/paulabarjau/"
+    },
+    {
+      "role": {
+        "es": "As. de Maquillaje",
+        "en": "Make up Assist.",
+        "ca": "As. de Maquillatge"
+      },
+      "name": "@ldomenech_muah",
+      "url": "https://www.instagram.com/ldomenech_muah/"
+    },
+    {
+      "role": {
+        "es": "As. de Maquillaje",
+        "en": "Make up Assist.",
+        "ca": "As. de Maquillatge"
+      },
+      "name": "@lauraasturgomakeup",
+      "url": "https://www.instagram.com/lauraasturgomakeup/"
+    }
+  ]
+}

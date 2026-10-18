@@ -1,0 +1,62 @@
+{
+  "$schema": "../../schema/project.json",
+  "title": "AINARA",
+  "category": "editorial",
+  "date": "2025-05-05",
+  "relevance": 1,
+  "cover": "ainara_1.webp",
+  "summary": {
+    "es": "AINARA",
+    "en": "AINARA",
+    "ca": "AINARA"
+  },
+  "main": "ainara_1.webp",
+  "photos": [
+    "ainara_2.webp",
+    "ainara_3.webp",
+    "ainara_4.webp",
+    "ainara_5.webp",
+    "ainara_6.webp",
+    "ainara_7.webp",
+    "ainara_8.webp",
+    "ainara_9.webp"
+  ],
+  "credits": [
+    {
+      "role": {
+        "es": "Fotografía",
+        "en": "Photography",
+        "ca": "Fotografia"
+      },
+      "name": "Andrés Bustamante",
+      "url": "https://www.instagram.com/andresbte/"
+    },
+    {
+      "role": {
+        "es": "Escenografía y dir. de arte",
+        "en": "Set design & art direction",
+        "ca": "Escenografia i dir. d’art"
+      },
+      "name": "Jhonson Camilo",
+      "url": "https://www.instagram.com/papitaa_criolla/"
+    },
+    {
+      "role": {
+        "es": "Estilismo",
+        "en": "Styling",
+        "ca": "Estilisme"
+      },
+      "name": "Margarita",
+      "url": "https://www.instagram.com/kichukrita/"
+    },
+    {
+      "role": {
+        "es": "Peluquería y maquillaje",
+        "en": "Hair & make-up",
+        "ca": "Perruqueria i maquillatge"
+      },
+      "name": "Paula Barjau",
+      "url": "https://www.instagram.com/paulabarjau/"
+    }
+  ]
+}

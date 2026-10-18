@@ -36,9 +36,15 @@ export function updateUrlState(lang, extraParams = {}) {
 }
 
 // URL limpia de un proyecto: p/<slug>/ en vez de project.html?slug=<slug>
+// En la vista previa (Live Server, sin build: falta data-built en <html>) no
+// existen p/<slug>/ ni about/, que solo escribe el build: ahí van a project.html y about.html.
+const BUILT = typeof document !== 'undefined' && document.documentElement.hasAttribute('data-built');
+
 export function projectUrl(slug, lang) {
-  return buildUrl(`p/${encodeURIComponent(slug)}/`, { lang });
+  return BUILT ? buildUrl(`p/${encodeURIComponent(slug)}/`, { lang }) : buildUrl('project.html', { slug, lang });
 }
+
+export const aboutPage = () => (BUILT ? 'about/' : 'about.html');
 
 // Saca el slug de la URL, venga de la ruta limpia (/p/<slug>/) o del
 // ?slug=<slug> antiguo, que se mantiene para no romper enlaces ya publicados.

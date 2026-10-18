@@ -1,0 +1,117 @@
+{
+  "$schema": "../../schema/project.json",
+  "title": "TORITO! - Vernat.mp3",
+  "category": "videoclip",
+  "date": "2024-10-24",
+  "relevance": 1,
+  "cover": "TORITO_ANNAIZQUIERDO_1.webp",
+  "summary": {
+    "es": "TORITO - Vernat.mp3",
+    "en": "TORITO - Vernat.mp3",
+    "ca": "TORITO - Vernat.mp3"
+  },
+  "main": {
+    "youtube": [
+      "https://www.youtube.com/watch?v=6k0b_MKujBw"
+    ]
+  },
+  "photos": [
+    "TORITO_ANNAIZQUIERDO_1.webp",
+    "TORITO_ANNAIZQUIERDO_2.webp",
+    "TORITO_ANNAIZQUIERDO_3.webp",
+    "TORITO_ANNAIZQUIERDO_4.webp",
+    "TORITO_ANNAIZQUIERDO_5.webp",
+    "TORITO_ANNAIZQUIERDO_6.webp",
+    "TORITO_ANNAIZQUIERDO_7.webp",
+    "TORITO_ANNAIZQUIERDO_8.webp",
+    "TORITO_ANNAIZQUIERDO_9.webp",
+    "TORITO_ANNAIZQUIERDO_10.webp",
+    "TORITO_ANNAIZQUIERDO_11.webp",
+    "TORITO_ANNAIZQUIERDO_12.webp",
+    "TORITO_ANNAIZQUIERDO_13.webp",
+    "TORITO_ANNAIZQUIERDO_14.webp",
+    "TORITO_ANNAIZQUIERDO_15.webp"
+  ],
+  "credits": [
+    {
+      "role": {
+        "es": "Icon",
+        "en": "Icon",
+        "ca": "Icon"
+      },
+      "name": "Mabel Olea"
+    },
+    {
+      "role": {
+        "es": "Director",
+        "en": "Directed",
+        "ca": "Director"
+      },
+      "name": "Isaac Fluxà"
+    },
+    {
+      "role": {
+        "es": "Dirección creativa y producción",
+        "en": "Creative direction and prod",
+        "ca": "Direcció creativa i producció"
+      },
+      "name": "del_country_al_mambo, Paula Comellas"
+    },
+    {
+      "role": {
+        "es": "Dirección de movimiento",
+        "en": "Movement director and dancer",
+        "ca": "Direcció de moviment"
+      },
+      "name": "Mabel Olea"
+    },
+    {
+      "role": {
+        "es": "Estilista",
+        "en": "Styled",
+        "ca": "Estilista"
+      },
+      "name": "Ariadna Baskes"
+    },
+    {
+      "role": {
+        "es": "Maquillaje y peluquería",
+        "en": "MUH",
+        "ca": "Maquillatge i perruqueria"
+      },
+      "name": "Paula Barjau"
+    },
+    {
+      "role": {
+        "es": "Foto fija",
+        "en": "Photograph",
+        "ca": "Foto fixa"
+      },
+      "name": "Anna Izquierdo"
+    },
+    {
+      "role": {
+        "es": "Mix",
+        "en": "Mix",
+        "ca": "Mix"
+      },
+      "name": "Arnau Figueres"
+    },
+    {
+      "role": {
+        "es": "Master",
+        "en": "Master",
+        "ca": "Master"
+      },
+      "name": "Dave Kutch"
+    },
+    {
+      "text": {
+        "es": "Attega - Nimph - Anima'ns Grup - Napalm Rentals - 400 Studio",
+        "en": "Attega - Nimph - Anima'ns Grup - Napalm Rentals - 400 Studio",
+        "ca": "Attega - Nimph - Anima'ns Grup - Napalm Rentals - 400 Studio"
+      },
+      "kind": "extra"
+    }
+  ]
+}

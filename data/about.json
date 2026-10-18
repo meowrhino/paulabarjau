@@ -1,11 +1,12 @@
 {
+  "$schema": "../schema/about.json",
   "title": {
-    "cat": "sobre mi",
+    "ca": "sobre mi",
     "es": "sobre mí",
     "en": "about me"
   },
-  "paragraphs": {
-    "cat": [
+  "text": {
+    "ca": [
       "hola! soc una maquilladora amb base a barcelona."
     ],
     "es": [
@@ -18,11 +19,11 @@
   "contact": [
     {
       "text": "@paulabarjau",
-      "link": "https://www.instagram.com/paulabarjau/"
+      "url": "https://www.instagram.com/paulabarjau/"
     },
     {
       "text": "paulabarjaugilboy@gmail.com",
-      "link": "mailto:paulabarjaugilboy@gmail.com"
+      "url": "mailto:paulabarjaugilboy@gmail.com"
     }
   ]
 }

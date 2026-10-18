@@ -1,3 +1,4 @@
+import { getCategories, getProject } from './lib/carga.js';
 import { HTML_LANG_MAP, SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta, projectDescription, projectSocialImagePath } from './lib/seo.js';
 import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, navigateTo, resolveSlugFromUrl, isCleanProjectUrl } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
@@ -46,7 +47,7 @@ function setImageAlt(img, text) {
 function resolveMediaSrc(path) {
   if (!path) return null;
   if (/^https?:\/\//i.test(path) || path.startsWith('//')) return path;
-  return `data/${projectSlug}/img/${path}`;
+  return `projects/${projectSlug}/img/${path}`;
 }
 
 function getCanonicalProjectUrl() {
@@ -141,21 +142,7 @@ async function init() {
 // Cargar datos desde JSON
 async function loadData() {
   try {
-    const [categoriesResponse, projectResponse] = await Promise.all([
-      fetch('data/home_categories.json'),
-      fetch(`data/${projectSlug}/${projectSlug}.json`)
-    ]);
-
-    if (!categoriesResponse.ok) {
-      throw new Error('No se pudieron cargar las categorías');
-    }
-
-    if (!projectResponse.ok) {
-      throw new Error('No se encontraron datos del proyecto');
-    }
-
-    categoriesData = await categoriesResponse.json();
-    projectData = await projectResponse.json();
+    [categoriesData, projectData] = await Promise.all([getCategories(), getProject(projectSlug)]);
 
     console.log('Datos del proyecto cargados:', { categoriesData, projectData });
   } catch (error) {

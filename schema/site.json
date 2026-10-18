@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "data/site.json: lo general de la web",
+  "description": "data/site.json: los textos del menú, las categorías y los proyectos de la portada. VS Code lee este fichero (por el \"$schema\" de arriba del JSON) para autocompletar, explicar cada campo y subrayar lo que está mal; el build y la vista previa lo usan para revisar.",
+  "type": "object",
+  "required": [
+    "title",
+    "ui",
+    "categories",
+    "lists"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "_": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "El nombre de la web."
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^https://[^/]+$",
+      "description": "El dominio, sin barra al final. Sin dominio, null."
+    },
+    "ui": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "menu",
+        "seeMore",
+        "back"
+      ],
+      "description": "Los textos de los botones, en los tres idiomas.",
+      "properties": {
+        "menu": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ca"
+          ],
+          "description": "El botón del menú.",
+          "properties": {
+            "ca": {
+              "type": "string"
+            },
+            "es": {
+              "type": "string"
+            },
+            "en": {
+              "type": "string"
+            }
+          }
+        },
+        "seeMore": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ca"
+          ],
+          "description": "El botón de ver más.",
+          "properties": {
+            "ca": {
+              "type": "string"
+            },
+            "es": {
+              "type": "string"
+            },
+            "en": {
+              "type": "string"
+            }
+          }
+        },
+        "back": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ca"
+          ],
+          "description": "El botón de volver.",
+          "properties": {
+            "ca": {
+              "type": "string"
+            },
+            "es": {
+              "type": "string"
+            },
+            "en": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "categories": {
+      "type": "object",
+      "description": "Las categorías (moda, comercial…): su nombre en los tres idiomas y sus colores.",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "name",
+          "color",
+          "bg"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ca"
+            ],
+            "description": "El nombre: { \"ca\": \"moda\", \"es\": \"moda\", \"en\": \"fashion\" }",
+            "properties": {
+              "ca": {
+                "type": "string"
+              },
+              "es": {
+                "type": "string"
+              },
+              "en": {
+                "type": "string"
+              }
+            }
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "description": "El color de la categoría: \"#C15896\""
+          },
+          "bg": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "description": "El color de fondo: \"#FFDFBE\""
+          }
+        }
+      }
+    },
+    "lists": {
+      "type": "object",
+      "description": "Los proyectos que salen en la portada. El orden lo deciden \"relevance\" y \"date\" de cada uno.",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "projects"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9-]+$",
+              "description": "El nombre de la carpeta en projects/: letras sin acentos ni ñ, números y guiones. Sale en la dirección: /p/<nombre>/"
+            }
+          }
+        }
+      }
+    }
+  }
+}

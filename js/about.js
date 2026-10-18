@@ -1,3 +1,4 @@
+import { getAbout, getCategories } from './lib/carga.js';
 import { SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
 import { isValidLanguage, resolveLangFromUrl, updateUrlState, navigateTo } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
@@ -56,19 +57,16 @@ function updateAboutSeo() {
 }
 
 async function loadData() {
-  const [aboutRes, categoriesRes] = await Promise.allSettled([
-    fetch('data/about.json'),
-    fetch('data/home_categories.json')
-  ]);
+  const [aboutRes, categoriesRes] = await Promise.allSettled([getAbout(), getCategories()]);
 
-  if (aboutRes.status === 'fulfilled' && aboutRes.value.ok) {
-    aboutData = await aboutRes.value.json();
+  if (aboutRes.status === 'fulfilled') {
+    aboutData = aboutRes.value;
   } else {
     throw new Error('No se pudo cargar about.json');
   }
 
-  if (categoriesRes.status === 'fulfilled' && categoriesRes.value.ok) {
-    categoriesData = await categoriesRes.value.json();
+  if (categoriesRes.status === 'fulfilled') {
+    categoriesData = categoriesRes.value;
   }
 }
 
