@@ -16,7 +16,7 @@ projects/<slug>/       un proyecto: project.json (title, category, date, relevan
                        main, photos, credits) + img/ (las imágenes, con su nombre)
 schema/                qué campos lleva cada JSON (VS Code, el build y la vista previa)
 index.html, project.html, about.html, 404.html   las plantillas, y la vista previa con Live Server
-build/build.mjs        → dist/: la portada, /about/ y /p/<slug>/ con su contenido dentro
+build/build.mjs        → dist/: la portada, /about/ y /p/<slug>/ con su contenido dentro, en catalán y bajo /es/ y /en/
 js/lib/house.js        la forma de la casa → la de antes (home_categories, home_projects, <slug>.json)
 js/lib/carga.js        lee los JSON (y en la vista previa los revisa con schema/)
 js/lib/validar.js      el JSON Schema sin dependencias (de JAMstack)
@@ -24,10 +24,13 @@ js/main.js, project.js, about.js, js/lib/{i18n,menu,seo,site}.js   como antes
 ```
 
 - **El build** (`npm ci && node build/build.mjs`) escribe en `dist/` (no se commitea) la portada,
-  `/about/` y `/p/<slug>/` con sus meta y el contenido en catalán ya en el HTML; og 1200×630 con
-  **sharp**, sitemap y robots. Al cargar, el JS vuelve a pintar lo mismo. Sustituye al generador y a
-  la Action que commiteaban `p/`, `about/` y `sitemap.xml`. `/p/siMurieraMañana/` redirige a
-  `/p/siMurieraManana/` (la ñ fuera del nombre de la carpeta).
+  `/about/` y `/p/<slug>/` con sus meta y el contenido ya en el HTML, una vez por idioma: el catalán
+  en la raíz y lo mismo bajo `/es/` y `/en/`, cada página con `canonical` y `hreflang` a las otras
+  dos; og 1200×630 con **sharp**, sitemap (con todas) y robots. Al cargar, el JS vuelve a pintar lo
+  mismo. Sustituye al generador y a la Action que commiteaban `p/`, `about/` y `sitemap.xml` en el
+  repo. Las direcciones viejas llevan a las nuevas: `/p/siMurieraMañana/` a `/p/siMurieraManana/`
+  (la ñ fuera del nombre de la carpeta), `project.html?slug=x` a `/p/x/`, y un `?lang=es` a la
+  página en `/es/` (un script en el `<head>`, antes de pintar).
 - **Vista previa**: Live Server sobre la carpeta. Sin `data-built` en `<html>`, `carga.js` revisa
   los JSON y enseña los errores en pantalla, y los enlaces van a `project.html?slug=` y `about.html`
   (las páginas `/p/` y `/about/` solo existen en `dist/`).
@@ -38,14 +41,17 @@ js/main.js, project.js, about.js, js/lib/{i18n,menu,seo,site}.js   como antes
 
 ## Idiomas
 
-`cat` es el de por defecto y **no** lleva parámetro en la URL; `es` y `en` van
-como `?lang=es`. Toda la lógica está en `js/lib/i18n.js`, que también resuelve el
-slug tanto de la ruta limpia (`/p/<slug>/`) como del viejo `?slug=<slug>`, que se
-mantiene para no romper enlaces ya publicados.
-
-Al cambiar de idioma no se recrean los nodos: se reescriben los textos
+Una dirección por idioma: el catalán, el de por defecto, en la raíz (`/`,
+`/p/<slug>/`, `/about/`) y lo mismo bajo `/es/` y `/en/`. En la web construida el
+idioma sale de `<html lang>`, el selector del menú y "tornar" son enlaces (el build
+los escribe: a la misma página en el otro idioma, y a la portada de ese idioma) y el
+JS no lo cambia. Toda la lógica está en `js/lib/i18n.js`: en la web construida
+(`data-built`) pone la carpeta del idioma delante de cada enlace; en la vista
+previa (Live Server) sigue con `?lang=es` y el cambio de idioma se hace en la
+página, sin recargar: no se recrean los nodos, se reescriben los textos
 (`updateCategoryButtonsText`, `updateProjectCardsText`), para no perder el estado
-de la rejilla ni las imágenes ya cargadas.
+de la rejilla ni las imágenes ya cargadas. También resuelve el slug tanto de la
+ruta limpia (`/p/<slug>/`) como del `?slug=<slug>` de la vista previa.
 
 ## El menú, que es la parte con más CSS
 

@@ -312,6 +312,7 @@ h1 {
   color: inherit;
   opacity: 0.3;
   text-transform: lowercase;
+  text-decoration: none;   /* en la web construida es un enlace */
   transition: opacity 0.3s ease;
 }
 
@@ -533,6 +534,7 @@ h1 {
   cursor: pointer;
   text-transform: lowercase;
   text-align: center;
+  text-decoration: none;   /* "tornar" en la web construida es un enlace */
   margin: 0;
   transition: opacity 0.3s ease;
 }

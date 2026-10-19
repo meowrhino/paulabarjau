@@ -57,7 +57,7 @@ siga igual mientras se prepara Cloudflare:
 
 ## 5. Comprobar en su dominio
 
-- [ ] La portada, un proyecto, `/about/` y `?lang=es`.
+- [ ] La portada, un proyecto, `/about/` y `/es/`.
 - [ ] `view-source:` de un proyecto: el título, los créditos y la galería están en el HTML (antes, vacío).
 - [ ] `view-source:`: `canonical` y `og:url` con `paulabarjau.studio`, y **sin**
       `<meta name="robots" content="noindex">`.

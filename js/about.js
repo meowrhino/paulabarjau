@@ -1,6 +1,6 @@
 import { getAbout, getCategories } from './lib/carga.js';
 import { SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
-import { isValidLanguage, resolveLangFromUrl, updateUrlState, navigateTo } from './lib/i18n.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, langDir, navigateTo } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
 
 // Estado
@@ -44,7 +44,7 @@ function updateAboutSeo() {
   const label = aboutData?.title?.[currentLanguage] || ABOUT_LABELS[currentLanguage];
   const description = aboutData?.paragraphs?.[currentLanguage]?.[0] || ABOUT_FALLBACK_DESCRIPTION[currentLanguage];
   const seoTitle = `${label} | ${ABOUT_TITLE_SUFFIX[currentLanguage]}`;
-  const canonicalUrl = `${SITE_ORIGIN}/about/`;
+  const canonicalUrl = `${SITE_ORIGIN}/${langDir(currentLanguage)}about/`;
   const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
 
   applyMeta({
@@ -129,7 +129,8 @@ function changeLanguage(lang) {
 function setupListeners() {
   setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange: changeLanguage });
 
-  backBtn.addEventListener('click', () => {
+  // en la web construida es un enlace a la portada (build/build.mjs) y navega solo
+  if (!backBtn.hasAttribute('href')) backBtn.addEventListener('click', () => {
     navigateTo('index.html', { lang: currentLanguage });
   });
 }

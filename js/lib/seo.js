@@ -5,6 +5,7 @@
 import { HTML_LANG_MAP, OG_LOCALE_MAP, TAB_TITLE } from './site.js';
 
 export {
+  HOME_SEO_DESCRIPTION,
   HTML_LANG_MAP,
   OG_LOCALE_MAP,
   SITE_ORIGIN,

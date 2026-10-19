@@ -46,7 +46,10 @@ export function setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange
     }
   });
 
+  // En la web construida son enlaces a la misma página en el otro idioma
+  // (build/build.mjs) y navegan solos: el idioma no se cambia en la página.
   langButtons.forEach(btn => {
+    if (btn.hasAttribute('href')) return;
     btn.addEventListener('click', () => {
       onLanguageChange(btn.dataset.lang);
       closeMenu();

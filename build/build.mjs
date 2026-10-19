@@ -5,9 +5,14 @@
 
    La portada, /about/ y una página por proyecto (/p/<slug>/), cada una con
    sus meta (title, description, og:image, canonical) y el contenido en
-   catalán ya escrito (los proyectos, el título, los créditos, la galería, el
-   texto del about), para que Google y WhatsApp lo lean sin JS. Al cargar, el
-   JS de siempre vuelve a pintar lo mismo, y el idioma sigue en ?lang=.
+   idioma de cada una ya escrito (los proyectos, el título, los créditos, la
+   galería, el texto del about), para que Google y WhatsApp lo lean sin JS.
+   Una carpeta por idioma (JAMstack, receta regla 5): el catalán en la raíz,
+   y lo mismo bajo /es/ y /en/, cada página con su canonical y hreflang a
+   las otras dos; el selector de idioma son enlaces a la misma página en
+   el otro idioma. Al cargar, el JS de siempre vuelve a pintar lo mismo en
+   el idioma que dice <html lang>. Un ?lang= de un enlace viejo lleva a la
+   página de ese idioma.
    Sustituye a scripts/generate-project-pages.mjs y a la Action que
    commiteaba p/, about/ y sitemap.xml en el repo.
 
@@ -20,13 +25,15 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { aboutOld, categoriesOld, projectOld, slugsOf } from '../js/lib/house.js';
 import { leerJSON, validar } from '../js/lib/validar.js';
-import { HTML_LANG_MAP, OG_LOCALE_MAP, TAB_TITLE, projectDescription, projectSocialImagePath } from '../js/lib/site.js';
+import { HOME_SEO_DESCRIPTION, HTML_LANG_MAP, OG_LOCALE_MAP, TAB_TITLE, projectDescription, projectSocialImagePath } from '../js/lib/site.js';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '../..');
 const OUT = join(ROOT, 'dist');
 const at = (...p) => join(ROOT, ...p);
 const fail = (msg) => { console.error(`\n✗ ${msg}\n\nNo se ha publicado nada: la web sigue como estaba.\n`); process.exit(1); };
-const LANG = 'cat';   // las páginas se escriben en el idioma por defecto (sin ?lang)
+const LANGS = ['cat', 'es', 'en'];   // como los llama el JS (js/lib/house.js); en la URL y el hreflang, HTML_LANG_MAP
+// la carpeta de cada idioma: el catalán en la raíz, los demás en /es/ y /en/
+const dir = (l) => (l === 'cat' ? '' : `${HTML_LANG_MAP[l]}/`);
 
 /* ---------- leer y revisar ---------- */
 
@@ -104,38 +111,60 @@ const meta = (html, marker, value, file) => swap(html,
   new RegExp(`(<meta[^>]*${marker}[^>]*content=")[^"]*(")|(<meta[^>]*content=")[^"]*("[^>]*${marker})`),
   (_, a, b, c, d) => (a ? `${a}${esc(value)}${b}` : `${c}${esc(value)}${d}`), file);
 
-function common(html, file, { url, base, image }) {
-  html = swap(html, /<html lang="[^"]*">/, `<html lang="${HTML_LANG_MAP[LANG]}" data-built>`, file);
-  if (base) html = swap(html, /<meta charset="utf-8" \/>/, `<meta charset="utf-8" />\n    <base href="${base}" />`, file);
-  html = swap(html, /(<link rel="canonical" id="canonical-link" href=")[^"]*(")/, `$1${esc(url)}$2`, file);
-  html = meta(html, 'id="og-url"', url, file);
+// `path` es la página relativa a la raíz: '' la portada, 'about/', 'p/<slug>/'
+const urlOf = (path, lang) => `${SITE}/${enc(dir(lang) + path)}`;
+const DIRS = JSON.stringify(Object.fromEntries(LANGS.map((l) => [l, dir(l)])));
+// Un ?lang= de un enlace viejo (de cuando el idioma iba ahí) lleva a esta página en ese
+// idioma, antes de pintar; sin él no hace nada. Va después del <base>, que es contra lo que resuelve.
+const redirector = (path, lang) => `<script>{const q=new URLSearchParams(location.search),l=q.get('lang');if(l!==null){q.delete('lang');const d=${DIRS};location.replace(new URL((d[l]??${JSON.stringify(dir(lang))})+${JSON.stringify(path)}+(String(q)&&'?'+q)+location.hash,document.baseURI))}}</script>`;
+
+/* Lo común a las tres plantillas: <html lang>, <base> según la profundidad, canonical y
+   hreflang a los tres idiomas, og:url y og:locale, el selector de idioma como enlaces a
+   esta misma página en cada idioma, y "tornar" como enlace a la portada de este idioma. */
+function common(html, file, { path, lang, image }) {
+  const here = dir(lang) + path;
+  const depth = here.split('/').length - 1;
+  html = swap(html, /<html lang="[^"]*">/, `<html lang="${HTML_LANG_MAP[lang]}" data-built>`, file);
+  html = swap(html, /<meta charset="utf-8" \/>/, `<meta charset="utf-8" />${depth ? `\n    <base href="${'../'.repeat(depth)}" />` : ''}\n    ${redirector(path, lang)}`, file);
+  html = swap(html, /(<link rel="canonical" id="canonical-link" href=")[^"]*(" \/>)/, `$1${esc(urlOf(path, lang))}$2\n${
+    [...LANGS.map((l) => [HTML_LANG_MAP[l], l]), ['x-default', 'cat']].map(([h, l]) => `    <link rel="alternate" hreflang="${h}" href="${esc(urlOf(path, l))}" />`).join('\n')}`, file);
+  html = meta(html, 'id="og-url"', urlOf(path, lang), file);
+  html = meta(html, 'id="og-locale"', OG_LOCALE_MAP[lang], file);
   if (image) { html = meta(html, 'id="og-image"', image, file); html = meta(html, 'id="twitter-image"', image, file); }
+  let n = 0;
+  html = html.replace(/<button class="lang-btn[^"]*" data-lang="(\w+)">(\w+)<\/button>/g, (_, l, text) => (n++,
+    `<a class="lang-btn${l === lang ? ' active' : ''}" data-lang="${l}" href="${esc(dir(l) + path || './')}" hreflang="${HTML_LANG_MAP[l]}" lang="${HTML_LANG_MAP[l]}">${text}</a>`));
+  if (n !== LANGS.length) fail(`${file}: esperaba ${LANGS.length} botones .lang-btn (el selector de idioma) y hay ${n}`);
+  html = html.replace(/<button id="back-btn" class="menu-action-btn">[^<]*<\/button>/,
+    `<a id="back-btn" class="menu-action-btn" href="${dir(lang) || './'}">${esc(categories.text_back[lang])}</a>`);
   // robots: en github.io, o sin dominio, no se indexa
   return INDEX ? html : html.replace(/(<meta charset="utf-8" \/>)/, '$1\n    <meta name="robots" content="noindex" />');
 }
 
-const t = (v) => (v && typeof v === 'object' ? v[LANG] ?? v.cat ?? '' : v ?? '');
+const t = (v, lang) => (v && typeof v === 'object' ? v[lang] ?? v.cat ?? '' : v ?? '');
+const descriptions = (html, file, d) => ['id="meta-description"', 'id="og-description"', 'id="twitter-description"'].reduce((h, m) => meta(h, m, d, file), html);
 
-function projectPage(slug) {
+function projectPage(slug, lang) {
   const file = 'project.html';
   const p = projectOld(slug, projects[slug]);
   const category = categories.home_categories[p.categoria];
-  const description = projectDescription(p.titulo, category?.[`name_${LANG}`] || p.categoria, LANG);
-  const url = `${SITE}/p/${encodeURIComponent(slug)}/`;
+  const description = projectDescription(p.titulo, category?.[`name_${lang}`] || p.categoria, lang);
+  const path = `p/${slug}/`;
+  const url = urlOf(path, lang);
   const image = ogs.has(slug) ? `${SITE}/og/${slug}.jpg` : abs(projectSocialImagePath(p, slug));
-  let html = common(readFileSync(at(file), 'utf8'), file, { url, base: '../../', image });
+  let html = common(readFileSync(at(file), 'utf8'), file, { path, lang, image });
   html = html.replace(/<title>[^<]*<\/title>/, `<title>${esc(TAB_TITLE)}</title>`);
-  for (const [m, v] of [['id="meta-description"', description], ['id="og-title"', TAB_TITLE], ['id="og-description"', description],
-    ['id="og-locale"', OG_LOCALE_MAP[LANG]], ['id="twitter-title"', TAB_TITLE], ['id="twitter-description"', description]]) html = meta(html, m, v, file);
+  html = descriptions(html, file, description);
+  for (const m of ['id="og-title"', 'id="twitter-title"']) html = meta(html, m, TAB_TITLE, file);
   html = html.replace(/(<script type="application\/ld\+json" id="project-schema">)[\s\S]*?(<\/script>)/, `$1${JSON.stringify({
-    '@context': 'https://schema.org', '@type': 'CreativeWork', name: p.titulo, description, url, inLanguage: HTML_LANG_MAP[LANG],
-    genre: category?.[`name_${LANG}`], image,
+    '@context': 'https://schema.org', '@type': 'CreativeWork', name: p.titulo, description, url, inLanguage: HTML_LANG_MAP[lang],
+    genre: category?.[`name_${lang}`], image,
     creator: { '@type': 'Person', name: 'Paula Barjau', jobTitle: 'Maquilladora y hairstylist', address: { '@type': 'PostalAddress', addressLocality: 'Barcelona', addressCountry: 'ES' } },
   }).replace(/</g, '\\u003c')}$2`);
   // el contenido, como lo pinta js/project.js (que vacía los contenedores y vuelve a pintar)
   const credits = p.creditos.map((c) => (c.texto
-    ? `<div class="credit-extra">${esc(t(c.texto))}</div>`
-    : `<div class="credit-item"><span class="credit-title">${esc(t(c.titulo))}</span> <span class="credit-name">${c.link
+    ? `<div class="credit-extra">${esc(t(c.texto, lang))}</div>`
+    : `<div class="credit-item"><span class="credit-title">${esc(t(c.titulo, lang))}</span> <span class="credit-name">${c.link
       ? `<a href="${esc(c.link)}" target="_blank" rel="noopener noreferrer">${esc(c.nombre)}</a>` : esc(c.nombre)}</span></div>`)).join('');
   const main = typeof p.imatge_principal === 'string' ? [p.imatge_principal] : [];
   const photos = [...main, ...p.galeria[0].url].map((f) => `<img src="projects/${enc(slug)}/img/${enc(f)}" alt="${esc(p.titulo)}" loading="lazy">`).join('');
@@ -144,30 +173,39 @@ function projectPage(slug) {
   return swap(html, /(<div id="gallery-container">)[\s\S]*?(<\/div>)/, `$1${photos}$2`, file);
 }
 
-function aboutPage() {
+function aboutPage(lang) {
   const file = 'about.html';
   const a = aboutOld(about);
-  let html = common(readFileSync(at(file), 'utf8'), file, { url: `${SITE}/about/`, base: '../' });
-  html = swap(html, /<h1 id="about-title">[^<]*<\/h1>/, `<h1 id="about-title">${esc(t(a.title))}</h1>`, file);
-  html = swap(html, /<div id="about-text" class="about-text"><\/div>/, `<div id="about-text" class="about-text">${(a.paragraphs[LANG] || []).map((x) => `<p>${esc(x)}</p>`).join('')}</div>`, file);
+  const paragraphs = a.paragraphs[lang] || [];
+  let html = common(readFileSync(at(file), 'utf8'), file, { path: 'about/', lang });
+  if (paragraphs[0]) html = descriptions(html, file, paragraphs[0]);   // como js/about.js: el primer párrafo
+  html = swap(html, /<h1 id="about-title">[^<]*<\/h1>/, `<h1 id="about-title">${esc(t(a.title, lang))}</h1>`, file);
+  html = swap(html, /<div id="about-text" class="about-text"><\/div>/, `<div id="about-text" class="about-text">${paragraphs.map((x) => `<p>${esc(x)}</p>`).join('')}</div>`, file);
   return swap(html, /<div id="about-contact" class="about-contact"><\/div>/, `<div id="about-contact" class="about-contact">${a.contact.map((c) =>
     `<div class="about-contact-line">${c.link ? `<a href="${esc(c.link)}">${esc(c.text)}</a>` : esc(c.text)}</div>`).join('')}</div>`, file);
 }
 
-function homePage() {
+function homePage(lang) {
   const file = 'index.html';
-  let html = common(readFileSync(at(file), 'utf8'), file, { url: `${SITE}/` });
-  html = swap(html, /<a id="about-link" href="about.html">/, '<a id="about-link" href="about/">', file);
+  let html = common(readFileSync(at(file), 'utf8'), file, { path: '', lang });
+  html = descriptions(html, file, HOME_SEO_DESCRIPTION[lang]);
+  html = swap(html, /<a id="about-link" href="about.html">/, `<a id="about-link" href="${dir(lang)}about/">`, file);
   // los proyectos, para quien no ejecuta JS (main.js vacía el contenedor y pinta las tarjetas)
-  const cards = slugs.map((s) => `<a href="p/${encodeURIComponent(s)}/">${esc(projects[s].title)}</a>`).join('\n            ');
+  const cards = slugs.map((s) => `<a href="${dir(lang)}p/${encodeURIComponent(s)}/">${esc(projects[s].title)}</a>`).join('\n            ');
   return swap(html, /(<section id="projects-container">)[\s\S]*?(<\/section>)/, `$1\n            ${cards}\n        $2`, file);
 }
 
-// una dirección vieja que lleva a la nueva (GitHub Pages no hace 301)
+// una dirección vieja que lleva a la nueva (GitHub Pages no hace 301); con ?lang=, a la de ese idioma
 const redirect = (to) => `<!DOCTYPE html>
-<html lang="ca"><head><meta charset="utf-8" /><meta name="robots" content="noindex" />
-<link rel="canonical" href="${SITE}/${to}" /><meta http-equiv="refresh" content="0; url=../../${to}" /><title>${TAB_TITLE}</title></head>
-<body><a href="../../${to}">${SITE}/${to}</a></body></html>
+<html lang="ca"><head><meta charset="utf-8" /><meta name="robots" content="noindex" /><base href="../../" />${redirector(to, 'cat')}
+<link rel="canonical" href="${SITE}/${to}" /><meta http-equiv="refresh" content="0; url=${to}" /><title>${TAB_TITLE}</title></head>
+<body><a href="${to}">${SITE}/${to}</a></body></html>
+`;
+// project.html?slug=x y about.html, las direcciones de antes del build (2026-10-18): a p/x/ y about/, en su idioma
+const legacy = (to) => `<!DOCTYPE html>
+<html lang="ca"><head><meta charset="utf-8" /><meta name="robots" content="noindex" /><title>${TAB_TITLE}</title>
+<script>{const q=new URLSearchParams(location.search),d=${DIRS},l=q.get('lang'),s=q.get('slug');q.delete('lang');q.delete('slug');location.replace((d[l]??'')+${to}+(String(q)&&'?'+q)+location.hash)}</script>
+</head><body><a href="./">${SITE}/</a></body></html>
 `;
 
 /* ---------- escribir dist/ ---------- */
@@ -175,16 +213,19 @@ const redirect = (to) => `<!DOCTYPE html>
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 for (const f of ['css', 'js', 'fonts', 'data', 'projects', '404.html']) cpSync(at(f), join(OUT, f), { recursive: true, filter: (x) => !x.endsWith('.DS_Store') });
-// project.html y about.html siguen valiendo (?slug=, enlaces viejos), ya construidas
-for (const f of ['project.html', 'about.html']) writeFileSync(join(OUT, f), readFileSync(at(f), 'utf8').replace('<html lang="ca">', '<html lang="ca" data-built>'));
-writeFileSync(join(OUT, 'index.html'), homePage());
-mkdirSync(join(OUT, 'about'), { recursive: true });
-writeFileSync(join(OUT, 'about', 'index.html'), aboutPage());
+writeFileSync(join(OUT, 'project.html'), legacy(`(s?'p/'+encodeURIComponent(s)+'/':'')`));
+writeFileSync(join(OUT, 'about.html'), legacy(`'about/'`));
 mkdirSync(join(OUT, 'og'), { recursive: true });
 for (const [slug, cached] of ogs) cpSync(cached, join(OUT, 'og', `${slug}.jpg`));
-for (const slug of slugs) {
-  mkdirSync(join(OUT, 'p', slug), { recursive: true });
-  writeFileSync(join(OUT, 'p', slug, 'index.html'), projectPage(slug));
+for (const lang of LANGS) {
+  const out = (...p) => join(OUT, dir(lang), ...p);
+  mkdirSync(out('about'), { recursive: true });
+  writeFileSync(out('index.html'), homePage(lang));
+  writeFileSync(out('about', 'index.html'), aboutPage(lang));
+  for (const slug of slugs) {
+    mkdirSync(out('p', slug), { recursive: true });
+    writeFileSync(out('p', slug, 'index.html'), projectPage(slug, lang));
+  }
 }
 // las de antes del 2026-10-18 (la ñ fuera del nombre de la carpeta)
 for (const [old, now] of [['siMurieraMañana', 'siMurieraManana']]) {
@@ -192,13 +233,13 @@ for (const [old, now] of [['siMurieraMañana', 'siMurieraManana']]) {
   mkdirSync(join(OUT, 'p', old), { recursive: true });
   writeFileSync(join(OUT, 'p', old, 'index.html'), redirect(`p/${now}/`));
 }
-const urls = [`${SITE}/`, `${SITE}/about/`, ...slugs.map((s) => `${SITE}/p/${encodeURIComponent(s)}/`)];
+const paths = ['', 'about/', ...slugs.map((s) => `p/${s}/`)];
 writeFileSync(join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${u}</loc></url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${LANGS.flatMap((l) => paths.map((p) => `  <url><loc>${urlOf(p, l)}</loc>${LANGS.map((o) => `<xhtml:link rel="alternate" hreflang="${HTML_LANG_MAP[o]}" href="${urlOf(p, o)}"/>`).join('')}</url>`)).join('\n')}
 </urlset>
 `);
 writeFileSync(join(OUT, 'robots.txt'), INDEX ? `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n` : 'User-agent: *\nDisallow: /\n');
 writeFileSync(join(OUT, '.nojekyll'), '');
 
-console.log(`✓ dist/: portada, about y ${slugs.length} proyectos${INDEX ? ` · se indexa (${SITE})` : ' · sin indexar'}`);
+console.log(`✓ dist/: portada, about y ${slugs.length} proyectos × ${LANGS.length} idiomas (${LANGS.map((l) => `/${dir(l)}`).join(', ')})${INDEX ? ` · se indexa (${SITE})` : ' · sin indexar'}`);

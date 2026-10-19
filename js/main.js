@@ -1,6 +1,6 @@
 import { getCategories, getHome } from './lib/carga.js';
-import { SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta } from './lib/seo.js';
-import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, projectUrl as buildProjectUrl, aboutPage } from './lib/i18n.js';
+import { SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, HOME_SEO_DESCRIPTION, applyMeta } from './lib/seo.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, langDir, projectUrl as buildProjectUrl, aboutPage } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
 
 // Estado global
@@ -29,11 +29,6 @@ const TEXT_LOAD_MORE = {
   cat: 'carregar més',
   es: 'cargar más',
   en: 'load more'
-};
-const HOME_SEO_DESCRIPTION = {
-  cat: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.',
-  es: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.',
-  en: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.'
 };
 
 function setImageAlt(img, text) {
@@ -69,7 +64,7 @@ function updateAboutLink() {
 
 function updateHomeSeo() {
   const description = HOME_SEO_DESCRIPTION[currentLanguage] || HOME_SEO_DESCRIPTION.cat;
-  const canonicalUrl = `${SITE_ORIGIN}/`;
+  const canonicalUrl = `${SITE_ORIGIN}/${langDir(currentLanguage)}`;
   const imageUrl = new URL(DEFAULT_SOCIAL_IMAGE, `${SITE_ORIGIN}/`).href;
 
   applyMeta({

@@ -1,6 +1,6 @@
 import { getCategories, getProject } from './lib/carga.js';
 import { HTML_LANG_MAP, SITE_ORIGIN, TAB_TITLE, DEFAULT_SOCIAL_IMAGE, applyMeta, projectDescription, projectSocialImagePath } from './lib/seo.js';
-import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, navigateTo, resolveSlugFromUrl, isCleanProjectUrl } from './lib/i18n.js';
+import { isValidLanguage, resolveLangFromUrl, updateUrlState, buildUrl, langDir, navigateTo, resolveSlugFromUrl, isCleanProjectUrl } from './lib/i18n.js';
 import { setupMenu } from './lib/menu.js';
 
 // Estado global
@@ -51,7 +51,7 @@ function resolveMediaSrc(path) {
 }
 
 function getCanonicalProjectUrl() {
-  return `${SITE_ORIGIN}/p/${encodeURIComponent(projectSlug)}/`;
+  return `${SITE_ORIGIN}/${langDir(currentLanguage)}p/${encodeURIComponent(projectSlug)}/`;
 }
 
 function getProjectSocialImageUrl() {
@@ -363,8 +363,8 @@ function changeLanguage(lang) {
 function setupEventListeners() {
   setupMenu({ menuToggle, menuPanel, langButtons, onLanguageChange: changeLanguage });
 
-  // Botón back
-  backBtn.addEventListener('click', () => {
+  // Botón back (en la web construida es un enlace a la portada, build/build.mjs, y navega solo)
+  if (!backBtn.hasAttribute('href')) backBtn.addEventListener('click', () => {
     navigateTo('index.html', { lang: currentLanguage });
   });
 

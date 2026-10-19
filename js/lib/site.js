@@ -22,6 +22,12 @@ export const OG_LOCALE_MAP = {
   en: 'en_US'
 };
 
+export const HOME_SEO_DESCRIPTION = {
+  cat: 'Portfolio de Paula Barjau, maquilladora i hairstylist a Barcelona especialitzada en moda, retrat i audiovisual.',
+  es: 'Portfolio de Paula Barjau, maquilladora y hairstylist en Barcelona especializada en moda, retrato y audiovisual.',
+  en: 'Portfolio of Paula Barjau, Barcelona-based makeup artist and hairstylist focused on fashion, portrait and film.'
+};
+
 // En català "de" s'apostrofa davant de vocal o h: d'editorial, però de moda
 function catDe(word) {
   return /^[aeiouàèéíòóúh]/i.test(word) ? `d'${word}` : `de ${word}`;

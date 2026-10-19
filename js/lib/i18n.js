@@ -1,15 +1,25 @@
 // Helpers de idioma y construcción de URLs compartidos entre páginas
+//
+// En la web construida (data-built en <html>, build/build.mjs) cada idioma tiene su
+// carpeta (/, /es/, /en/): el idioma sale de <html lang>, los enlaces llevan la carpeta
+// y ?lang= no se usa (un enlace viejo con ?lang= lo manda el <head> a la página de ese
+// idioma). En la vista previa (Live Server) sigue en ?lang=, como siempre.
 
 const VALID_LANGUAGES = ['cat', 'es', 'en'];
+const BUILT = typeof document !== 'undefined' && document.documentElement.hasAttribute('data-built');
+const LANG_DIR = { cat: '', es: 'es/', en: 'en/' };
 
 export function isValidLanguage(lang) {
   return VALID_LANGUAGES.includes(lang);
 }
 
 export function resolveLangFromUrl() {
-  const urlLang = new URLSearchParams(window.location.search).get('lang');
-  return isValidLanguage(urlLang) ? urlLang : 'cat';
+  const l = BUILT ? document.documentElement.lang.replace(/^ca$/, 'cat') : new URLSearchParams(window.location.search).get('lang');
+  return isValidLanguage(l) ? l : 'cat';
 }
+
+// La carpeta del idioma en la web construida ('' en la vista previa), para canonical y og:url
+export const langDir = (lang) => (BUILT ? LANG_DIR[lang] : '');
 
 // Sincroniza la URL actual con el idioma y parámetros extra (category, slug, ...).
 // Un valor null/undefined/false en extraParams elimina ese parámetro.
@@ -24,7 +34,7 @@ export function updateUrlState(lang, extraParams = {}) {
     }
   });
 
-  if (lang !== 'cat') {
+  if (lang !== 'cat' && !BUILT) {
     params.set('lang', lang);
   } else {
     params.delete('lang');
@@ -38,8 +48,6 @@ export function updateUrlState(lang, extraParams = {}) {
 // URL limpia de un proyecto: p/<slug>/ en vez de project.html?slug=<slug>
 // En la vista previa (Live Server, sin build: falta data-built en <html>) no
 // existen p/<slug>/ ni about/, que solo escribe el build: ahí van a project.html y about.html.
-const BUILT = typeof document !== 'undefined' && document.documentElement.hasAttribute('data-built');
-
 export function projectUrl(slug, lang) {
   return BUILT ? buildUrl(`p/${encodeURIComponent(slug)}/`, { lang }) : buildUrl('project.html', { slug, lang });
 }
@@ -67,16 +75,22 @@ export function navigateTo(page, params = {}) {
   window.location.href = new URL(buildUrl(page, params), document.baseURI).href;
 }
 
-// Construye la URL de una página añadiendo params.lang solo cuando no es "cat"
+// Construye la URL de una página: en la web construida, params.lang es la carpeta
+// del idioma delante (y la portada, la raíz); en la vista previa, ?lang= si no es "cat"
 export function buildUrl(page, params = {}) {
   const searchParams = new URLSearchParams();
+  let path = BUILT && page === 'index.html' ? '' : page;
 
   Object.entries(params).forEach(([key, value]) => {
     if (value === null || value === undefined) return;
-    if (key === 'lang' && value === 'cat') return;
+    if (key === 'lang') {
+      if (BUILT) path = LANG_DIR[value] + path;
+      else if (value !== 'cat') searchParams.set(key, value);
+      return;
+    }
     searchParams.set(key, value);
   });
 
   const query = searchParams.toString();
-  return `${page}${query ? `?${query}` : ''}`;
+  return `${path}${query ? `?${query}` : ''}`;
 }
